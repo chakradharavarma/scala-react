@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700');
+@import url('https://fonts.googleapis.com/css?family=PT+Mono');
 
 body {
     margin: 0;
@@ -15,10 +17,10 @@ body {
 .dash-scala-logo {
     flex: 1;
     background-repeat: no-repeat;
-    background-size: 200px 68px; 
     height: 68px;
-    margin: 15px 0;
-    max-width: 90%;
+    background-size: contain;
+    margin: 30px 0 30px 25px;
+    background-image: url('/scala-logo.png')
 }
 
 .dash-customer-logo {
@@ -90,9 +92,12 @@ body {
 }
 
 .dash-right {
+    display: flex;
+    flex-direction: column;
     background-color: #EFEFEF;
     flex: 6 1;
     padding: 0 16px 12px 32px;
+    height: stretch;
     overflow-y: scroll;
 }
 
@@ -105,7 +110,7 @@ body {
 
 .dash-right-options {
     text-align: right;
-    margin: 10px 30px;
+    margin: 24px 30px;
     padding: 10px;
     font-weight: 100;
 }
@@ -119,7 +124,7 @@ body {
 
 .card {
     background: white;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.18);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.1);
     border: 1px solid #ECECEC;
     padding: 20px
 }
@@ -232,22 +237,26 @@ body {
 }
 
 td.status-completed {
+    text-transform: uppercase !important;
     font-weight: 600;
     color: green ;
 }
 
 td.status-terminated {
     font-weight: 600;
+    text-transform: uppercase !important;
     color: #CECECE ;
 }
 
 td.status-failed {
     font-weight: 600;
+    text-transform: uppercase !important;
     color: #7C0A02;
 }
 
 td.status-running {
     font-weight: 600;
+    text-transform: uppercase !important;
     color: #132a44;
 }
 
@@ -275,6 +284,382 @@ td.status-running {
     padding: 20px;
 }
 
+.jobs-root {
+    width: 100%;
+}
+
 .jobs-root > div {
     margin-top: 24px;
+}
+
+.jobs-root:last-child {
+    margin-bottom: 24px;
+}
+
+.file-explorer {
+    font-family: 'Ubuntu Mono', monospace;
+    letter-spacing: 2px;
+    padding: 20px;
+}
+
+
+.file-explorer-table {
+    font-family: 'Ubuntu Mono', monospace !important;
+    letter-spacing: 2px;
+    padding: 20px;
+}
+
+.file-path {
+    margin: 8px 0;
+    padding: 2px;
+    background-color: aliceblue;
+    font-family: 'Ubuntu Mono', monospace;
+    border: unset;
+    font-size: 16px;
+}
+
+.file-path:focus {
+    outline: none;
+}
+
+.file-pane-header {
+    font-weight: 800;
+}
+
+.jobs-drawer-workflows > div {
+    width: unset !important;
+    margin: unset !important;
+}
+
+.workflow-card {
+    min-height: 200px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.workflow-card-title {
+    padding: 4px 0;
+}
+
+.workflow-templates {
+    margin: 16px;
+}
+
+.section {
+    margin-top: 24px;
+    padding: 24px;
+}
+
+.card-metadata {
+    font-family: 'Ubuntu Mono', monospace;
+    margin: 8px !important;
+}
+
+.workflow-title-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 4px;
+    align-items: flex-end;
+}
+
+.workflow-title-container > * {
+    display: inline !important;
+}
+
+.stepper-progress-buttons {
+    display: flex;
+    align-self: center;
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+.step-content-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 182px;
+}
+
+.step-title {
+    letter-spacing: 4px;
+    font-weight: 100 !important;
+    margin: 32px !important;
+    text-transform: uppercase;
+}
+
+.template-metadata-subheading {
+    font-family: 'Ubuntu Mono', monospace;
+    text-transform: uppercase;
+    margin: 6px 6px 0 6px !important;
+    letter-spacing: 1px;
+}
+
+.usage-summary {
+    padding: 24px;
+}
+
+.specific-usage-detail {
+
+}
+
+.monthly-usage-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.desktop-section-container {
+    padding: 24px;
+    min-height: 357px;
+    margin: 20px 0;
+}
+
+.section-title {
+    font-weight: 200;
+}
+
+.desktop-cards-root {
+    margin-top: 24px !important;
+}
+
+.desktop-card {
+    min-height: 108px;
+    padding: 0 12px 8px;
+}
+
+.desktop-card-title {
+    padding: 12px;
+    text-align: center;
+}
+
+.schedule-container {
+    margin-top: 24px !important;
+}
+
+.summary-container {
+    margin-top: 12px !important;
+}
+
+.connection-card {
+    display: flex;
+    margin: 12px !important;
+    padding: 18px;
+    min-height: 240px;
+}
+
+.connection-cards-container {
+    padding: 12px;
+}
+
+.menu-options-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.expansion-panel-jobs-summary {
+    background-color: #5e8dbf !important;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding-left: 24px;
+    margin-bottom: 4px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.expansion-panel-jobs-summary-title {
+    color: white !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.jobs-drawer-list-container {
+    width: 432px;
+}
+
+.create-new-job-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.create-new-job-title {
+    margin: 12px !important;
+    text-transform: uppercase;
+    font-weight: 400 !important;
+    letter-spacing: 2px;
+}
+
+.jobs-drawer-top-section {
+    margin: 32px 6px 4px 24px;
+}
+
+.workflow-logo {
+    width: auto;
+    height: 24px;
+}
+
+.back-button {
+    background-color: #ECECEC !important;
+}
+
+.confirm-workflow-field {
+    letter-spacing: 3px;
+    font-weight: 100 !important;
+    text-transform: uppercase;
+    display: inline-block !important;
+    padding-right: 8px;
+}
+
+.confirm-workflow-value {
+    font-family: 'Ubuntu Mono', monospace !important;
+    letter-spacing: 1px;
+    display: inline-block !important;
+}
+
+.confirm-workflow-card {
+    min-height: 40vh;
+    min-width: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.sibling-fade { visibility: hidden; }
+/* Prevents :hover from triggering in the gaps between items */
+
+.sibling-fade > * { visibility: visible; }
+/* Brings the child items back in, even though the parent is `hidden` */
+
+.sibling-fade > * { transition: opacity 150ms linear 100ms, transform 150ms ease-in-out 100ms; }
+/* Makes the fades smooth with a slight delay to prevent jumps as the mouse moves between items */
+
+.sibling-fade > * { opacity: 0.8; transform: scale(0.97); }
+/* Fade out all items when the parent is hovered */
+
+/*.sibling-fade:hover > * { opacity: 0.8; transform: scale(0.97); }
+ Fade out all items when the parent is hovered */
+
+.sibling-fade > *:hover { opacity: 1; transform: scale(1); transition-delay: 0ms, 0ms; }
+/* Fade in the currently hovered item */
+
+/**/
+
+.menu-option-icon {
+    margin-right: 8px;
+}
+
+.create-new-schedule-expander {
+    display: flex;
+    align-items: center;
+}
+
+.create-new-schedule-root {
+    padding: 0 !important;
+}
+
+.create-schedule-field {
+    margin: 0 20px;
+    display: flex;
+    align-items: baseline;
+}
+
+.create-schedule-field-title {
+    margin-right: 8px !important;
+    letter-spacing: 1px;
+    width: stretch;
+    text-transform: uppercase;
+}
+
+.react-swipeable-view-container > div {
+    margin: auto;
+}
+
+.route-wrapper {
+    display: flex;
+    flex: 0 0 100%;
+    position: relative;
+}
+
+.route-wrapper > * {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    max-height: stretch;
+}
+
+.delete-session-button-group {
+    margin: 8px 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.delete-session-button-group > button {
+    margin: 8px;
+}
+
+.delete-session-button-group > button:first-child {
+    background-color:  #FF545B;
+    color: white;
+    border-color: #FF545B;
+}
+
+.delete-session-button-group > button:last-child {
+    color: #FF545B;
+    border-color: #FF545B;
+}
+
+.delete-session-modal:focus {
+    outline: none;
+}
+
+.delete-session-modal-title {
+    display: flex;
+    align-items: center;
+    margin: 12px;
+}
+
+.delete-session-warning-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-weight: 800;
+    background-color: #FF545B;
+    padding: 8px 12px 16px;
+}
+
+.delete-session-warning-container > svg {
+    height: 6em;
+    width: 6em;
+}
+
+.delete-session-close-button {
+    position: absolute !important;
+    right:8px;
+    float: right;
+    clear:both;
+
+}
+
+.no-data-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 148px;
+    font-size: 24px;
+    font-weight:bold;
+}
+
+.connection-string {
+    background-color: #ECECEC;
+    border-radius: 12px;
+    padding: 2px;
+    margin: 2px 5px;    
+}
+
+.connection-string:hover {
+    cursor: grab;
 }
