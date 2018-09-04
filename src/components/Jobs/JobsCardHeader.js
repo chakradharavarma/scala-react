@@ -2,7 +2,6 @@ import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -10,23 +9,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { Field, reduxForm } from 'redux-form';
-
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
-
+import {
+  searchField
+} from '../TextField/fields';
 
 const toolbarStyles = theme => ({
   root: {
@@ -52,12 +37,6 @@ const toolbarStyles = theme => ({
     flex: '0 0 auto',
   },
 });
-
-const searchField = field({
-  label: "Search",
-  margin: "normal",
-  style: { width: '100%' }
-})
 
 const JobsCardHeader = props => {
 
@@ -89,10 +68,8 @@ const JobsCardHeader = props => {
             </IconButton>
           </Tooltip>
         ) : (
-          <Field name="filter"
-            component={searchField}
-          />
-          )}
+          <Field name='filter' component={searchField} />
+        )}
       </div>
     </Toolbar>
   );

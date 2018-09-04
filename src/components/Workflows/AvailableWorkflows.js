@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
-
-import AvailableWorkflowCard from './AvailableWorkflowCard';
-import { deleteWorkflow, runWorkflow } from '../../actions/workflowActions'
 import { connect } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import AvailableWorkflowCard from './AvailableWorkflowCard';
+
+import { deleteWorkflow, runWorkflow } from '../../actions/workflowActions'
 
 class AvailableWorkflows extends Component {
 
@@ -21,15 +20,6 @@ class AvailableWorkflows extends Component {
       </Grid>
     );
   }
-}
-
-AvailableWorkflows.defaultProps = {
-  workflows: [],
-}
-
-
-AvailableWorkflows.propTypes = {
-  workflows: PropTypes.array,
 }
 
 const mapStateToProps = (state) => {

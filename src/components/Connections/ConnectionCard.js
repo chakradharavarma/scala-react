@@ -72,7 +72,7 @@ class ConnectionCard extends Component {
                 </span>
                 {
                   connectionString === 'none' ? (
-                    <span>
+                    <span style={{marginLeft: 4 }} >
                       {connectionString}
                     </span>
                   ) : (

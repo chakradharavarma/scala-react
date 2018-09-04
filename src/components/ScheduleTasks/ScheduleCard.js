@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
@@ -12,6 +13,7 @@ import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 
 import EditCronModal from '../EditCronModal';
+import { deleteSchedule } from '../../actions/scheduleActions'
 
 class ScheduleCard extends Component {
 
@@ -33,12 +35,15 @@ class ScheduleCard extends Component {
   };
 
   render() {
-    const { onClickDelete, workflows, schedule } = this.props;
+    const { deleteSchedule, workflows, schedule } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-    const workflow = workflows.find(workflow => workflow.id === schedule.workflowId);
+    if(!workflows) {
+      return null;
+    }
+    const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
     if(!workflow) { // TODO move this somewhere nicer ... this means a workflow's been deleted and not its schedules
-      onClickDelete(schedule.id);
+      deleteSchedule(schedule.id);
       return null;
     }
     return (
@@ -77,7 +82,7 @@ class ScheduleCard extends Component {
                       Edit
                     </MenuItem>
                   } />
-                  <MenuItem onClick={this._handleClose(onClickDelete(schedule.id))}>
+                  <MenuItem onClick={this._handleClose(deleteSchedule(schedule.id))}>
                     <DeleteOutlined className='menu-option-icon' />
                     Delete
                   </MenuItem>
@@ -103,9 +108,19 @@ class ScheduleCard extends Component {
   }
 }
 
-ScheduleCard.defaultProps = {
-  schedule: {},
-  workflows: [],
-}
+const mapStateToProps = (state) => {
+  return (
+    {
+      workflows: state.availableWorkflows
+    }
+  )
+};
 
-export default ScheduleCard;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteSchedule: (id) => dispatch(deleteSchedule(id)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleCard);
+

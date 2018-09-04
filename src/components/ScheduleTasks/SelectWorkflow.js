@@ -1,26 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { reduxForm, Field } from 'redux-form';
-import { connect } from 'react-redux';
-
-const field = (props, children) => ({
-    input,
-    label,
-    meta: { touched, error },
-    ...custom
-}) => (
-        <TextField
-            helperText={touched && error}
-            {...input}
-            {...custom}
-            {...props}
-        >
-            {children}
-        </TextField>
-    );
+import TextField from '../TextField';
 
 class SelectWorkflow extends Component {
 
@@ -31,16 +15,13 @@ class SelectWorkflow extends Component {
                 {workflow.name}
             </MenuItem>
         ))
-
-
         return (
-
             <Grid item style={{width: 'calc(70% - 24px', marginRight: '24px'}} className='create-schedule-field'>
                 <Typography color='secondary' variant='subheading' className='create-schedule-field-title'>
                     Select a workflow
                 </Typography>
                 <Field name="workflowId"
-                    component={field({
+                    component={TextField({
                     select: true,
                     margin: "normal",
                     style: { width: '100%' }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
@@ -83,7 +82,7 @@ class AvailableWorkflows extends Component {
                   <MenuItem onClick={this._handleClose(onClickDelete(workflow.id))}>
                     <DeleteOutlined className='menu-option-icon' />
                     Delete
-                        </MenuItem>
+                  </MenuItem>
                 </Menu>
               </div>
             </div>
@@ -112,14 +111,6 @@ class AvailableWorkflows extends Component {
   }
 }
 
-AvailableWorkflows.defaultProps = {
-  workflows: [],
-}
-
-
-AvailableWorkflows.propTypes = {
-  workflows: PropTypes.array,
-}
 
 const mapDispatchToProps = (dispatch) => {
   return {

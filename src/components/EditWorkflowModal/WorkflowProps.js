@@ -41,27 +41,7 @@ const disks = [
   "2 TB",
 ]
 
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
-
 class WorkflowProps extends Component {
-
-  state = {
-
-  }
 
   onFileLoad = (e, file) => alert(e.target.result, file.name);
 
@@ -76,7 +56,7 @@ class WorkflowProps extends Component {
           <Grid container item spacing={32}>
             <Grid item xs={12}>
               <Field name="clusterType"
-                component={field({
+                component={TextField({
                   label: "Cluster Type",
                   select: true,
                   type: "number",
@@ -93,7 +73,7 @@ class WorkflowProps extends Component {
             </Grid>
             <Grid item xs={6}>
               <Field name="numberOfNodes"
-                component={field({
+                component={TextField({
                   label: "Number of nodes",
                   type: "number",
                   margin: "normal",
@@ -103,7 +83,7 @@ class WorkflowProps extends Component {
             </Grid>
             <Grid item xs={6}>
               <Field name="cpusPerNode"
-                component={field({
+                component={TextField({
                   label: "CPU's per node",
                   type: "number",
                   margin: "normal",
@@ -113,7 +93,7 @@ class WorkflowProps extends Component {
             </Grid>
             <Grid item xs={6}>
               <Field name="diskSpace"
-                component={field({
+                component={TextField({
                   label: "Disk Space",
                   select: true,
                   type: "number",
@@ -130,7 +110,7 @@ class WorkflowProps extends Component {
             </Grid>
             <Grid item xs={6}>
               <Field name="tasksPerNode"
-                component={field({
+                component={TextField({
                   label: "Tasks per nodes",
                   type: "number",
                   margin: "normal",

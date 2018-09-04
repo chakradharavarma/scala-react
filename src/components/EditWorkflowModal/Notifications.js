@@ -1,24 +1,8 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
+import { emailField } from '../TextField/fields';
 
 class WorkflowProps extends Component {
 
@@ -47,11 +31,7 @@ class WorkflowProps extends Component {
             </Grid>
             <Grid item xs={12}>
               <Field name="emails"
-                component={field({
-                  label: "Emails",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+                component={emailField}
               />
             </Grid>
           </Grid>

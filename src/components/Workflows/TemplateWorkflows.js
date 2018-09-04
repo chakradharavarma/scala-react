@@ -24,12 +24,9 @@ class TemplateWorkflows extends Component {
   }
 }
 
-TemplateWorkflows.defaultProps = {
-  workflows: [],
-}
 
 TemplateWorkflows.propTypes = {
-  workflows: PropTypes.array,
+  workflows: PropTypes.object,
 }
 
 const mapStateToProps = (state) => {

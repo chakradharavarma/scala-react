@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { reduxForm, Field } from 'redux-form';
-import { MaterialTextField } from '../MaterialField';
+import { Field, reduxForm } from 'redux-form';
+import TextField from '../TextField';
 
-function TabContainer({ children, dir }) {
+function TabContainer({ children }) {
   return (
       {children}
   );
@@ -16,21 +16,24 @@ TabContainer.propTypes = {
   dir: PropTypes.string.isRequired,
 };
 
-class FullWidthTabs extends React.Component {
+class ScheduleField extends Component {
 
   render() {
-
-    const { title, name, type} = this.props
+    const { label, name, type} = this.props;
     return (
       <Grid item className='create-schedule-field'>
         <Typography color='secondary' variant='subheading' className='create-schedule-field-title'>
-          { title }
+          { label }
         </Typography>
-        <MaterialTextField
+        <Field
           name={name}
-          type={type}
-          margin="normal"
-          style={{ width: 44, textAlign: 'center' }}
+          component={TextField({
+            label: label,
+            type: type,
+            margin: "normal",
+            style: { width: '100%' }
+          })
+          }
         />
       </Grid>
     );
@@ -42,4 +45,4 @@ export default reduxForm({
   form: 'editSchedule',
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-})(FullWidthTabs);
+})(ScheduleField);

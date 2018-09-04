@@ -4,12 +4,10 @@ import Card from '@material-ui/core/Card'
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Grid from '@material-ui/core/Grid';
-
-import CodeMirror from 'react-codemirror';
 import SwipeableViews from 'react-swipeable-views';
-
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/shell/shell';
+import {
+    codeField
+} from '../TextField/fields'
 
 function getModalStyle() {
     return {
@@ -19,24 +17,6 @@ function getModalStyle() {
 }
 
 
-
-const field = (props) => ({
-    input,
-    label,
-    meta: { touched, error },
-    ...custom
-}) => (
-        <CodeMirror
-            mode={'shell'}
-            value={''}
-            autoFocus
-            options={{ lineNumbers: true }}
-            helperText={touched && error}
-            {...input}
-            {...custom}
-            {...props}
-        />
-    );
 
 
 function TabContainer({ children, dir }) {
@@ -84,17 +64,17 @@ class Scripts extends Component {
                 >
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_prep" component={field()} />
+                            <Field name="scripts_prep" component={codeField} />
                         </Card>
                     </TabContainer>
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_run" component={field()} />
+                            <Field name="scripts_run" component={codeField} />
                         </Card>
                     </TabContainer>
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_post" component={field()} />
+                            <Field name="scripts_post" component={codeField} />
                         </Card>
                     </TabContainer>
                 </SwipeableViews>

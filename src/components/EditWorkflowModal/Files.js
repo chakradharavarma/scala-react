@@ -1,11 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { reduxForm } from 'redux-form';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
-import CodeMirror from 'react-codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/shell/shell';
 import { getMode } from '../../common/helpers';
 
 function getModalStyle() {

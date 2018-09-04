@@ -1,26 +1,11 @@
 import React, { Component } from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+import TextField from '../TextField';
 
-const field = (props, children) => ({
-    input,
-    label,
-    meta: { touched, error },
-    ...custom
-}) => (
-        <TextField
-            helperText={touched && error}
-            {...input}
-            {...custom}
-            {...props}
-        >
-            {children}
-        </TextField>
-    );
 
 class SelectWorkflow extends Component {
 
@@ -41,7 +26,7 @@ class SelectWorkflow extends Component {
                     Select a workflow
                 </Typography>
                 <Field name="workflowId"
-                    component={field({
+                    component={TextField({
                         select: true,
                         margin: "normal",
                         style: { width: '100%' }

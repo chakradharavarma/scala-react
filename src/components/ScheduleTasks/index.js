@@ -7,7 +7,6 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import { connect } from 'react-redux';
-import { deleteSchedule } from '../../actions/scheduleActions'
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleCard from './ScheduleCard';
 import ViewSwiper from './ViewSwiper';
@@ -23,7 +22,8 @@ const classes = {
 class ScheduleTasks extends Component {
 
   render() {
-    const { onClickDelete, schedules, workflows } = this.props;
+    const { schedules } = this.props;
+    const { fetched, data } = schedules;
     return (
       <Fragment>
         <NewCronDrawer />
@@ -51,13 +51,15 @@ class ScheduleTasks extends Component {
           <Divider />
           <Grid className='schedule-container sibling-fade' container spacing={16} >
             {
-              schedules.fetched &&
-              schedules.data.map((schedule, i) =>
-                <ScheduleCard
-                  schedule={schedule}
-                  workflows={workflows}
-                  onClickDelete={onClickDelete}
-                  key={`schedule-card-${i}`}/>
+              fetched &&
+              (
+                data.length ?
+                  data.map((schedule, i) =>
+                    <ScheduleCard
+                      schedule={schedule}
+                      key={`schedule-card-${i}`}
+                    />
+                  ) : 'nasdjkhsdjsdfklsdull'
               )
             }
           </Grid>
@@ -67,24 +69,12 @@ class ScheduleTasks extends Component {
   }
 }
 
-ScheduleTasks.defaultProps = {
-  schedules: [],
-  workflows: [],
-}
-
 const mapStateToProps = (state) => {
   return (
     {
-      schedules: state.schedules,
-      workflows: state.availableWorkflows.data
+      schedules: state.schedules
     }
   )
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onClickDelete: (id) => () => dispatch(deleteSchedule(id)),
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleTasks);
+export default connect(mapStateToProps)(ScheduleTasks);

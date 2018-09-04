@@ -16,6 +16,8 @@ import TableCell from "@material-ui/core/TableCell";
 import AddIcon from "@material-ui/icons/Add";
 import Button from '@material-ui/core/Button';
 import UploadIcon from "@material-ui/icons/CloudUpload";
+import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { searchField } from '../TextField/fields';
 
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
 
@@ -63,7 +65,6 @@ class Files extends Component {
   }
 
   state = {
-    filter: '',
     order: 'asc',
     orderBy: 'name',
     selected: [],
@@ -105,11 +106,10 @@ class Files extends Component {
   }
 
   render() {
-    const { fetchFile, fetchFolder, folder, deleteFile, modal } = this.props;
+    const { fetchFile, fetchFolder, folder, deleteFile, modal, filter } = this.props;
     const { orderBy, order } = this.state;
     let { data, path } = folder;
     data = data || [];
-
     if (!folder) {
       return null;
     }
@@ -163,7 +163,7 @@ class Files extends Component {
                 <UploadFileModal trigger={uploadFileTrigger} />
               </span>
               <span className='card-file-header-search-container'>
-                <input onChange={e => this.setState({ filter: e.target.value })} className='card-file-header-search' type='search' placeholder='SEARCH...' />
+                <Field name='filter' component={searchField} />
               </span>
             </div>
             <div className='card-file-header-title'>
@@ -211,7 +211,7 @@ class Files extends Component {
             </TableHead>
             <TableBody>
               {data
-                .filter(row => row.name.toLowerCase().includes(this.state.filter.toLowerCase()))
+                .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
                 .sort(getSorting(order, orderBy))
                 .map((row, i) => (
                   <Fragment key={`file-row-${i}`}>
@@ -263,10 +263,19 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
+const selector = formValueSelector('filesFilter');
+
 const mapStateToProps = (state) => {
   return {
     folder: state.folder,
+    filter: selector(state, 'filter')
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Files);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'filesFilter',
+    destroyOnUnmount: false,
+    forceUnregisterOnUnmount: true
+  })(Files)
+);

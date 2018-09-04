@@ -10,16 +10,18 @@ export function createNotification(message, type){
 export function getMode(path) {
   const ext = path.substring(path.lastIndexOf('.'));
   switch(ext){
-    case '.js':
+    case '.js' || '.jsx' :
       return 'javascript'
     case '.sh':
       return 'shell'
-    case '.py':
+    case '.py' || '.pyc':
       return 'python'
     case '.bat':
       return 'batch'
     case '.yml':
       return 'yaml'
+    case '.java':
+      return 'java'
     default:
       return 'none'
   }

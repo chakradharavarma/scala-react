@@ -37,6 +37,7 @@ function getSorting(order, orderBy) {
   }
 }
 
+
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },

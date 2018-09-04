@@ -99,7 +99,7 @@ class EditCronModal extends Component {
             style={{ padding: "32px 32px 0" }}
           >
             <ScheduleField
-              title='Enter a cron expression'
+              label='Enter a cron expression'
               name='cron'
               style={{ width: 128 }}
             />

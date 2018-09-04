@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -52,9 +51,5 @@ class CreateNewWorkflowDrawer extends Component {
     );
   }
 }
-
-CreateNewWorkflowDrawer.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default CreateNewWorkflowDrawer;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import CurrentJobs from './CurrentJobs';
-import QuickTips from './QuickTips';
 import JobsHistory from './JobsHistory';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -16,14 +15,12 @@ export default class Jobs extends Component {
         Create a New Workflow        
       </Button>
     )
-    // todo delete quick tips
     return (
       <div className={classnames('jobs-root')}> 
         <CreateWorkflowStepper
           trigger={createNewWorkflowTrigger}
         />
         <CurrentJobs />
-          { false && <QuickTips /> } { /* todo} */ }
         <JobsHistory />
       </div>
     );
