@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { reduxForm, Field } from 'redux-form';
+import { MaterialTextField } from '../MaterialField';
 
 function TabContainer({ children, dir }) {
   return (
@@ -43,12 +44,11 @@ class FullWidthTabs extends React.Component {
         <Typography color='secondary' variant='subheading' className='create-schedule-field-title'>
           { title }
         </Typography>
-        <Field name={name}
-          component={field({
-            type: type ,
-            margin: "normal",
-            style: { width: 44, textAlign: 'center' },
-          })}
+        <MaterialTextField
+          name={name}          
+          type={type}
+          margin="normal"
+          style={{ width: 44, textAlign: 'center' }}
         />
       </Grid>
     );

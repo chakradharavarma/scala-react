@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import { reduxForm, Field } from 'redux-form';
+import { MaterialTextField } from '../MaterialField';
 
 function TabContainer({ children, dir }) {
   return (
@@ -16,23 +16,6 @@ TabContainer.propTypes = {
   dir: PropTypes.string.isRequired,
 };
 
-
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...this.props}
-    >
-      {children}
-    </TextField>
-  );
-
 class FullWidthTabs extends React.Component {
 
   render() {
@@ -43,12 +26,11 @@ class FullWidthTabs extends React.Component {
         <Typography color='secondary' variant='subheading' className='create-schedule-field-title'>
           { title }
         </Typography>
-        <Field name={name}
-          component={field({
-            type: type ,
-            margin: "normal",
-            style: { width: 44, textAlign: 'center' },
-          })}
+        <MaterialTextField
+          name={name}
+          type={type}
+          margin="normal"
+          style={{ width: 44, textAlign: 'center' }}
         />
       </Grid>
     );

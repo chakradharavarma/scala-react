@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Dropzone from 'react-dropzone'
+import { MaterialTextField } from '../MaterialField';
 
 const machines = [
   "Scala Test Small",
@@ -42,22 +42,6 @@ const disks = [
   "2 TB",
 ]
 
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
-
 class WorkflowProps extends Component {
 
   state = {
@@ -79,69 +63,66 @@ class WorkflowProps extends Component {
         <Grid container style={{ margin: 20 }} justify='center'>
           <Grid container item xs={12} lg={6} spacing={32}>
             <Grid item xs={12}>
-              <Field name="clusterType"
-                component={field({
-                  label: "Cluster Type",
-                  select: true,
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                },
-                  machines.map(machine => (
-                    <MenuItem key={machine} value={machine}>
-                      {machine}
-                    </MenuItem>
-                  ))
-                )}
+              <MaterialTextField
+                name="clusterType"
+                label="Cluster Type"
+                select
+                type="number"
+                margin="normal"
+                style={{ width: '100%' }}
+                children={machines.map(machine => (
+                  <MenuItem key={machine} value={machine}>
+                    {machine}
+                  </MenuItem>
+                ))
+                }
               />
             </Grid>
             <Grid item xs={12} />
             <Grid item xs={12} lg={6} >
-              <Field name="numberOfNodes"
-                component={field({
-                  label: "Number of nodes",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+              <MaterialTextField
+                name="numberOfNodes"
+                label="Number of nodes"
+                type="number"
+                margin="normal"
+                style={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12} lg={6} >
-              <Field name="cpusPerNode"
-                component={field({
-                  label: "CPU's per node",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+              <MaterialTextField
+                name="cpusPerNode"
+                label="CPU's per node"
+                type="number"
+                margin="normal"
+                style={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12} />
             <Grid item xs={12} lg={6} >
-              <Field name="diskSpace"
-                component={field({
-                  label: "Disk Space",
-                  select: true,
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                },
+              <MaterialTextField
+                name="diskSpace"
+                select
+                label="Disk Space"
+                type="number"
+                margin="normal"
+                style={{ width: '100%' }}
+                children={
                   disks.map(disk => (
                     <MenuItem key={disk} value={disk}>
                       {disk}
                     </MenuItem>
                   ))
-                )}
+                }
               />
             </Grid>
             <Grid item xs={12} lg={6} >
-              <Field name="tasksPerNode"
-                component={field({
-                  label: "Tasks per nodes",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+              <MaterialTextField
+                name="tasksPerNode"
+                select
+                label="Tasks per node"
+                type="number"
+                margin="normal"
+                style={{ width: '100%' }}
               />
             </Grid>
             <Grid item xs={12}>
