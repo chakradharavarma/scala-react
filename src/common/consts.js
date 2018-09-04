@@ -6,3 +6,9 @@ export const SUCCESS = 'success';
 
 export const WARNING = 'warning';
 
+export const VALID_STATUSES = [
+    'DEPLOYING',
+    'DEPLOYED',
+    'RUNNING',
+    'PENDING'
+];

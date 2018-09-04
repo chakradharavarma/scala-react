@@ -6,6 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
 import JobsDrawer from './JobsDrawer';
 import JobsRunningTable from './JobsRunningTable';
+import { VALID_STATUSES } from '../../common/consts';
 
 const classes = {
   paper: {
@@ -18,8 +19,7 @@ class CurrentJobs extends Component {
   render() {
     const { jobs } = this.props;
     const { data, fetching } = jobs;
-    const validStatuses = ['DEPLOYING', 'DEPLOYED', 'RUNNING', 'PENDING' ]
-    const runningJobs = data.filter(job => validStatuses.includes(job.status));
+    const runningJobs = data.filter(job => VALID_STATUSES.includes(job.status));
     if(!runningJobs.length) {
       // todo
     }
