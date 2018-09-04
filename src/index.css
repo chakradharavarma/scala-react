@@ -786,3 +786,7 @@ div:focus {
 .large-modal {
     max-width: 748px !important;
 }
+
+.loader-inner > div {
+    background-color: #5e8dbf;
+}

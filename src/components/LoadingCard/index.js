@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ContentLoader, { Facebook } from 'react-content-loader'
 
+const classes = {
+    modal: {
+        content: 'create-new-schedule-expander',
+        root: 'create-new-schedule-root',
+    }
+}
 
 class LoadingCard extends Component {
 
   render() {
+    const { classes } = this.props;
 
     return (
       <div>

@@ -7,6 +7,8 @@ import Card from "@material-ui/core/Card";
 import JobsDrawer from './JobsDrawer';
 import JobsRunningTable from './JobsRunningTable';
 import { VALID_STATUSES } from '../../common/consts';
+import Loader from 'react-loaders'
+import 'loaders.css/loaders.min.css';
 
 const classes = {
   paper: {
@@ -20,9 +22,6 @@ class CurrentJobs extends Component {
     const { jobs } = this.props;
     const { data, fetching } = jobs;
     const runningJobs = data.filter(job => VALID_STATUSES.includes(job.status));
-    if(!runningJobs.length) {
-      // todo
-    }
     return (
       <Card classes={classes.paper} >
         <div className={classnames('current-jobs-header')}>
@@ -31,12 +30,18 @@ class CurrentJobs extends Component {
           </Typography>
         </div>
         <Divider />
-        { runningJobs.length ?
-          <JobsRunningTable jobs={runningJobs} /> : 
-          <div className='no-data-message'>
-            { !fetching && <JobsDrawer title='Click to run a workflow' />} { /* TODO add loading state */}
-          </div>
+        {
+            runningJobs.length ?
+              <JobsRunningTable jobs={runningJobs} /> : (
+                <div className='no-data-message'>
+                  { fetching ? 
+                    <Loader type="ball-grid-pulse" active /> :
+                    <JobsDrawer title='Click to run a workflow' />
+                  }
+                </div>
+              )
         }
+
       </Card>
     )
   }
