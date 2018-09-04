@@ -33,7 +33,7 @@ class CurrentJobs extends Component {
         {
             runningJobs.length ?
               <JobsRunningTable jobs={runningJobs} /> : (
-                <div className='no-data-message'>
+                <div className='centered'>
                   { fetching ? 
                     <Loader type="ball-grid-pulse" active /> :
                     <JobsDrawer title='Click to run a workflow' />

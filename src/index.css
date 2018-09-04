@@ -212,8 +212,8 @@ body {
 
 .card-file-header-title {
     display: flex;
-    padding: 6px 12px;
-    background-color: #ECECEC;
+    padding: 8px 12px;
+    background-color: #ececec;
     width: fit-content;
     border-radius: 4px;
     font-weight: 800;
@@ -659,7 +659,7 @@ td.status-running {
 
 }
 
-.no-data-message {
+.centered {
     display: flex;
     justify-content: center;
     align-items: center;
