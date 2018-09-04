@@ -33,7 +33,7 @@ class Workflows extends Component {
                   Workflows
                 </Typography>
                 <Divider />
-                <AvailableWorkflows workflows={availableWorkflows.data} />
+                <AvailableWorkflows />
               </Card>
             </Grid>
           </Grid>
@@ -44,13 +44,4 @@ class Workflows extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return (
-    {
-      availableWorkflows: state.availableWorkflows,
-    }
-  )
-};
-
-export default connect(mapStateToProps)(Workflows);
-
+export default Workflows;

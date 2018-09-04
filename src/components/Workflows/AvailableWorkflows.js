@@ -9,11 +9,11 @@ import { connect } from 'react-redux';
 class AvailableWorkflows extends Component {
 
   render() {
-    const { onClickDelete, onClickRun } = this.props;
+    const { onClickDelete, onClickRun, workflows } = this.props;
     return (
       <Grid container spacing={16} className='section sibling-fade' >
         {
-          this.props.workflows
+          workflows.data
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((workflow, i) =>
               <AvailableWorkflowCard key={`workflow-template-${i}`} workflow={workflow} onClickRun={onClickRun} onClickDelete={onClickDelete} /> )
@@ -32,6 +32,12 @@ AvailableWorkflows.propTypes = {
   workflows: PropTypes.array,
 }
 
+const mapStateToProps = (state) => {
+  return {
+    workflows: state.availableWorkflows,
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     onClickRun: (id) => () => dispatch(runWorkflow(id)),
@@ -39,4 +45,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(undefined, mapDispatchToProps)(AvailableWorkflows);
+export default connect(mapStateToProps, mapDispatchToProps)(AvailableWorkflows);
