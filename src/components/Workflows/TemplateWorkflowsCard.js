@@ -17,13 +17,17 @@ export default class TemplateWorkflows extends Component {
         workflow={workflow}
         trigger={(
           <Grid item xs={12} md={6} lg={4} xl={3} >
-            <Card elevation={1} >
+          <Card elevation={1} >
               <CardContent>
                 <div className='workflow-title-container'>
                   <Typography color='secondary' gutterBottom variant="title">
                     {workflow.name}
                   </Typography>
-                  <img className='workflow-logo' src={workflow.image} />
+                  <img
+                    alt='workflow'
+                    className='workflow-logo'
+                    src={workflow.image}
+                  />
                 </div>
                 <Divider />
                 <Typography className='template-metadata-subheading' variant='subheading'>

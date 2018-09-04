@@ -1,23 +1,35 @@
 import {
     DELETE_SCHEDULE,
     CREATE_SCHEDULE,
+    EDIT_SCHEDULE,
 } from './types';
 
 export const deleteSchedule = (id) => {
     return {
         type: DELETE_SCHEDULE,
         payload: {
-            id
+            id,
         }
     }
 }
 
-export const createSchedule = (cron, workflowId) => {
+export const createSchedule = (workflowId, cron) => {
     return {
         type: CREATE_SCHEDULE,
         payload: {
             cron,
-            workflowId
+            workflowId,
+        }
+    }
+}
+
+export const editSchedule = (workflowId, cron, id) => {
+    return {
+        type: EDIT_SCHEDULE,
+        payload: {
+            cron,
+            workflowId,
+            id,
         }
     }
 }

@@ -10,8 +10,24 @@ import DeleteConnectionModal from './DeleteConnectionModal';
 class ConnectionCard extends Component {
 
   handleClick = () => {
-    
+
   }
+
+  state = {
+    message: 'Click to copy'
+  };
+
+  handleCopyTextClick = () => {
+    this.setState({ message: 'Copied!' })
+  }
+
+  handleCopyTextMouseOut = () => {
+    const { message } = this.state;
+    if (message !== 'Click to copy') {
+      setTimeout(() => this.setState({ message: 'Click to copy' }), 700)  // TODO
+    }
+  }
+
 
   render() {
     const { shell, handleClickDelete } = this.props;
@@ -31,6 +47,7 @@ class ConnectionCard extends Component {
     } else if (state === "running") {
       state = "pending";
     }
+
     return (
       <Grid item xs={4}>
         <Card className='connection-card' >
@@ -38,28 +55,36 @@ class ConnectionCard extends Component {
             <Grid item xs={12} className='menu-options-container'>
               {
                 state !== 'shutting-down' &&
-                <DeleteConnectionModal handleClickDelete={handleClickDelete(instanceId)}/>
+                <DeleteConnectionModal handleClickDelete={handleClickDelete(instanceId)} />
               }
             </Grid>
             <Grid item xs={12} className='card-metadata'>
-                <span style={{fontWeight: 800, textTransform: 'uppercase'}}>Instance: </span>
-                {instanceId}
+              <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>Instance: </span>
+              {instanceId}
             </Grid>
             <Grid item xs={12} className='card-metadata'>
-                <span style={{fontWeight: 800, textTransform: 'uppercase'}}>State: </span>
-                {state}
+              <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>State: </span>
+              {state}
             </Grid>
             <Grid item xs={12} className='card-metadata'>
-                <span style={{fontWeight: 800, textTransform: 'uppercase'}}>
-                  Connection String: 
+              <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>
+                Connection String:
                 </span>
-                <CopyToClipboard text={connectionString}>
-                  <Tooltip disableHoverListener title="Copied!">
-                    <span className='connection-string' >
+                {
+                  connectionString === 'none' ? (
+                    <span>
                       {connectionString}
                     </span>
-                  </Tooltip>
-                </CopyToClipboard>
+                  ) : (
+                    <Tooltip title={this.state.message}  >
+                      <CopyToClipboard text={connectionString}>
+                        <div className='connection-string' onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
+                          {connectionString}
+                        </div>
+                      </CopyToClipboard>
+                    </Tooltip>
+                  )
+                }
             </Grid>
           </Grid>
         </Card>

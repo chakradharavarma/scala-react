@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,800');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700');
 @import url('https://fonts.googleapis.com/css?family=PT+Mono');
 
@@ -176,6 +176,15 @@ body {
 .card-file-header-path {
     margin-left: 18px;
     font-weight: 300;
+    cursor: pointer;
+}
+
+.card-file-header-path:hover {
+    font-weight: 600;
+}
+
+.card-file-header-path:hover:last-child {
+    font-weight: 300;
 }
 
 .card-icon {
@@ -196,30 +205,34 @@ body {
 }
 
 .card-file-header {
-    padding: 40px;
+    padding: 18px 36px;
     font-size: 20px;
     margin-bottom: 16px;
 }
 
 .card-file-header-title {
+    display: flex;
+    padding: 6px 12px;
+    background-color: #ECECEC;
+    width: fit-content;
+    border-radius: 4px;
     font-weight: 800;
 }
 
 .card-file-header-interactions {
-    margin-top: 30px;
     display: flex;
     justify-content: space-between;
 }
 
 .card-file-header-actions {
     display: flex;
-    flex: 2;
-    justify-content: space-between;
+    align-items: flex-start;
+    flex: 1;
 }
 
 .card-file-header-search-container {
     display: flex;
-    flex: 4;
+    flex: 1;
     justify-content: flex-end;
 }
 
@@ -260,7 +273,7 @@ td.status-running {
     color: #132a44;
 }
 
-.quick-tips > * {
+.current-jobs > * {
     margin: 10px 0;
 }
 
@@ -268,7 +281,10 @@ td.status-running {
     float: right;
 }
 
-.tips-header {
+.current-jobs {
+}
+
+.current-jobs-header {
     flex: 1;
     font-size: 28px;
     display: flex;
@@ -280,8 +296,9 @@ td.status-running {
 
 }
 
-.quick-tips {
+.current-jobs {
     padding: 20px;
+    min-height: 221px;
 }
 
 .jobs-root {
@@ -297,9 +314,11 @@ td.status-running {
 }
 
 .file-explorer {
+    width: stretch;
     font-family: 'Ubuntu Mono', monospace;
     letter-spacing: 2px;
-    padding: 20px;
+    padding: 18px;
+    margin-bottom: 24px;
 }
 
 
@@ -377,7 +396,7 @@ td.status-running {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 0 182px;
+    margin: 0 10vw;
 }
 
 .step-title {
@@ -519,7 +538,7 @@ td.status-running {
 
 .confirm-workflow-card {
     min-height: 40vh;
-    min-width: 50vh;
+    min-width: 50vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -572,10 +591,6 @@ td.status-running {
     text-transform: uppercase;
 }
 
-.react-swipeable-view-container > div {
-    margin: auto;
-}
-
 .route-wrapper {
     display: flex;
     flex: 0 0 100%;
@@ -611,11 +626,11 @@ td.status-running {
     border-color: #FF545B;
 }
 
-.delete-session-modal:focus {
+.modal:focus {
     outline: none;
 }
 
-.delete-session-modal-title {
+.modal-title {
     display: flex;
     align-items: center;
     margin: 12px;
@@ -656,10 +671,118 @@ td.status-running {
 .connection-string {
     background-color: #ECECEC;
     border-radius: 12px;
-    padding: 2px;
-    margin: 2px 5px;    
+    padding: 4px 8px;
+    margin: 8px 0;    
 }
 
 .connection-string:hover {
     cursor: grab;
+}
+
+.edit-workflow-properties {
+    margin: 12px 48px;
+}
+
+.file-explorer-item {
+    width: fit-content;
+}
+
+.file-explorer-item:hover {
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.button-icon {
+    margin-right: 4px;
+}
+
+.cm-s-default {
+    height: 80vh;
+}
+
+.edit-file-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 8vh;
+    margin: 0 24px;
+}
+
+.edit-file-buttons > * {
+    margin: 0 6px !important;
+}
+
+div:focus {
+    outline: none;
+}
+
+.edit-file-title {
+    letter-spacing: 1px;
+    margin: 12px 28px !important;
+}
+
+.react-contexify {
+    font-family: 'Roboto';
+    opacity: 1;
+    font-weight: 300;
+    letter-spacing: 1px;
+    z-index: 9999;
+}
+
+.react-contexify__item {
+    border-bottom: 1px solid #EFEFEF
+}
+
+.react-contexify__item:last-child {
+    border-bottom: unset;
+}
+
+.card-file-header-title {
+    margin-top: 12px;
+}
+
+.pending-uploads-container {
+    position:relative;
+    height: 12vh;
+    overflow: scroll;
+    overflow-y: scroll;
+    padding: 4px 0;
+}
+
+
+.card-file-header-path:first-child {
+    margin-left: 0;
+}
+
+.edit-workflow-swiper {
+    height: 50vh;
+}
+
+.edit-workflow-swiper > div {
+    height: 50vh;
+}
+
+.edit-workflow-script-tab-container {
+    background-color: #F7F7F7;
+    color: #ECECEC;
+}
+
+.edit-workflow-script-tab {
+    border-bottom-color: #ECECEC !important;
+    color: grey !important;
+    max-width: 108px !important;
+    min-width: 108px;
+}
+
+.create-schedule-tab-container {
+    padding-top: 5vh;
+    margin-left: 4vw;
+}
+
+.edit-workflow-notification-container {
+    margin: 36px;
+}
+
+.large-modal {
+    max-width: 748px !important;
 }

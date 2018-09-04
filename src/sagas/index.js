@@ -1,58 +1,8 @@
-import {
-    FETCHED_JOBS_FAILED,
-    FETCHED_JOBS_SUCCESS,
-    FETCHED_CONNECTIONS_FAILED,
-    FETCHED_CONNECTIONS_SUCCESS,
-    FETCHED_JOBS_STATUS_FAILED,
-    FETCHED_JOBS_STATUS_SUCCESS,
-    FETCHED_WORKFLOWS_AVAILABLE_SUCCESS,
-    FETCHED_WORKFLOWS_AVAILABLE_FAILED,
-    FETCHED_SCHEDULES_SUCCESS,
-    FETCHED_SCHEDULES_FAILED,
-    FETCHED_WORKFLOW_TEMPLATES_FAILED,
-    FETCHED_WORKFLOW_TEMPLATES_SUCCESS,
-    INIT_APP,
-    SUBMIT_NEW_WORKFLOW,
-    SUBMIT_WORKFLOW_FAILED,
-    SUBMIT_WORKFLOW_SUCCESS,
-    DELETE_WORKFLOW,
-    DELETE_WORKFLOW_SUCCESS,
-    DELETE_WORKFLOW_FAILED,
-    CREATE_SCHEDULE,
-    CREATE_SCHEDULE_SUCCESS,
-    CREATE_SCHEDULE_FAILED,
-    DELETE_SCHEDULE,
-    DELETE_SCHEDULE_SUCCESS,
-    DELETE_SCHEDULE_FAILED,
-    RUN_WORKFLOW,
-    RUN_WORKFLOW_SUCCESS,
-    RUN_WORKFLOW_FAILED,
-    DOWNLOAD_KEY_PAIR,
-    DOWNLOAD_KEY_PAIR_SUCCESS,
-    DOWNLOAD_KEY_PAIR_FAILED,
-    CREATE_CONNECTION,
-    CREATE_CONNECTION_SUCCESS,
-    CREATE_CONNECTION_FAILED,
-    DELETE_CONNECTION,
-    DELETE_CONNECTION_SUCCESS,
-    DELETE_CONNECTION_FAILED,
-    FETCHED_DESKTOPS_FAILED,
-    FETCHED_DESKTOPS_SUCCESS,
-    CREATE_DESKTOP,
-    CREATE_DESKTOP_SUCCESS,
-    CREATE_DESKTOP_FAILED,
-    DELETE_DESKTOP,
-    DELETE_DESKTOP_SUCCESS,
-    DELETE_DESKTOP_FAILED,
-} from '../actions/types';
+import * as actions from '../actions/types';
 
-// import downloader from 'js-file-download'; // TODO delete this pkg json
 import axios from 'axios';
-import { takeLatest } from 'redux-saga';
-import { call, fork, put } from 'redux-saga/effects';
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
+import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
+import { jsonToFormData } from '../common/helpers';
 
 function getAvailableWorkflows() {
     const url = '/getWorkflows';
@@ -90,6 +40,52 @@ function getDesktops() {
         .catch(err => err);
 }
 
+function getFolder({ path }) {
+    const data = new FormData();
+    data.set('path', path);
+    const url = '/folderContents/';
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers) // TODO make this a get 
+        .catch(err => err);
+}
+
+function getFile(data) {
+    const url = '/getFileContents/';
+    return axios.post(url, data) // TODO make this a get 
+        .catch(err => err);
+}
+
+function saveFile(data) {
+    const url = '/saveFileContents/';
+    return axios.post(url, data)
+        .catch(err => err);
+}
+
+function uploadFiles({ files, path }) {
+    const data = new FormData();
+    files.forEach(file => {
+        data.append("uploadedFiles", file);
+    })
+    data.set('path', path);
+    const url = '/uploadToMount/';
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers)
+        .catch(err => err);
+}
+
+function deleteFile({ file }) {
+    const url = '/deleteItems/';
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, JSON.stringify([file], headers))
+        .catch(err => err);
+}
+
 function getJobsStatus() {
     const url = '/jobstatuscount';
     return axios.get(url)
@@ -102,42 +98,10 @@ function getKeyPairURL() {
         .catch(err => err);
 }
 
-function deleteConnection({id}) {
+function deleteConnection({ id }) {
     const url = `/deleteConnection?shell_id=${id}`;
     return axios.get(url)
         .catch(err => err);
-}
-
-function getKeyPair(url) {
-    debugger;
-    return axios({
-        url,
-        method: 'GET',
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-        },      
-        responseType: 'blob', // important
-    }).then((response) => {
-        debugger;
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'key.pem');
-        debugger;
-        document.body.appendChild(link);
-        link.click();
-    }).catch(err => {
-        debugger;
-        return err;
-    });
-    /*
-    // TODO fix preflight in S3
-    return axios.get(url, config)
-        .then(resp => {
-            return resp.data
-        })
-        .then(data => downloader(data, 'key.pem'))
-        .catch(err => err);*/
 }
 
 // TODO make it a post
@@ -147,32 +111,70 @@ function postNewWorkflow(payload) {
         .catch(err => err);
 }
 
-function deleteWorkflow(payload) {
+function deleteWorkflow({ id }) {
+    const data = new FormData();
+    data.set('id', id);
     const url = `/deleteWorkflow`;
-    return axios.post(url, {
-        id: payload.id
-    }).catch(err => err);
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers)
+        .catch(err => err);
 }
 
-function runWorkflow(payload) {
+function terminateJob({ uuid }) {
+    const url = `/terminatejob/?job_uuid=${uuid}`
+    const data = { job_uuid: uuid }
+    return axios.get(url, data)
+        .catch(err => err);
+}
+
+function runWorkflow({ id }) {
+    const data = new FormData();
+    data.set('id', id);
     const url = `/runWorkflow`;
-    return axios.post(url, {
-        id: payload.id
-    }).catch(err => err);
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers).catch(err => err);
 }
 
-function deleteSchedule(payload) { /* todo test */
+function createFolder({ path }) {
+    const data = new FormData();
+    data.set('path', path);
+    const url = `/createFolder/`;
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers).catch(err => err);
+}
+
+
+function deleteSchedule({ id }) { /* todo fix form data */
+    const data = new FormData();
+    data.set('id', id);
     const url = `/deleteSchedule`;
-    return axios.post(url, {
-        id: payload.workflowId
-    }).catch(err => err);
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return axios.post(url, data, headers)
+        .catch(err => err);
 }
 
 function createSchedule(payload) {
     const url = `/createSchedule`;
-    return axios.post(url, {
-        data: JSON.stringify(payload),
-    }).catch(err => err);
+    const data = JSON.stringify(payload);
+    return axios.post(url, data).catch(err => err);
+}
+
+function editWorkflow(payload) {
+    const url = `/editWorkflow/`;
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    const data = jsonToFormData(payload)
+    return axios.post(url, data, headers)
+        .catch(err => err);
 }
 
 function createConnection() {
@@ -180,55 +182,65 @@ function createConnection() {
     return axios.post(url).catch(err => err);
 }
 
-function createDesktop({type}) {
+function createDesktop({ type }) {
     const url = `/createdesktop/?desktopType=${type}`;
     return axios.get(url)
         .catch(err => err);
 }
 
-function deleteDesktop({desktop_id, con_id}) {
-    debugger;
+function deleteDesktop({ desktop_id, con_id }) {
     const url = `/deletedesktop/?desktop_id=${desktop_id}&con_id=${con_id}`;
+    return axios.get(url)
+        .catch(err => err);
+}
+
+function pauseDesktop({ iid }) { // TODO change route name on back end
+    const url = `/stopdesktop/?iid=${iid}`;
+    return axios.get(url, )
+        .catch(err => err);
+}
+
+function resumeDesktop({ iid }) {
+    const url = `/startdesktop/?iid=${iid}`;
     return axios.get(url)
         .catch(err => err);
 }
 
 function* callWorkflowsAvailable() {
     const payload = yield call(getAvailableWorkflows);
-    if (payload.data && payload.data.length) {
-        yield put({ type: FETCHED_WORKFLOWS_AVAILABLE_SUCCESS, payload });
+    if (payload.data) {
+        yield put({ type: actions.FETCHED_WORKFLOWS_AVAILABLE_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_WORKFLOWS_AVAILABLE_FAILED, payload });
+        yield put({ type: actions.FETCHED_WORKFLOWS_AVAILABLE_FAILED, payload });
     }
 }
 
 function* callCreateConnection() {
     const payload = yield call(createConnection);
     if (payload.data) {
-        yield put({ type: CREATE_CONNECTION_SUCCESS, payload });
+        yield put({ type: actions.CREATE_CONNECTION_SUCCESS, payload });
         yield callConnections();
     } else {
-        debugger;
-        yield put({ type: CREATE_CONNECTION_FAILED, payload });
+        yield put({ type: actions.CREATE_CONNECTION_FAILED, payload });
     }
 }
 
 function* callDeleteConnection(action) {
     const payload = yield call(deleteConnection, action.payload);
     if (payload.data && payload.data.length) {
-        yield put({ type: DELETE_CONNECTION_SUCCESS, payload });
+        yield put({ type: actions.DELETE_CONNECTION_SUCCESS, payload });
         yield callConnections();
     } else {
-        yield put({ type: DELETE_CONNECTION_FAILED, payload });
+        yield put({ type: actions.DELETE_CONNECTION_FAILED, payload });
     }
 }
 
 function* callWorkflowTemplates() {
     const payload = yield call(getWorkflowTemplates);
     if (payload.data && payload.data.length) {
-        yield put({ type: FETCHED_WORKFLOW_TEMPLATES_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_WORKFLOW_TEMPLATES_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_WORKFLOW_TEMPLATES_FAILED, payload });
+        yield put({ type: actions.FETCHED_WORKFLOW_TEMPLATES_FAILED, payload });
     }
 }
 
@@ -236,75 +248,143 @@ function* callDownloadKeyPair() {
     let payload = yield call(getKeyPairURL);
     window.location = payload.data;
     if (payload.data && payload.data.length) {
-        yield put({ type: DOWNLOAD_KEY_PAIR_SUCCESS, payload });
+        yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
     } else {
-        debugger;
-        yield put({ type: DOWNLOAD_KEY_PAIR_FAILED, payload });
+        yield put({ type: actions.DOWNLOAD_KEY_PAIR_FAILED, payload });
     }
 }
 
 function* callSchedules() {
     const payload = yield call(getSchedules);
     if (payload.data) {
-        yield put({ type: FETCHED_SCHEDULES_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_SCHEDULES_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_SCHEDULES_FAILED, payload });
+        yield put({ type: actions.FETCHED_SCHEDULES_FAILED, payload });
     }
 }
 
 function* callConnections() {
     const payload = yield call(getConnections);
     if (payload.data) {
-        yield put({ type: FETCHED_CONNECTIONS_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_CONNECTIONS_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_CONNECTIONS_FAILED, payload });
+        yield put({ type: actions.FETCHED_CONNECTIONS_FAILED, payload });
     }
 }
 
 function* callJobs() {
     const payload = yield call(getJobs);
     if (payload.data) {
-        yield put({ type: FETCHED_JOBS_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_JOBS_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_JOBS_FAILED, payload });
+        yield put({ type: actions.FETCHED_JOBS_FAILED, payload });
     }
 }
 
 function* callDesktops() {
     const payload = yield call(getDesktops);
     if (payload.data) {
-        yield put({ type: FETCHED_DESKTOPS_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_DESKTOPS_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_DESKTOPS_FAILED, payload });
+        yield put({ type: actions.FETCHED_DESKTOPS_FAILED, payload });
+    }
+}
+
+function* callFolder(action) {
+    action.payload = action.payload ? action.payload : { path: '/' }; // TODO clean up
+    let payload = yield call(getFolder, action.payload);
+    if (payload.data) {
+        payload.path = action.payload.path
+        yield put({ type: actions.FETCHED_FOLDER_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.FETCHED_FOLDER_FAILED, payload });
+    }
+}
+
+
+function* callFile(action) {
+    let payload = yield call(getFile, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.FETCHED_FILE_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.FETCHED_FILE_FAILED, payload });
+    }
+}
+
+function* callSaveFile(action) {
+    let payload = yield call(saveFile, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.SAVE_FILE_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.SAVE_FILE_FAILED, payload });
+    }
+}
+
+function* callUploadFiles(action) {
+    let payload = yield call(uploadFiles, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.UPLOAD_FILES_SUCCESS, payload });
+        action.payload.path = action.payload.path.substring(0, action.payload.path.lastIndexOf('/')) || '/';
+        yield callFolder(action);
+    } else {
+        yield put({ type: actions.UPLOAD_FILES_FAILED, payload });
+    }
+}
+
+function* callDeleteFile(action) {
+    let payload = yield call(deleteFile, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.DELETE_FILE_SUCCESS, payload });
+        action.payload.path = action.payload.file.path.substring(0, action.payload.file.path.lastIndexOf('/')) || '/';
+        yield callFolder(action);
+    } else {
+        yield put({ type: actions.DELETE_FILE_FAILED, payload });
+    }
+}
+
+function* callTerminateJob(action) {
+    let payload = yield call(terminateJob, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.TERMINATE_JOB_SUCCESS, payload });
+        yield callJobs(action);
+        yield callJobStatus(action);
+    } else {
+        yield put({ type: actions.TERMINATE_JOB_FAILED, payload });
     }
 }
 
 function* callJobStatus() {
     const payload = yield call(getJobsStatus);
     if (payload.data) {
-        yield put({ type: FETCHED_JOBS_STATUS_SUCCESS, payload });
+        yield put({ type: actions.FETCHED_JOBS_STATUS_SUCCESS, payload });
     } else {
-        yield put({ type: FETCHED_JOBS_STATUS_FAILED, payload });
+        yield put({ type: actions.FETCHED_JOBS_STATUS_FAILED, payload });
     }
 }
 
+/*
+function initAxios() { // TODO delete when done w migration
+    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios.defaults.xsrfCookieName = "csrftoken";
+}*/
 function* callInitApp(action) {
+    //initAxios(); // todo delete
+    yield callWorkflowsAvailable(action);
     yield callJobs(action);
     yield callJobStatus(action);
     yield callSchedules(action);
+    yield callWorkflowTemplates(action);
     yield callConnections(action);
     yield callDesktops(action);
-    yield callWorkflowsAvailable(action);
-    yield callWorkflowTemplates(action);
 }
 
 function* callSubmitNewWorkflow(action) {
     const payload = yield call(postNewWorkflow, action.payload);
     if (payload.data) {
-        yield put({ type: SUBMIT_WORKFLOW_SUCCESS, payload });
+        yield put({ type: actions.CREATE_WORKFLOW_SUCCESS, payload });
         yield callWorkflowsAvailable(action);
     } else {
-        yield put({ type: SUBMIT_WORKFLOW_FAILED, payload });
+        yield put({ type: actions.CREATE_WORKFLOW_FAILED, payload });
     }
 }
 
@@ -312,115 +392,210 @@ function* callSubmitNewWorkflow(action) {
 function* callDeleteWorkflow(action) {
     const payload = yield call(deleteWorkflow, action.payload);
     if (payload.data) {
-        yield put({ type: DELETE_WORKFLOW_SUCCESS, payload });
+        yield put({ type: actions.DELETE_WORKFLOW_SUCCESS, payload });
         yield callWorkflowsAvailable(action);
     } else {
-        yield put({ type: DELETE_WORKFLOW_FAILED, payload });
+        yield put({ type: actions.DELETE_WORKFLOW_FAILED, payload });
     }
 }
 
 function* callCreateSchedule(action) {
     const payload = yield call(createSchedule, action.payload);
     if (payload.data) {
-        yield put({ type: CREATE_SCHEDULE_SUCCESS, payload });
+        yield put({ type: actions.CREATE_SCHEDULE_SUCCESS, payload });
         yield callSchedules(action);
     } else {
-        yield put({ type: CREATE_SCHEDULE_FAILED, payload });
+        yield put({ type: actions.CREATE_SCHEDULE_FAILED, payload });
+    }
+}
+
+function* callEditSchedule(action) { // todo, make a real edit
+    const payload = yield call(createSchedule, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.EDIT_SCHEDULE_SUCCESS, payload });
+        yield callSchedules(action);
+    } else {
+        yield put({ type: actions.EDIT_SCHEDULE_FAILED, payload });
+    }
+}
+
+function* callEditWorkflow(action) { // todo, make a real edit
+    const payload = yield call(editWorkflow, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.EDIT_SCHEDULE_SUCCESS, payload });
+        yield callSchedules(action);
+    } else {
+        yield put({ type: actions.EDIT_SCHEDULE_FAILED, payload });
     }
 }
 
 function* callCreateDesktop(action) {
     const payload = yield call(createDesktop, action.payload);
     if (payload.data) {
-        yield put({ type: CREATE_DESKTOP_SUCCESS, payload });
+        yield put({ type: actions.CREATE_DESKTOP_SUCCESS, payload });
         yield callDesktops(action);
     } else {
-        debugger;
-        yield put({ type: CREATE_DESKTOP_FAILED, payload });
+        yield put({ type: actions.CREATE_DESKTOP_FAILED, payload });
+    }
+}
+
+function* callCreateFolder(action) {
+    const payload = yield call(createFolder, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.CREATE_FOLDER_SUCCESS, payload });
+        action.payload.path = action.payload.path.substring(0, action.payload.path.lastIndexOf('/')) || '/';
+        yield callFolder(action);
+    } else {
+        yield put({ type: actions.CREATE_FOLDER_FAILED, payload });
     }
 }
 
 function* callDeleteDesktop(action) {
     const payload = yield call(deleteDesktop, action.payload);
     if (payload.data) {
-        yield put({ type: DELETE_DESKTOP_SUCCESS, payload });
+        yield put({ type: actions.DELETE_DESKTOP_SUCCESS, payload });
         yield callDesktops();
     } else {
-        debugger;
-        yield put({ type: DELETE_DESKTOP_FAILED, payload });
+        yield put({ type: actions.DELETE_DESKTOP_FAILED, payload });
+    }
+}
+
+function* callResumeDesktop(action) {
+    const payload = yield call(resumeDesktop, action.payload);
+    if (payload.data) { // TODO check data len?
+        yield put({ type: actions.RESUME_DESKTOP_SUCCESS, payload });
+        yield callDesktops();
+    } else {
+        yield put({ type: actions.RESUME_DESKTOP_FAILED, payload });
+    }
+}
+
+function* callPauseDesktop(action) {
+    const payload = yield call(pauseDesktop, action.payload);
+    if (payload.data) { // TODO check data len?
+        yield put({ type: actions.PAUSE_DESKTOP_SUCCESS, payload });
+        yield callDesktops();
+    } else {
+        yield put({ type: actions.PAUSE_DESKTOP_FAILED, payload });
     }
 }
 
 function* callDeleteSchedule(action) {
     const payload = yield call(deleteSchedule, action.payload);
     if (payload.data) {
-        yield put({ type: DELETE_SCHEDULE_SUCCESS, payload });
+        yield put({ type: actions.DELETE_SCHEDULE_SUCCESS, payload });
         yield callSchedules(action);
     } else {
-        yield put({ type: DELETE_SCHEDULE_FAILED, payload });
+        yield put({ type: actions.DELETE_SCHEDULE_FAILED, payload });
     }
 }
 
 function* callRunWorkflow(action) {
     const payload = yield call(runWorkflow, action.payload);
     if (payload.data) {
-        yield put({ type: RUN_WORKFLOW_SUCCESS, payload });
-        // todo put in refresh task
+        yield put({ type: actions.RUN_WORKFLOW_SUCCESS, payload });
+        yield callJobs(action);
+        yield callJobStatus(action);
     } else {
-        yield put({ type: RUN_WORKFLOW_FAILED, payload });
+        yield put({ type: actions.RUN_WORKFLOW_FAILED, payload });
     }
 }
 
 function* getInitSaga() {
-    yield* takeLatest(INIT_APP, callInitApp)
+    yield takeLatest(actions.INIT_APP, callInitApp)
 }
 
 function* getSubmitWorkflowSaga() {
-    yield* takeLatest(SUBMIT_NEW_WORKFLOW, callSubmitNewWorkflow)
+    yield takeLatest(actions.CREATE_WORKFLOW, callSubmitNewWorkflow)
 }
 
 function* getDeleteWorkflowSaga() {
-    yield* takeLatest(DELETE_WORKFLOW, callDeleteWorkflow)
+    yield takeLatest(actions.DELETE_WORKFLOW, callDeleteWorkflow)
 }
 
 function* getCreateConnectionSaga() {
-    yield* takeLatest(CREATE_CONNECTION, callCreateConnection)
+    yield takeLatest(actions.CREATE_CONNECTION, callCreateConnection)
 }
 
 function* getCreateDesktopSaga() {
-    yield* takeLatest(CREATE_DESKTOP, callCreateDesktop)
+    yield takeLatest(actions.CREATE_DESKTOP, callCreateDesktop)
 }
 
 function* getDeleteDesktopSaga() {
-    yield* takeLatest(DELETE_DESKTOP, callDeleteDesktop)
+    yield takeLatest(actions.DELETE_DESKTOP, callDeleteDesktop)
+}
+
+function* getPauseDesktopSaga() {
+    yield takeLatest(actions.PAUSE_DESKTOP, callPauseDesktop)
+}
+
+function* getResumeDesktopSaga() {
+    yield takeLatest(actions.RESUME_DESKTOP, callResumeDesktop)
+}
+
+function* getFolderSaga() {
+    yield takeLatest(actions.FETCH_FOLDER, callFolder)
+}
+
+function* getFileSaga() {
+    yield takeLatest(actions.FETCH_FILE, callFile)
+}
+
+function* saveFileSaga() {
+    yield takeLatest(actions.SAVE_FILE, callSaveFile)
+}
+
+function* uploadFilesSaga() {
+    yield takeLatest(actions.UPLOAD_FILES, callUploadFiles)
+}
+
+function* deleteFileSaga() {
+    yield takeLatest(actions.DELETE_FILE, callDeleteFile)
+}
+
+function* terminateJobSaga() {
+    yield takeLatest(actions.TERMINATE_JOB, callTerminateJob)
+}
+
+function* createFolderSaga() {
+    yield takeLatest(actions.CREATE_FOLDER, callCreateFolder)
 }
 
 function* getDeleteConnectionSaga() {
-    yield* takeLatest(DELETE_CONNECTION, callDeleteConnection)
+    yield takeLatest(actions.DELETE_CONNECTION, callDeleteConnection)
 }
 
 function* getCreateScheduleSaga() {
     // todo test    
-    yield* takeLatest(CREATE_SCHEDULE, callCreateSchedule)
+    yield takeLatest(actions.CREATE_SCHEDULE, callCreateSchedule)
+}
+
+function* getEditScheduleSaga() {
+    // todo test    
+    yield takeLatest(actions.EDIT_SCHEDULE, callEditSchedule)
+}
+
+function* getEditWorkflowSaga() {
+    yield takeLatest(actions.EDIT_WORKFLOW, callEditWorkflow)
 }
 
 function* getDeleteScheduleSaga() {
     // todo test
-    yield* takeLatest(DELETE_SCHEDULE, callDeleteSchedule)
+    yield takeLatest(actions.DELETE_SCHEDULE, callDeleteSchedule)
 }
 
 function* getRunWorkflowSaga() {
     // todo test
-    yield* takeLatest(RUN_WORKFLOW, callRunWorkflow)
+    yield takeLatest(actions.RUN_WORKFLOW, callRunWorkflow)
 }
 
 function* getDownloadKeyPairSaga() {
-    yield* takeLatest(DOWNLOAD_KEY_PAIR, callDownloadKeyPair)
+    yield takeLatest(actions.DOWNLOAD_KEY_PAIR, callDownloadKeyPair)
 }
 
 
 export default function* root() {
-    yield [
+    yield all([
         fork(getInitSaga),
         fork(getSubmitWorkflowSaga),
         fork(getDeleteWorkflowSaga),
@@ -432,5 +607,16 @@ export default function* root() {
         fork(getDeleteConnectionSaga),
         fork(getCreateDesktopSaga),
         fork(getDeleteDesktopSaga),
-    ]
+        fork(getEditScheduleSaga),
+        fork(getEditWorkflowSaga),
+        fork(getPauseDesktopSaga),
+        fork(getResumeDesktopSaga),
+        fork(getFolderSaga),
+        fork(getFileSaga),
+        fork(saveFileSaga),
+        fork(createFolderSaga),
+        fork(uploadFilesSaga),
+        fork(deleteFileSaga),
+        fork(terminateJobSaga),
+    ])
 }

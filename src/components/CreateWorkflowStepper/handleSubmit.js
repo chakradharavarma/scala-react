@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import store from '../../store';
-import { submitNewWorkflow } from '../../actions/workflowActions';
+import { createWorkflow } from '../../actions/workflowActions';
 
 export default function submit(values) {
   if (!values.name) {
@@ -9,7 +9,7 @@ export default function submit(values) {
       _error: 'submit failed!',
     });
   } else {
-    store.dispatch(submitNewWorkflow(values))
+    store.dispatch(createWorkflow(values))
   }
   return 'done';
 };

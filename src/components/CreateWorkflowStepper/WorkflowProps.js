@@ -77,7 +77,7 @@ class WorkflowProps extends Component {
           Workflow Properties
         </Typography>
         <Grid container style={{ margin: 20 }} justify='center'>
-          <Grid container item xs={6} spacing={32}>
+          <Grid container item xs={12} lg={6} spacing={32}>
             <Grid item xs={12}>
               <Field name="clusterType"
                 component={field({
@@ -96,7 +96,7 @@ class WorkflowProps extends Component {
               />
             </Grid>
             <Grid item xs={12} />
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="numberOfNodes"
                 component={field({
                   label: "Number of nodes",
@@ -106,7 +106,7 @@ class WorkflowProps extends Component {
                 })}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="cpusPerNode"
                 component={field({
                   label: "CPU's per node",
@@ -117,7 +117,7 @@ class WorkflowProps extends Component {
               />
             </Grid>
             <Grid item xs={12} />
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="diskSpace"
                 component={field({
                   label: "Disk Space",
@@ -134,7 +134,7 @@ class WorkflowProps extends Component {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="tasksPerNode"
                 component={field({
                   label: "Tasks per nodes",

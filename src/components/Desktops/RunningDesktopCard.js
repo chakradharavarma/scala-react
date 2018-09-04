@@ -11,7 +11,7 @@ import LaunchOutlinedIcon from '@material-ui/icons/LaunchOutlined';
 import PauseOutlinedIcon from '@material-ui/icons/PauseOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PlayCircleOutlinedIcon from '@material-ui/icons/PlayCircleOutlineOutlined';
-import { deleteDesktop } from '../../actions/desktopActions'
+import { deleteDesktop, pauseDesktop, resumeDesktop } from '../../actions/desktopActions'
 
 class RunningDesktopCard extends Component {
 
@@ -39,7 +39,7 @@ class RunningDesktopCard extends Component {
 
   render() {
 
-    const { desktop, desktops, handleClickDeleteDesktop } = this.props;
+    const { desktop, desktops, handleClickDeleteDesktop, handleClickPause, handleClickResume } = this.props;
 
     if (desktops.fetching) {
       return null;
@@ -47,7 +47,7 @@ class RunningDesktopCard extends Component {
 
     const instance = desktop.Instances.find(instance => instance.InstanceId !== undefined);
     const { LaunchTime, PrivateIpAddress, InstanceId } = instance;
-
+    
     const now = moment();
     const launch = moment(LaunchTime);
     const duration = moment.duration(now.diff(launch));
@@ -56,7 +56,6 @@ class RunningDesktopCard extends Component {
 
     const conn = openConns.find(conn => conn.hostname === PrivateIpAddress)
     if (!conn) { // todo add case for shutting down state, this currently catches and doesn't render
-      debugger;
       return null;
     }
     const { id, protocol } = conn;
@@ -71,7 +70,6 @@ class RunningDesktopCard extends Component {
     } else {
       connect = 'none';
     }
-
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
@@ -108,12 +106,12 @@ class RunningDesktopCard extends Component {
                     </MenuItem>
                     )
                   }
-                  <MenuItem>
-                    <PauseOutlinedIcon onClick={this.handleClose} className='menu-option-icon' />
+                  <MenuItem onClick={this._handleClose(handleClickPause(InstanceId))}>
+                   <PauseOutlinedIcon className='menu-option-icon' />
                     Pause
                   </MenuItem>
-                  <MenuItem>
-                    <PlayCircleOutlinedIcon onClick={this.handleClose} className='menu-option-icon' />
+                  <MenuItem onClick={this._handleClose(handleClickResume(InstanceId))}>
+                    <PlayCircleOutlinedIcon className='menu-option-icon' />
                     Resume
                   </MenuItem>
                   <MenuItem onClick={this._handleClose(handleClickDeleteDesktop(id, InstanceId))}>
@@ -149,7 +147,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickDeleteDesktop: (con_id, desktop_id) => () => dispatch(deleteDesktop(desktop_id, con_id))
+    handleClickDeleteDesktop: (con_id, desktop_id) => () => dispatch(deleteDesktop(desktop_id, con_id)),
+    handleClickPause: (id) => () => dispatch(pauseDesktop(id)),
+    handleClickResume: (id) => () => dispatch(resumeDesktop(id)),
   }
 }
 

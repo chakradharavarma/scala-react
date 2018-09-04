@@ -16,14 +16,14 @@ export default class Jobs extends Component {
         Create a New Workflow        
       </Button>
     )
-
+    // todo delete quick tips
     return (
       <div className={classnames('jobs-root')}> 
         <CreateWorkflowStepper
           trigger={createNewWorkflowTrigger}
         />
         <CurrentJobs />
-        { false && <QuickTips /> }
+          { false && <QuickTips /> } { /* todo} */ }
         <JobHistory />
       </div>
     );

@@ -2,8 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import DesktopCardSection from './DesktopCardSection';
-import Snackbar from '../Snackbar';
-import { clearMessages } from '../../actions/generalActions';
 
 const availableDesktops = [
   {
@@ -18,14 +16,8 @@ const availableDesktops = [
 
 class Desktops extends Component {
 
-  /*
-  componentWillUnmount() {
-    this.props.clearMessages();
-  }
-  */
-
   render() {
-    const { clearMessages, runningDesktops, notification } = this.props;
+    const { runningDesktops } = this.props;
     return (
       <Fragment>
         <Grid container spacing={8} className='desktop-root'>
@@ -36,21 +28,8 @@ class Desktops extends Component {
             <DesktopCardSection title='Running Desktops' desktops={runningDesktops && runningDesktops.Reservations} runningCard />
           </Grid>
         </Grid>
-        <Snackbar
-          variant={notification ? notification.type : 'default'}
-          message={notification ? notification.message : ''}
-          open={notification !== undefined}
-          handleClose={clearMessages}
-        />
-
       </Fragment>
     );
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    clearMessages: () => dispatch(clearMessages()),
   }
 }
 
@@ -61,4 +40,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Desktops);
+export default connect(mapStateToProps)(Desktops);

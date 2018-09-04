@@ -14,7 +14,7 @@ import submitForm from './handleSubmit';
 
 function TabContainer({ children, dir }) {
   return (
-    <Grid container direction='column' alignItems='center' >
+    <Grid container direction='column' alignItems='flex-start' className='create-schedule-tab-container' >
       {children}
     </Grid>
   );
@@ -30,6 +30,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
+    padding: 12,
   },
   tab: {
     maxWidth: 140,
@@ -71,6 +72,8 @@ class ViewsSwiper extends Component {
     const { classes, theme } = this.props;
     return (
       <div className={classes.root}>
+          {
+            false && (
         <Tabs
           value={this.state.value}
           onChange={this.handleChange}
@@ -78,20 +81,18 @@ class ViewsSwiper extends Component {
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab className={classes.tab} disableRipple label="Custom CRON" />
-          {
-            false && (
               <Fragment>
+                <Tab className={classes.tab} disableRipple label="Custom CRON" />
                 <Tab className={classes.tab} disableRipple label="Minutes" />
                 <Tab className={classes.tab} disableRipple label="Hourly" />
                 <Tab className={classes.tab} disableRipple label="Daily" />
                 <Tab className={classes.tab} disableRipple label="Weekly" />
               </Fragment>
-            )
-            // todo
-          }
         </Tabs>
-        <SwipeableViews
+            // todo
+          )
+        }
+          <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}

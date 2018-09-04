@@ -14,25 +14,26 @@ const months = [
 
 export default class MonthlyUsagePanel extends Component {
 
-  constructor(props) {
-    super(props);
-    const month = this.props.usage.group ? months[this.props.usage.group - 1] : 'No data'
-
-    this.state = {
-      month: month,
-    }
-  }
-
   render() {
+    const { usage } = this.props;
+    const month = this.props.usage.group ? months[this.props.usage.group - 1] : 'No data'
+    const count = {}
+    usage.data.forEach((job) => {
+      count[job.status] = count[job.status] + 1 || 1;
+    });
+
     return (
         <ExpansionPanel >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className='monthly-usage-summary'>
               <Typography variant='subheading' style={{ color: "#696969" }}>
-                {this.state.month} 2018
-          </Typography>
+                {month} 2018
+              </Typography>
               <Typography variant='subheading' style={{ color: "#CECECE" }} >
-                Completed: {this.props.usage.data.reduce((total, data) => data.status === 'COMPLETED' ? 1 + total : total, 0)}
+                Completed: { count['COMPLETED'] }
+              </Typography>
+              <Typography variant='subheading' style={{ color: "#CECECE" }} >
+                Terminated: { count['TERMINATED'] }
               </Typography>
             </div>
           </ExpansionPanelSummary>

@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Fade from '@material-ui/core/Fade';
 import Stepper from './Stepper';
 import { connect } from 'react-redux';
-import { reset, initialize } from 'redux-form';
+import { destroy, initialize } from 'redux-form';
 
 const styles = {
   appBar: {
@@ -16,8 +16,10 @@ const styles = {
   },
 };
 
+const EXIT_TIMEOUT = 500;
+
 function Transition(props) {
-  return <Fade {...props} timeout={{enter: 1000, exit: 500}} />;
+  return <Fade {...props} timeout={{enter: 1000, exit: EXIT_TIMEOUT}} />;
 }
 
 class CreateWorkflowStepper extends Component {
@@ -28,9 +30,9 @@ class CreateWorkflowStepper extends Component {
 
   handleClickOpen = () => {
     this.setState({ open: true });
-    const { workflow } = this.props;
+    const { workflow, dispatch } = this.props;
     if(workflow) {
-      this.props.dispatch(initialize('createWorkflow', {
+      dispatch(initialize('createWorkflow', {
         name: workflow.name,
         numberOfNodes: workflow.resources.nodes,
         cpusPerNode: workflow.resources.nodes,
@@ -42,16 +44,19 @@ class CreateWorkflowStepper extends Component {
   };
 
   handleClose = () => {
-    this.props.dispatch(reset('createWorkflow'));
-    this.setState({ open: false });
     this.props.handleCloseCallback()
+    this.setState({ open: false }, () => {
+      setTimeout(() => {
+        this.props.dispatch(destroy('createWorkflow'));
+      }, EXIT_TIMEOUT);
+    });
   };
 
   render() {
     return (
       <React.Fragment>
         {
-          // Necessary to add props to an element passed as a prop
+          // This is needed to add props to an element passed as a prop
           React.cloneElement(this.props.trigger, {onClick: this.handleClickOpen})
         }
         <Dialog

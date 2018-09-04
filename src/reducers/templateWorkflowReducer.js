@@ -20,7 +20,6 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: false, fetched: true, data: action.payload.data};
       break;
     case FETCHED_WORKFLOW_TEMPLATES_FAILED:
-      console.log(action.payload);
       state = { ...state, fetching: false, fetched: false, error: action.payload};
       break;
     default:

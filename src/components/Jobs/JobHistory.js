@@ -13,7 +13,6 @@ import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -29,13 +28,26 @@ function createData({name, status, updated, duration, desktop}) {
 }
 
 function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => b[orderBy] >= a[orderBy] : (a, b) => a[orderBy] <= b[orderBy];
+  return (a, b) => {
+    let _a = a[orderBy];
+    let _b = b[orderBy];
+  
+    if(_a === _b) {
+      return 0;
+    }
+    else if(typeof _a === 'string') {
+      return order === 'desc' ? _a.localeCompare(_b) : _b.localeCompare(_a) ;
+    }else {
+      return order === 'desc' ? (_a > _b ? 1 : -1) : (_b > _a ? 1 : -1 );
+    }
+  }
 }
+
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
-  { id: 'update_date', numeric: false, disablePadding: false, label: 'Started' },
+  { id: 'updated', numeric: false, disablePadding: false, label: 'Started' },
   { id: 'duration', numeric: false, disablePadding: false, label: 'Duration' },
   { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop' },
   { id: 'results', numeric: false, disablePadding: false, label: 'Results' },
@@ -66,7 +78,7 @@ class EnhancedTableHead extends React.Component {
   };
 
   render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+    const { order, orderBy } = this.props;
 
     return (
       <TableHead>
@@ -211,10 +223,10 @@ class EnhancedTable extends Component {
     super(props);
     const { jobs } = this.props;
     if(jobs.initialState) {
-      debugger;
+      // todo
     }
     if(!jobs.data){
-      debugger;
+      // todo
     }
     const data = []
     this.state = {

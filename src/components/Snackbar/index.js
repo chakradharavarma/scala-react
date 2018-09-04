@@ -3,46 +3,42 @@ import { connect } from 'react-redux';
 import Portal from '@material-ui/core/Portal';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from './SnackbarContent';
-import { clearMessages } from '../../actions/generalActions'
+import { closeSnackbar, processQueue } from '../../actions/snackbarActions'
 
 class MySnackbar extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: this.props.open,
-    }
-  }
-
   handleClose = (_, reason) => {
-    if(reason === 'timeout') {
-      debugger;
+    if (reason === 'clickaway') {
+      // ignore clickaway events
+      return;
     }
-    this.setState({ open: false});
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.open !== prevProps.open || this.props.message !== prevProps.message) {
-      this.setState({
-        open: this.props.open
-      })
-    }
+    this.props.closeSnackbar();
   }
 
   render() {
+    const { snackbar, autoHideDuration, handleExited } = this.props
+    const { notification, open, queue } = snackbar;
+    if(!notification) {
+      return null;
+    }
+    const { key, message, type } = notification
+
+    const duration = Math.min(autoHideDuration, queue.length ? 500 : autoHideDuration);    
     return (
       <Portal>
         <Snackbar
-          open={this.state.open}
+          open={open}
+          key={key}
           onClose={this.handleClose}
-          autoHideDuration={this.props.autoHideDuration}
+          autoHideDuration={duration}
+          onExited={handleExited}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          <SnackbarContent 
-            variant={this.props.variant || ''}
-            message={this.props.message}
-            onClose={this.handleClose}
-          />
+        <SnackbarContent 
+          variant={type}
+          message={message}
+          onClose={this.handleClose}
+        />
         </Snackbar>
       </Portal>
     )
@@ -54,10 +50,19 @@ MySnackbar.defaultProps = {
   handleClose: () => null,
 }
 
+const mapStateToProps = (state) => {
+  return (
+    {
+      snackbar: state.snackbar
+    }
+  )
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    clearMessages: () => dispatch(clearMessages()),
+    closeSnackbar: () => dispatch(closeSnackbar()),
+    handleExited: () => dispatch(processQueue())
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(MySnackbar);
+export default connect(mapStateToProps, mapDispatchToProps)(MySnackbar);

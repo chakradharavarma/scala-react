@@ -8,17 +8,16 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
-import Snackbar from '../Snackbar';
 
 import ConnectionCard from './ConnectionCard';
-import { clearMessages, downloadKeyPair } from '../../actions/generalActions';
+import { downloadKeyPair } from '../../actions/generalActions';
 import { createConnection, deleteConnection } from '../../actions/connectionActions';
 
 class Connections extends Component {
 
   render() {
-    const { clearMessages, connections, downloadKeyPair, handleClickDelete, handleClickCreateConnection } = this.props;
-    const { fetched, data, notification } = connections;
+    const { connections, downloadKeyPair, handleClickDelete, handleClickCreateConnection } = this.props;
+    const { fetched, data } = connections;
     return (
       <Fragment>
         <div>
@@ -57,12 +56,6 @@ class Connections extends Component {
             </Card>
           </Grid>
         </Grid>
-        <Snackbar
-          variant={notification ? notification.type : 'default'}
-          message={notification ? notification.message : ''}
-          open={notification !== undefined}
-          handleClose={clearMessages}
-        />
       </Fragment>
     );
   }
@@ -77,7 +70,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     downloadKeyPair: () => dispatch(downloadKeyPair()),
-    clearMessages: () => dispatch(clearMessages()),
     handleClickDelete: (id) => () => dispatch(deleteConnection(id)),
     handleClickCreateConnection: () => dispatch(createConnection())
   }

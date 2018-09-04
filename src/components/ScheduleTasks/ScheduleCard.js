@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 
+import EditCronModal from '../EditCronModal';
+
 class ScheduleCard extends Component {
 
   state = {
@@ -34,16 +36,18 @@ class ScheduleCard extends Component {
     const { onClickDelete, workflows, schedule } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
+    const workflow = workflows.find(workflow => workflow.id === schedule.workflowId);
+    if(!workflow) { // TODO move this somewhere nicer ... this means a workflow's been deleted and not its schedules
+      onClickDelete(schedule.id);
+      return null;
+    }
     return (
       <Grid item xs={12} lg={6}  >
         <Card style={{ minHeight: 200 }} >
           <CardContent>
             <div className='workflow-title-container'>
               <Typography color='secondary' gutterBottom variant="title">
-                {workflows.find(workflow => workflow.id === schedule.workflowId) ?
-                  workflows.find(workflow => workflow.id === schedule.workflowId).name
-                  : null
-                }
+                { workflow.name }
               </Typography>
               <div>
                 <IconButton
@@ -65,10 +69,14 @@ class ScheduleCard extends Component {
                     }
                   }}
                 >
-                  <MenuItem onClick={this.handleClose}>  { /* todo */ }
-                    <EditOutlined className='menu-option-icon' />
-                    Edit
-                  </MenuItem>
+                  <EditCronModal schedule={schedule}
+                    handleCloseCallback={this.handleClose}
+                    trigger={
+                    <MenuItem onClick={this.handleClose}>  { /* todo */ }
+                      <EditOutlined className='menu-option-icon' />
+                      Edit
+                    </MenuItem>
+                  } />
                   <MenuItem onClick={this._handleClose(onClickDelete(schedule.id))}>
                     <DeleteOutlined className='menu-option-icon' />
                     Delete
@@ -78,6 +86,9 @@ class ScheduleCard extends Component {
             </div>
             <Divider />
             <Grid className='card-metadata' container spacing={8} >
+              <Grid item xs={12} >
+                Schedule: {schedule.cron}
+              </Grid>
               <Grid item xs={12} >
                 Scheduler ID: {schedule.id}
               </Grid>

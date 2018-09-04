@@ -1,5 +1,4 @@
 import {
-  CLEAR_MESSAGES,
   DELETE_WORKFLOW,
   DELETE_WORKFLOW_FAILED,
   DELETE_WORKFLOW_SUCCESS,
@@ -8,19 +7,10 @@ import {
   INIT_APP,
 } from '../actions/types';
 
-import {
-  ERROR,
-  SUCCESS,
-  INFO,
-} from '../common/consts';
-
-import { createNotification } from '../common/helpers';
-
 const initialState = {
   fetching: false,
   fetched: false,
   data: [],
-  notification: undefined,
 }
 
 export default function (state={...initialState}, action) {
@@ -32,19 +22,16 @@ export default function (state={...initialState}, action) {
       state = { ...state, fetching: false, fetched: true, data: action.payload.data};
       break;
     case FETCHED_WORKFLOWS_AVAILABLE_FAILED:
-      state = { ...state, fetching: false, fetched: false, notification: createNotification(action.payload.message, ERROR)};
+      state = { ...state, fetching: false, fetched: false};
       break;
     case DELETE_WORKFLOW:
-      state = { ...state, fetching: false, fetched: false, notification: createNotification('Deleting workflow . . . ', INFO)};
+      state = { ...state, fetching: false, fetched: false};
       break;
     case DELETE_WORKFLOW_SUCCESS:
-      state = { ...state, fetching: false, fetched: false, notification: createNotification('Successfully deleted workflow', SUCCESS)};
+      state = { ...state, fetching: false, fetched: false};
       break;
     case DELETE_WORKFLOW_FAILED:
-      state = { ...state, fetching: false, fetched: false, notification: createNotification(action.payload.message, ERROR)};
-      break;
-    case CLEAR_MESSAGES:
-      state = { ...state, notification: undefined};
+      state = { ...state, fetching: false, fetched: false};
       break;
     default:
       break;

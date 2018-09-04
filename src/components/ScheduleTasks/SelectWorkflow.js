@@ -26,25 +26,27 @@ class SelectWorkflow extends Component {
 
     render() {
         const { availableWorkflows } = this.props
+        const items = availableWorkflows.map(workflow => (
+            <MenuItem key={workflow.name} value={workflow.id}>
+                {workflow.name}
+            </MenuItem>
+        ))
+
+
         return (
 
-            <Grid item style={{width: 'calc(50% - 24px', marginRight: '24px'}} className='create-schedule-field'>
+            <Grid item style={{width: 'calc(70% - 24px', marginRight: '24px'}} className='create-schedule-field'>
                 <Typography color='secondary' variant='subheading' className='create-schedule-field-title'>
                     Select a workflow
                 </Typography>
                 <Field name="workflowId"
                     component={field({
-                        select: true,
-                        margin: "normal",
-                        style: { width: '100%' }
+                    select: true,
+                    margin: "normal",
+                    style: { width: '100%' }
                     },
-                        availableWorkflows.map(workflow => (
-                            <MenuItem key={workflow.name} value={workflow.id}>
-                                {workflow.name}
-                            </MenuItem>
-                        ))
-                    )}
-                />
+                    items
+                )} />
             </Grid>
         );
     }

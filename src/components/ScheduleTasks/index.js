@@ -8,11 +8,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import { connect } from 'react-redux';
 import { deleteSchedule } from '../../actions/scheduleActions'
-import { clearMessages } from '../../actions/generalActions'
-import ViewSwiper from './ViewSwiper';
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleCard from './ScheduleCard';
-import Snackbar from '../Snackbar';
+import ViewSwiper from './ViewSwiper';
+import NewCronDrawer from './NewCronDrawer';
 
 const classes = {
   expansionPanelSummary: {
@@ -24,21 +23,27 @@ const classes = {
 class ScheduleTasks extends Component {
 
   render() {
-    const { clearMessages, onClickDelete, schedules, workflows } = this.props;
-    const { notification } = schedules;
+    const { onClickDelete, schedules, workflows } = this.props;
     return (
       <Fragment>
-        <ExpansionPanel style={{ padding: '8px 24px', width: '50%' }} >
-          <ExpansionPanelSummary classes={classes.expansionPanelSummary}>
-            <AddIcon style={{ marginRight: 18 }} color='secondary'/>
-            <Typography color='secondary' variant='headline'>
-              Create a New Schedule
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={{ display: 'unset' }} >
-            <ViewSwiper />
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+        <NewCronDrawer />
+        {
+          false && (
+            <ExpansionPanel style={{ padding: '8px 24px', width: '50%' }} >
+            <ExpansionPanelSummary classes={classes.expansionPanelSummary}>
+              <AddIcon style={{ marginRight: 18 }} color='secondary'/>
+              <Typography color='secondary' variant='headline'>
+                Create a New Schedule
+              </Typography>
+            </ExpansionPanelSummary>
+  
+            <ExpansionPanelDetails style={{ display: 'unset' }} >
+              <ViewSwiper />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>  
+          )
+        }
+
         <Card className='section'>
           <Typography color='secondary' variant='headline' className='section-title'>
             Schedules
@@ -57,12 +62,6 @@ class ScheduleTasks extends Component {
             }
           </Grid>
         </Card>
-        <Snackbar
-          variant={notification ? notification.type : 'default'}
-          message={notification ? notification.message : ''}
-          open={notification !== undefined}
-          handleClose={clearMessages}
-        />
       </Fragment>
     );
   }
@@ -84,7 +83,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    clearMessages: () => dispatch(clearMessages()),
     onClickDelete: (id) => () => dispatch(deleteSchedule(id)),
   }
 };

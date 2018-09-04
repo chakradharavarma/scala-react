@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
+import JobsDrawerCard from './JobsDrawerCard';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Grid from '@material-ui/core/Grid';
@@ -31,7 +29,7 @@ class JobsDrawer extends Component {
     const createNewWorkflowTrigger = (
       <Button color='secondary'>
         <AddIcon />
-        Create a New Workfloww
+        Create a New Workflow
       </Button>
     );
 
@@ -66,20 +64,7 @@ class JobsDrawer extends Component {
                     {
                       workflows
                         .sort((a,b) => a.name.localeCompare(b.name))
-                        .map((workflow, i) =>
-                        <Grid key={`workflow-${i}`} item xs={6}>
-                          <Card>
-                            <CardMedia src=''>
-                              <img src={workflow.logo} alt='workflow logo' />
-                            </CardMedia>
-                            <CardContent>
-                              <Typography gutterBottom variant="title">
-                                {workflow.name}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      )
+                        .map((workflow, i) => <JobsDrawerCard closeDrawer={this.toggleDrawer(false)} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
                     }
                   </Grid>
                 </div>

@@ -1,13 +1,14 @@
 import {
     DELETE_WORKFLOW,
-    SUBMIT_NEW_WORKFLOW,
+    CREATE_WORKFLOW,
     RUN_WORKFLOW,
+    EDIT_WORKFLOW
 } from './types';
 
 
-export const submitNewWorkflow = (payload) => {
+export const createWorkflow = (payload) => {
     return {
-        type: SUBMIT_NEW_WORKFLOW,
+        type: CREATE_WORKFLOW,
         payload
     }   
 }
@@ -27,5 +28,13 @@ export const runWorkflow = (id) => {
         payload: {
             id
         }
+    }
+}
+
+
+export const editWorkflow = (payload) => {
+    return {
+        type: EDIT_WORKFLOW,
+        payload
     }
 }

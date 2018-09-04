@@ -16,7 +16,7 @@ function getModalStyle() {
   return {
     top: `${top}%`,
     left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    transform: `translate(-${left}%, -${top}%)`,
     outline: 'none'
   };
 }
@@ -64,7 +64,7 @@ class DeleteConnectionModal extends Component {
           aria-labelledby="delete-session-modal"
           open={this.state.open}
           onClose={this.handleClose}
-          className='delete-session-modal'
+          className='modal'
         >
           <div style={getModalStyle()} className={classes.paper}>
             <div className='delete-session-warning-container'>
@@ -78,7 +78,7 @@ class DeleteConnectionModal extends Component {
               <CloseIcon />
             </IconButton>
               <WarningIcon />
-              <div className='delete-session-modal-title'>
+              <div className='modal-title'>
               <Typography style={{ lineHeight: '1.4em'}} color='inherit' variant="title">
                 Once you delete a session, you will lose all its data. Are you sure you want to continue?
             </Typography>
