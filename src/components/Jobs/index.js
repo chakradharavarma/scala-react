@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import CurrentJobs from './CurrentJobs';
 import QuickTips from './QuickTips';
-import JobHistory from './JobHistory';
+import JobsHistory from './JobsHistory';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
@@ -24,7 +24,7 @@ export default class Jobs extends Component {
         />
         <CurrentJobs />
           { false && <QuickTips /> } { /* todo} */ }
-        <JobHistory />
+        <JobsHistory />
       </div>
     );
   }

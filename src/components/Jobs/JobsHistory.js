@@ -17,9 +17,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from "@material-ui/core/Divider";
-import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import JobsCardHeader from './JobsCardHeader'
 
 let counter = 0;
 function createData({name, status, updated, duration, desktop}) {
@@ -72,7 +71,7 @@ const field = (props, children) => ({
   );
 
 
-class EnhancedTableHead extends React.Component {
+class JobsCardHead extends Component {
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
   };
@@ -114,7 +113,7 @@ class EnhancedTableHead extends React.Component {
   }
 }
 
-EnhancedTableHead.propTypes = {
+JobsCardHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -122,86 +121,6 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
-const toolbarStyles = theme => ({
-  root: {
-    paddingRight: theme.spacing.unit,
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-        color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-      }
-      : {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.secondary.dark,
-      },
-  spacer: {
-    flex: '1 1 100%',
-  },
-  actions: {
-    color: theme.palette.text.secondary,
-  },
-  title: {
-    flex: '0 0 auto',
-  },
-});
-
-let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
-
-  return (
-    <Toolbar
-      className={classnames(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      <div className={classes.title}>
-        {numSelected > 0 ? (
-          <Typography color="inherit" variant="subheading">
-            {numSelected} selected
-          </Typography>
-        ) : (
-            <Typography variant='headline' color='secondary'>
-              Job History
-          </Typography>
-          )}
-      </div>
-      <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Field name="filter"
-            component={field({
-              label: "Search",
-              margin: "normal",
-              style: { width: '100%' }
-            })}
-          />
-          )}
-      </div>
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-};
-
-;
-
-EnhancedTableToolbar = reduxForm({
-  form: 'filterJobsHistory',
-  destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true,
-})(withStyles(toolbarStyles)(EnhancedTableToolbar));
 
 const styles = theme => ({
   root: {
@@ -218,7 +137,7 @@ const styles = theme => ({
   },
 });
 
-class EnhancedTable extends Component {
+class JobsCard extends Component {
   constructor(props) {
     super(props);
     const { jobs } = this.props;
@@ -305,11 +224,11 @@ class EnhancedTable extends Component {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <JobsCardHeader numSelected={selected.length} />
         <Divider />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
+            <JobsCardHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -376,11 +295,11 @@ class EnhancedTable extends Component {
   }
 }
 
-EnhancedTable.propTypes = {
+JobsCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-EnhancedTable.defaultProps = {
+JobsCard.defaultProps = {
   jobs: {
     data: [],
   }
@@ -393,4 +312,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(EnhancedTable));
+export default connect(mapStateToProps)(withStyles(styles)(JobsCard));
