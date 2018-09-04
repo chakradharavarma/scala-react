@@ -55,7 +55,14 @@ const toolbarStyles = theme => ({
   },
 });
 
+const searchField = field({
+  label: "Search",
+  margin: "normal",
+  style: { width: '100%' }
+})
+
 const JobsCardHeader = props => {
+
   const { numSelected, classes } = props;
 
   return (
@@ -85,11 +92,7 @@ const JobsCardHeader = props => {
           </Tooltip>
         ) : (
           <Field name="filter"
-            component={field({
-              label: "Search",
-              margin: "normal",
-              style: { width: '100%' }
-            })}
+            component={searchField}
           />
           )}
       </div>
