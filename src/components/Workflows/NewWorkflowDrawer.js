@@ -31,7 +31,7 @@ class NewWorkflowDrawer extends Component {
   };
 
   render() {
-    const { classes, workflows } = this.props;
+    const { classes } = this.props;
 
     const createNewWorkflowTrigger = (
       <Button style={{ alignSelf: 'flex-start', marginLeft: 28 }} color='secondary'>
@@ -56,7 +56,7 @@ class NewWorkflowDrawer extends Component {
               trigger={createNewWorkflowTrigger}
               handleCloseCallback={this.toggleDrawer('top', false)}
             />
-            <TemplateWorkflows workflows={workflows} />
+            <TemplateWorkflows />
           </div>
         </Drawer>
       </div>

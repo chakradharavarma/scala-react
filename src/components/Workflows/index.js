@@ -25,7 +25,7 @@ class Workflows extends Component {
     return (
       <Fragment>
         <div className='workflows-root'>
-          <NewWorkflowDrawer workflows={templateWorkflows} />
+          <NewWorkflowDrawer />
           <Grid container spacing={16} >
             <Grid xs={12} item>
               <Card  className='workflow-card'>
@@ -48,7 +48,6 @@ const mapStateToProps = (state) => {
   return (
     {
       availableWorkflows: state.availableWorkflows,
-      templateWorkflows: state.templateWorkflows.data,
     }
   )
 };
