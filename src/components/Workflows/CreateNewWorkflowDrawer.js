@@ -1,22 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import TemplateWorkflows from './TemplateWorkflows';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
 
-const styles = {
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-};
-
-class NewWorkflowDrawer extends Component {
+class CreateNewWorkflowDrawer extends Component {
   state = {
     top: false,
     left: false,
@@ -31,7 +21,6 @@ class NewWorkflowDrawer extends Component {
   };
 
   render() {
-    const { classes } = this.props;
 
     const createNewWorkflowTrigger = (
       <Button style={{ alignSelf: 'flex-start', marginLeft: 28 }} color='secondary'>
@@ -64,8 +53,8 @@ class NewWorkflowDrawer extends Component {
   }
 }
 
-NewWorkflowDrawer.propTypes = {
+CreateNewWorkflowDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(NewWorkflowDrawer);
+export default CreateNewWorkflowDrawer;

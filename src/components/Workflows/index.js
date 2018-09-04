@@ -1,31 +1,18 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import AvailableWorkflows from './AvailableWorkflows';
-import TemplateWorkflows from './TemplateWorkflows';
-import AddIcon from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
-import NewWorkflowDrawer from './NewWorkflowDrawer';
+import CreateNewWorkflowDrawer from './CreateNewWorkflowDrawer';
 
 class Workflows extends Component {
 
   render() {
-    const { availableWorkflows, templateWorkflows } = this.props;
-
-    const createNewWorkflowTrigger = (
-      <Button color='secondary'>
-        <AddIcon />
-        Add a New Workflow
-      </Button>
-    )
-
     return (
       <Fragment>
         <div className='workflows-root'>
-          <NewWorkflowDrawer />
+          <CreateNewWorkflowDrawer />
           <Grid container spacing={16} >
             <Grid xs={12} item>
               <Card  className='workflow-card'>

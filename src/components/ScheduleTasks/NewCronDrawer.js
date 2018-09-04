@@ -30,8 +30,6 @@ class NewCronDrawer extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-
     return (
       <div>
         <Button color='secondary' onClick={this.toggleDrawer('top', true)}>

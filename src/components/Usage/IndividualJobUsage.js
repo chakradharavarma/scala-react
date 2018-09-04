@@ -8,8 +8,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 export default class IndividualJobUsage extends Component {
 
   render() {
-    const { data } = this.props;
-    debugger;
     return (
       <ExpansionPanel >
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>

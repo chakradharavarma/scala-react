@@ -9,13 +9,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import TextField from '@material-ui/core/TextField';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from "@material-ui/core/Divider";
 import { connect } from 'react-redux';
 import JobsCardHeader from './JobsCardHeader'
@@ -42,7 +37,6 @@ function getSorting(order, orderBy) {
   }
 }
 
-
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
@@ -52,24 +46,6 @@ const columnData = [
   { id: 'results', numeric: false, disablePadding: false, label: 'Results' },
   { id: 'options', numeric: true, disablePadding: false, label: '' },
 ];
-
-
-const field = (props, children) => ({
-  input,
-  label,
-  meta: { touched, error },
-  ...custom
-}) => (
-    <TextField
-      helperText={touched && error}
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
-
 
 class JobsCardHead extends Component {
   createSortHandler = property => event => {
@@ -215,7 +191,7 @@ class JobsCard extends Component {
     let data;
     if(filterForm) {
       data = this.props.jobs.data
-        .filter(job => job.name.includes((filterForm.values && filterForm.values.filter) || ''))
+        .filter(job => job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || ''))
         .map(job => createData(job));
     }else {
       data = this.props.jobs.data
