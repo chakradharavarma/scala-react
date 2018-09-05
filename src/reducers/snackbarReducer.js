@@ -5,6 +5,7 @@ import * as actions from '../actions/types';
 import {
   SUCCESS,
   INFO,
+  WARNING,
   ERROR,
 } from '../common/consts';
 
@@ -103,6 +104,14 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.CREATE_DESKTOP_FAILED:
+      notification = createNotification(action.payload.message, ERROR);
+      state = processQueue(state, notification);
+      break;
+    case actions.CREATE_DESKTOP_JOB_SUCCESS:
+      notification = createNotification('Successfully created a new desktop', SUCCESS);
+      state = processQueue(state, notification);
+      break;
+    case actions.CREATE_DESKTOP_JOB_FAILED:
       notification = createNotification(action.payload.message, ERROR);
       state = processQueue(state, notification);
       break;
@@ -218,6 +227,14 @@ export default function (state=initialState, action) {
       notification = createNotification(action.payload.message, ERROR);
       state = processQueue(state, notification);
       break;
+    case actions.DESKTOP_NOT_READY:
+      notification = createNotification('Desktop is still launching', WARNING);
+      state = processQueue(state, notification);
+      break;
+    case actions.LAUNCHED_DESKTOP:
+      notification = createNotification('Launched desktop in new tab', INFO);
+      state = processQueue(state, notification);
+      break
     default:
       break;
   }

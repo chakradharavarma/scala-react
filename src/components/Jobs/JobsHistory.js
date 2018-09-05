@@ -16,11 +16,16 @@ import Divider from "@material-ui/core/Divider";
 import JobsCardHeader from './JobsCardHeader'
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
+import IconButton from '@material-ui/core/IconButton';
+import DesktopIcon from '@material-ui/icons/DesktopWindows';
+import DesktopDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
+import { createDesktopJob } from '../../actions/desktopActions';
 
 let counter = 0;
-function createData({ name, status, updated, running_time, desktop }) {
+function createData(data) {
+  const { name, status, updated, running_time, desktop, id } = data;
   counter += 1;
-  return { id: counter, name, status, updated, duration: running_time, desktop, result: desktop };
+  return { id: counter, jobId: id, name, status, updated, duration: running_time, desktop, result: desktop };
 }
 
 function getSorting(order, orderBy) {
@@ -44,10 +49,9 @@ const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
   { id: 'updated', numeric: false, disablePadding: false, label: 'Started' },
-  { id: 'duration', numeric: false, disablePadding: false, label: 'Duration' },
+  { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration' },
   { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop' },
   { id: 'results', numeric: false, disablePadding: false, label: 'Results' },
-  { id: 'options', numeric: true, disablePadding: false, label: '' },
 ];
 
 class JobsCardHead extends Component {
@@ -126,7 +130,7 @@ class JobsCard extends Component {
     page: 0,
     rowsPerPage: 5,
   };
-  
+
   handleRequestSort = (event, property) => {
     const orderBy = property;
     let order = 'desc';
@@ -178,19 +182,16 @@ class JobsCard extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, filterForm, jobs } = this.props;
+    const { classes, filterForm, jobs, onClickDesktop } = this.props;
     const { fetching } = jobs;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     let data;
     if (filterForm) {
       data = jobs.data
         .filter(job => job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || ''))
-        .map(job => createData(job));
     } else {
       data = jobs.data
-        .map(job => createData(job));
     }
-    debugger;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     return (
       <Paper className={classes.root}>
@@ -239,10 +240,19 @@ class JobsCard extends Component {
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
                                 <TableCell>{n.updated}</TableCell>
-                                <TableCell>{n.duration}</TableCell>
-                                <TableCell>{n.desktop}</TableCell>
+                                <TableCell>{n.running_time}</TableCell>
+                                <TableCell>
+                                  {
+                                    <IconButton 
+                                    aria-label="Desktop"
+                                    onClick={onClickDesktop(n.uuid, 'vnc')}
+                                  >
+                                    <DesktopIcon />
+                                  </IconButton>
+
+                                  }
+                                </TableCell>
                                 <TableCell >{n.result}</TableCell>
-                                <TableCell >{n.options}</TableCell>
                               </TableRow>
                             );
                           })
@@ -295,4 +305,10 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(JobsCard));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onClickDesktop: (id, desktopType) => () => dispatch(createDesktopJob(id, desktopType)) 
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(JobsCard));

@@ -1,6 +1,7 @@
 import * as actions from '../actions/types';
 
 import axios from 'axios';
+import moment from 'moment';
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import { jsonToFormData } from '../common/helpers';
 
@@ -150,6 +151,16 @@ function createFolder({ path }) {
 }
 
 
+function checkDesktopJob({jobid}) {
+    const url = `/desktopsJobsAjax/?jobid=${jobid}`;
+    return axios.get(url).catch(err => err);
+}
+
+function createDesktopJob({jobid, desktopType}) {
+    const url = `/createjobdesktop/?desktopType=${desktopType}&jobid=${jobid}`;
+    return axios.get(url).catch(err => err);
+}
+
 function deleteSchedule({ id }) { /* todo fix form data */
     const data = new FormData();
     data.set('id', id);
@@ -295,6 +306,7 @@ function* callFolder(action) {
     let payload = yield call(getFolder, action.payload);
     if (payload.data) {
         payload.path = action.payload.path
+        window.location.hash = action.payload.path;
         yield put({ type: actions.FETCHED_FOLDER_SUCCESS, payload });
     } else {
         yield put({ type: actions.FETCHED_FOLDER_FAILED, payload });
@@ -362,13 +374,7 @@ function* callJobStatus() {
     }
 }
 
-/*
-function initAxios() { // TODO delete when done w migration
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    axios.defaults.xsrfCookieName = "csrftoken";
-}*/
 function* callInitApp(action) {
-    //initAxios(); // todo delete
     yield callWorkflowsAvailable(action);
     yield callJobs(action);
     yield callJobStatus(action);
@@ -431,7 +437,6 @@ function* callEditWorkflow(action) { // todo, make a real edit
 
 function* callCreateDesktop(action) {
     const payload = yield call(createDesktop, action.payload);
-    debugger;
     if (payload.data) {
         yield put({ type: actions.CREATE_DESKTOP_SUCCESS, payload });
         yield callDesktops(action);
@@ -448,6 +453,47 @@ function* callCreateFolder(action) {
         yield callFolder(action);
     } else {
         yield put({ type: actions.CREATE_FOLDER_FAILED, payload });
+    }
+}
+
+function* callCreateDesktopJob(action) {
+    let payload = yield call(checkDesktopJob, action.payload);
+    if (payload.data) {
+        const { conn } = payload.data;
+        if(!conn) {
+            yield put({ type: actions.CREATE_DESKTOP, payload });
+            payload = yield call(createDesktopJob, action.payload);
+            if (payload.data) {
+                yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
+                yield callDesktops(action);
+            } else {
+                yield put({ type: actions.CREATE_DESKTOP_JOB_FAILED, payload });
+            }
+        } else {
+            var { data } = payload;
+            var instance = data.desktop;
+            var state = instance.State.Name;
+    
+            var serverIp = data.serverIp;
+    
+            var connection_id = data.conn.identifier;
+            var base = btoa([connection_id, "c", "postgresql"].join("\x00"));
+    
+            var now = moment();
+            var launchDate = moment(instance.LaunchTime);
+            var duration = moment.duration(now.diff(launchDate));
+    
+            if (state === "running" && duration.asMinutes() > 10) {
+                let connect = "http://" + serverIp + ":8080/guacamole/#/client/" + base + "?token=" + data.token;
+                window.open(connect, '_blank')
+                yield put({ type: actions.LAUNCHED_DESKTOP, payload });
+            } else {
+                yield put({ type: actions.DESKTOP_NOT_READY, payload });
+            }
+        }
+
+    } else {
+        yield put({ type: actions.CREATE_DESKTOP_JOB_FAILED, payload });
     }
 }
 
@@ -562,6 +608,10 @@ function* createFolderSaga() {
     yield takeLatest(actions.CREATE_FOLDER, callCreateFolder)
 }
 
+function* createDesktopJobSaga() {
+    yield takeLatest(actions.CREATE_DESKTOP_JOB, callCreateDesktopJob)
+}
+
 function* getDeleteConnectionSaga() {
     yield takeLatest(actions.DELETE_CONNECTION, callDeleteConnection)
 }
@@ -619,5 +669,6 @@ export default function* root() {
         fork(uploadFilesSaga),
         fork(deleteFileSaga),
         fork(terminateJobSaga),
+        fork(createDesktopJobSaga),
     ])
 }

@@ -30,7 +30,6 @@ class NameModal extends Component {
 
     getModalContents = () => {
         const { type, onClose } = this.props;
-        debugger;
         switch(type){
             case 'dir':
                 return <NameFolder onClose={onClose} />
@@ -43,7 +42,6 @@ class NameModal extends Component {
 
     render() {
         const { open, onClose } = this.props;
-        debugger;
         return (
                 <Modal
                     disableAutoFocus

@@ -1,5 +1,6 @@
 import {
     CREATE_DESKTOP,
+    CREATE_DESKTOP_JOB,
     DELETE_DESKTOP,
     PAUSE_DESKTOP,
     RESUME_DESKTOP,
@@ -20,6 +21,16 @@ export const createDesktop = (type) => {
         type: CREATE_DESKTOP,
         payload: {
             type
+        }
+    }
+}
+
+export const createDesktopJob = (jobid, desktopType) => {
+    return {
+        type: CREATE_DESKTOP_JOB,
+        payload: {
+            desktopType,
+            jobid
         }
     }
 }

@@ -44,7 +44,6 @@ class ConfirmActionModal extends Component {
 
   handleConfirm = () => {
     this.props.handleConfirm();
-    debugger;
     this.handleClose();
   }
 

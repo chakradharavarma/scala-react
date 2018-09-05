@@ -22,8 +22,6 @@ export default class MonthlyUsagePanel extends Component {
       count[job.status] = count[job.status] + 1 || 1;
     });
 
-    debugger;
-
     return (
         <ExpansionPanel >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>

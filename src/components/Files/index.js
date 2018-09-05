@@ -60,12 +60,32 @@ function getSorting(order, orderBy) {
 class Files extends Component {
 
   componentDidMount() {
+    window.addEventListener("hashchange", this.onHashChange, false);
     const { fetchFolder, folder, modal } = this.props;
+    const hash = window.location.hash;
     if(!modal) {
-      fetchFolder('/')();
+      if(hash) {
+        fetchFolder(hash.replace('#', ''))()
+      } else {
+        fetchFolder('/')();
+      }
     }
-    else if (folder) {
+    else if (folder) { // only for modals
       fetchFolder(folder.path)();
+    } else {
+      // this is bad news? // todo
+    }
+  }
+
+  componentWillUnmount() { 
+    window.removeEventListener("hashchange", this.onHashChange, false);
+  }
+
+  onHashChange = () => {
+    const { fetchFolder, modal } = this.props;
+    const hash = window.location.hash;
+    if(!modal && hash) {
+      fetchFolder(hash.replace('#', ''))()
     }
   }
 
@@ -94,7 +114,6 @@ class Files extends Component {
   };
 
   toggleNameModal = () => {
-    debugger;
     this.setState(prevState => {
       return { nameModal: !prevState.nameModal }
     })
@@ -167,7 +186,6 @@ class Files extends Component {
     if(modal) {
       parts.splice(1,2)
     }
-
     return (
       <Fragment>
         <NameModal type='rename' open={renameModal} onClose={this.toggleRenameModal} />

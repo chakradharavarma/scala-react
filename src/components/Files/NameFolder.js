@@ -17,7 +17,6 @@ class NameFolder extends Component {
 
     handleSave = () => {
         const { createNewFolder, onClose, folder } = this.props;
-        debugger;
         const { value } = this.state;
         createNewFolder(`${folder.path}/${value}`);
         onClose();
