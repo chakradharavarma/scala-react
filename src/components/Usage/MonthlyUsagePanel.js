@@ -22,6 +22,8 @@ export default class MonthlyUsagePanel extends Component {
       count[job.status] = count[job.status] + 1 || 1;
     });
 
+    debugger;
+
     return (
         <ExpansionPanel >
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -30,10 +32,10 @@ export default class MonthlyUsagePanel extends Component {
                 {month} 2018
               </Typography>
               <Typography variant='subheading' style={{ color: "#CECECE" }} >
-                Completed: { count['COMPLETED'] }
+                Completed: { count['COMPLETED'] || 0 }
               </Typography>
               <Typography variant='subheading' style={{ color: "#CECECE" }} >
-                Terminated: { count['TERMINATED'] }
+                Terminated: { count['TERMINATED'] || 0 }
               </Typography>
             </div>
           </ExpansionPanelSummary>

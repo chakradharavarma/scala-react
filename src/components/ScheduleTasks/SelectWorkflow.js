@@ -24,7 +24,7 @@ class SelectWorkflow extends Component {
                     component={TextField({
                     select: true,
                     margin: "normal",
-                    style: { width: '100%' }
+                    style: { width: 300 }
                     },
                     items
                 )} />

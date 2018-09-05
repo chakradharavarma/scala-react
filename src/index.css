@@ -582,15 +582,16 @@ td.status-running {
 }
 
 .create-schedule-field {
-    margin: 0 20px;
     display: flex;
+    flex: 1;
+    margin: 0 20px;
     align-items: baseline;
 }
 
 .create-schedule-field-title {
     margin-right: 8px !important;
     letter-spacing: 1px;
-    width: stretch;
+    width: 292px !important;
     text-transform: uppercase;
 }
 
@@ -781,7 +782,8 @@ div:focus {
 
 .create-schedule-tab-container {
     padding-top: 5vh;
-    margin-left: 4vw;
+    margin: 0 8vw;
+    display: flex;
 }
 
 .edit-workflow-notification-container {

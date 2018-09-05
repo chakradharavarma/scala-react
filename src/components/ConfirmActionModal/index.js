@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton'
-import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 

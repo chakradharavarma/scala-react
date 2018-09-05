@@ -18,9 +18,9 @@ import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
 
 let counter = 0;
-function createData({ name, status, updated, duration, desktop }) {
+function createData({ name, status, updated, running_time, desktop }) {
   counter += 1;
-  return { id: counter, name, status, updated, duration, desktop, result: desktop };
+  return { id: counter, name, status, updated, duration: running_time, desktop, result: desktop };
 }
 
 function getSorting(order, orderBy) {
@@ -117,27 +117,16 @@ const styles = theme => ({
 });
 
 class JobsCard extends Component {
-  constructor(props) {
-    super(props);
-    const { jobs } = this.props;
-    if (jobs.initialState) {
-      // todo
-    }
-    if (!jobs.data) {
-      // todo
-    }
-    const data = []
-    this.state = {
-      filter: '',
-      order: 'asc',
-      orderBy: 'name',
-      selected: [],
-      data: data,
-      page: 0,
-      rowsPerPage: Math.min(data.length || 5),
-    };
-  }
 
+  state = {
+    filter: '',
+    order: 'asc',
+    orderBy: 'name',
+    selected: [],
+    page: 0,
+    rowsPerPage: 5,
+  };
+  
   handleRequestSort = (event, property) => {
     const orderBy = property;
     let order = 'desc';
@@ -201,6 +190,7 @@ class JobsCard extends Component {
       data = jobs.data
         .map(job => createData(job));
     }
+    debugger;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     return (
       <Paper className={classes.root}>

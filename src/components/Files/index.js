@@ -60,8 +60,11 @@ function getSorting(order, orderBy) {
 class Files extends Component {
 
   componentDidMount() {
-    const { fetchFolder, folder } = this.props;
-    if (folder) {
+    const { fetchFolder, folder, modal } = this.props;
+    if(!modal) {
+      fetchFolder('/')();
+    }
+    else if (folder) {
       fetchFolder(folder.path)();
     }
   }

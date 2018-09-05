@@ -78,7 +78,7 @@ class EditWorkflowModal extends Component {
         diskSpace: '20 GB', // TODO,
         emails: workflow.notifications ? workflow.notifications.emails : '',
         }))
-      dispatch(fetchFolder(`/workflows/${workflow.id}`))
+      dispatch(fetchFolder(`/workflow/${workflow.id}`))
     })
 
   }

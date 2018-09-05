@@ -41,9 +41,10 @@ const styles = theme => ({
   },
   button: {
     alignSelf: 'flex-end',
-    marginRight: 24,
+    marginRight: 96,
+    marginBottom: 8,
     width: 96,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   gridContainer: {
     justifyContent: 'center',

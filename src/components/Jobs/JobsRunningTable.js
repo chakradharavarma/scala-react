@@ -33,7 +33,7 @@ function JobsRunningTable(props) {
           <TableCell>Results available</TableCell>
           <TableCell>Created date</TableCell>
           <TableCell>Updated date</TableCell>
-          <TableCell>Job ID</TableCell>
+          <TableCell numeric>Job ID</TableCell>
           <TableCell>Terminate job</TableCell>
         </TableRow>
       </TableHead>

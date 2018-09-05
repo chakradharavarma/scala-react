@@ -40,7 +40,7 @@ export const emailField = TextField({
 
 export const cronField = TextField({
   margin: "normal",
-  style: { width: '100%' }
+  style: { width: 300 }
 })
  
 export const searchField = TextField({
