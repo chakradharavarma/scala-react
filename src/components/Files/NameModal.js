@@ -26,52 +26,37 @@ function getModalStyle() {
     };
   }
 
-class NameFileModal extends Component {
-
-    state = {
-        open: false,
-    }
-    
-    handleClose = () => {
-        this.setState({ open: false });
-    }
-
-    handleOpen = () => {
-        this.setState({ open: true });
-    }
+class NameModal extends Component {
 
     getModalContents = () => {
-        const { type } = this.props;
+        const { type, onClose } = this.props;
+        debugger;
         switch(type){
             case 'dir':
-                return <NameFolder onClose={this.handleClose} />
+                return <NameFolder onClose={onClose} />
             case 'rename':
-                return <Rename onClose={this.handleClose} />
+                return <Rename onClose={onClose} />
             default:
                 break;
         }
     }
 
     render() {
-        const { trigger } = this.props;
-        const { open } = this.state;
-
+        const { open, onClose } = this.props;
+        debugger;
         return (
-            <Fragment>
-                { React.cloneElement(trigger, { onClick: this.handleOpen }) }
                 <Modal
                     disableAutoFocus
-                    aria-labelledby="file-editor-modal"
+                    aria-labelledby="file-name-modal"
                     open={open}
-                    onClose={this.handleClose}
+                    onClose={onClose}
                 >
                     <Card  style={getModalStyle()}>
                         { this.getModalContents() } 
                     </Card>
                 </Modal>
-            </Fragment>
         );
     }
 }
 
-export default NameFileModal;
+export default NameModal;

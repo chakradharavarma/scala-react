@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Dropzone from 'react-dropzone'
+import TextField from '../TextField';
+import {
+  tasksPerNode,
+  numberOfNodes,
+  cpusPerNode,
+} from '../TextField/fields';
 
 const machines = [
   "Scala Test Small",
@@ -41,6 +46,34 @@ const disks = [
   "2 TB",
 ]
 
+const diskSpace = TextField({
+  label: "Disk Space",
+  select: true,
+  type: "number",
+  margin: "normal",
+  style: { width: '100%' }
+},
+  disks.map(disk => (
+    <MenuItem key={disk} value={disk}>
+      {disk}
+    </MenuItem>
+  ))
+)
+
+const clusterType = TextField({
+  label: "Cluster Type",
+  select: true,
+  type: "number",
+  margin: "normal",
+  style: { width: '100%' }
+},
+  machines.map(machine => (
+    <MenuItem key={machine} value={machine}>
+      {machine}
+    </MenuItem>
+  ))
+)
+
 class WorkflowProps extends Component {
 
   onFileLoad = (e, file) => alert(e.target.result, file.name);
@@ -51,89 +84,46 @@ class WorkflowProps extends Component {
 
   render() {
     return (
-      <div className='edit-workflow-properties'>
-        <Grid container justify='center'>
-          <Grid container item spacing={32}>
+      <div className='step-content-container'>
+        <Grid container style={{ margin: 20 }} justify='center'>
+          <Grid container item xs={12} spacing={32}>
             <Grid item xs={12}>
               <Field name="clusterType"
-                component={TextField({
-                  label: "Cluster Type",
-                  select: true,
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                },
-                  machines.map(machine => (
-                    <MenuItem key={machine} value={machine}>
-                      {machine}
-                    </MenuItem>
-                  ))
-                )}
+                component={clusterType}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="numberOfNodes"
-                component={TextField({
-                  label: "Number of nodes",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+                component={numberOfNodes}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="cpusPerNode"
-                component={TextField({
-                  label: "CPU's per node",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+                component={cpusPerNode}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="diskSpace"
-                component={TextField({
-                  label: "Disk Space",
-                  select: true,
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                },
-                  disks.map(disk => (
-                    <MenuItem key={disk} value={disk}>
-                      {disk}
-                    </MenuItem>
-                  ))
-                )}
+                component={diskSpace}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6} >
               <Field name="tasksPerNode"
-                component={TextField({
-                  label: "Tasks per nodes",
-                  type: "number",
-                  margin: "normal",
-                  style: { width: '100%' }
-                })}
+                component={tasksPerNode}
               />
             </Grid>
-            {
-              false && (
-                <Grid item xs={12}>
-                  <Dropzone style={{ width: '100%' }}>
-                    <Button
-                      disableRipple
-                      style={{ width: '100%', minHeight: 62 }}
-                      variant="contained"
-                      color="secondary"
-                    >
-                      Add Files
-                    </Button>
-                  </Dropzone>
-                </Grid>
-              )
-            }
+            <Grid item xs={12}>
+              <Dropzone style={{ width: '100%' }}>
+                <Button
+                  disableRipple
+                  style={{ width: '100%', minHeight: 62 }}
+                  variant="contained"
+                  color="secondary"
+                >
+                  Add Files
+                </Button>
+              </Dropzone>
+            </Grid>
           </Grid>
         </Grid>
       </div>

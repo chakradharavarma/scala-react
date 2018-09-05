@@ -43,23 +43,19 @@ class ConfirmActionModal extends Component {
     this.setState({ open: false });
   };
 
-  handleClickDelete = () => {
-    this.props.handleClickDelete();
+  handleConfirm = () => {
+    this.props.handleConfirm();
+    debugger;
     this.handleClose();
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, message, } = this.props;
     return (
       <Fragment>
-        <IconButton
-          aria-label="Delete"
-          aria-haspopup="true"
-          onClick={this.handleOpen}
-        >
-          <DeleteIcon />
-        </IconButton>
-
+        {
+          React.cloneElement(this.props.children, { onClick: this.handleOpen })
+        }
         <Modal
           aria-labelledby="delete-session-modal"
           open={this.state.open}
@@ -80,12 +76,12 @@ class ConfirmActionModal extends Component {
               <WarningIcon />
               <div className='modal-title'>
               <Typography style={{ lineHeight: '1.4em'}} color='inherit' variant="title">
-                Once you delete a session, you will lose all its data. Are you sure you want to continue?
+                { message }
             </Typography>
             </div>
             </div>
             <div className='delete-session-button-group'>
-              <Button variant="outlined" size="medium" onClick={this.handleClickDelete}>Confirm</Button>
+              <Button variant="outlined" size="medium" onClick={this.handleConfirm}>Confirm</Button>
               <Button variant="outlined" size="medium" onClick={this.handleClose}>Cancel</Button>
             </div>
           </div>

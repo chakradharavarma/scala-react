@@ -431,6 +431,7 @@ function* callEditWorkflow(action) { // todo, make a real edit
 
 function* callCreateDesktop(action) {
     const payload = yield call(createDesktop, action.payload);
+    debugger;
     if (payload.data) {
         yield put({ type: actions.CREATE_DESKTOP_SUCCESS, payload });
         yield callDesktops(action);

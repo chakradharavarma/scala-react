@@ -13,7 +13,6 @@ import ScheduleCard from './ScheduleCard';
 import ViewSwiper from './ViewSwiper';
 import NewCronDrawer from './NewCronDrawer';
 import ScalaLoader from '../ScalaLoader';
-import Fade from '@material-ui/core/Fade';
 
 const classes = {
   expansionPanelSummary: {
@@ -67,29 +66,25 @@ class ScheduleTasks extends Component {
             fetching ? (
               <ScalaLoader centered active />
             ) :
-              <Fade in animation={600}>
-                {
-                  fetched &&
-                  data.length ?
-                  (
-                    <Grid className='schedule-container sibling-fade' container spacing={16} >
-                      {
-                        data.map((schedule, i) =>
-                          <ScheduleCard
-                            schedule={schedule}
-                            key={`schedule-card-${i}`}
-                          />
-                        )
-                      }
-                    </Grid>
-                  ) :
-                  (
-                    <div className='centered'>
-                      <NewCronDrawer trigger={drawerTriggerEmpty} />
-                    </div>
-                  )
-              }
-              </Fade>
+              fetched &&
+                data.length ?
+                (
+                  <Grid className='schedule-container sibling-fade' container spacing={16} >
+                    {
+                      data.map((schedule, i) =>
+                        <ScheduleCard
+                          schedule={schedule}
+                          key={`schedule-card-${i}`}
+                        />
+                      )
+                    }
+                  </Grid>
+                ) :
+                (
+                  <div className='centered'>
+                    <NewCronDrawer trigger={drawerTriggerEmpty} />
+                  </div>
+                )
           }
         </Card>
       </Fragment>

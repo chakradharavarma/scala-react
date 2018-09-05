@@ -11,6 +11,7 @@ import LaunchOutlinedIcon from '@material-ui/icons/LaunchOutlined';
 import PauseOutlinedIcon from '@material-ui/icons/PauseOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import PlayCircleOutlinedIcon from '@material-ui/icons/PlayCircleOutlineOutlined';
+import ConfirmActionModal from '../ConfirmActionModal';
 import { deleteDesktop, pauseDesktop, resumeDesktop } from '../../actions/desktopActions'
 
 class RunningDesktopCard extends Component {
@@ -41,9 +42,10 @@ class RunningDesktopCard extends Component {
 
     const { desktop, desktops, handleClickDeleteDesktop, handleClickPause, handleClickResume } = this.props;
 
+    /* TODO delete
     if (desktops.fetching) {
       return null;
-    }
+    }*/ 
 
     const instance = desktop.Instances.find(instance => instance.InstanceId !== undefined);
     const { LaunchTime, PrivateIpAddress, InstanceId } = instance;
@@ -73,7 +75,7 @@ class RunningDesktopCard extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <Card className='desktop-card' >
           <Grid container>
             <Grid item xs={12} className='menu-options-container'>
@@ -114,10 +116,15 @@ class RunningDesktopCard extends Component {
                     <PlayCircleOutlinedIcon className='menu-option-icon' />
                     Resume
                   </MenuItem>
-                  <MenuItem onClick={this._handleClose(handleClickDeleteDesktop(id, InstanceId))}>
+                  <ConfirmActionModal
+                    message='Are you sure you want to delete this desktop?'
+                    handleConfirm={this._handleClose(handleClickDeleteDesktop(id, InstanceId))}
+                  >
+                    <MenuItem>
                     <DeleteOutlinedIcon className='menu-option-icon' />
-                    Delete
-                  </MenuItem>
+                      Delete
+                    </MenuItem>
+                  </ConfirmActionModal>
                 </Menu>
               </div>
 

@@ -37,6 +37,11 @@ export const emailField = TextField({
   margin: "normal",
   style: { width: '100%' }
 })
+
+export const cronField = TextField({
+  margin: "normal",
+  style: { width: '100%' }
+})
  
 export const searchField = TextField({
   label: 'Search'
@@ -50,7 +55,6 @@ export const codeField = (props) => ({
 }) => (
         <CodeMirror
             mode={'shell'}
-            value={''}
             autoFocus
             options={{ lineNumbers: true }}
             helperText={touched && error}

@@ -11,7 +11,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton'
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
-
+import ConfirmActionModal from '../ConfirmActionModal';
 import EditCronModal from '../EditCronModal';
 import { deleteSchedule } from '../../actions/scheduleActions'
 
@@ -43,7 +43,7 @@ class ScheduleCard extends Component {
     }
     const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
     if(!workflow) { // TODO move this somewhere nicer ... this means a workflow's been deleted and not its schedules
-      deleteSchedule(schedule.id);
+      deleteSchedule(schedule.id)();
       return null;
     }
     return (
@@ -82,10 +82,15 @@ class ScheduleCard extends Component {
                       Edit
                     </MenuItem>
                   } />
-                  <MenuItem onClick={this._handleClose(deleteSchedule(schedule.id))}>
-                    <DeleteOutlined className='menu-option-icon' />
+                  <ConfirmActionModal
+                    message='Are you sure you want to delete this schedule?'
+                    handleConfirm={this._handleClose(deleteSchedule(schedule.id))}
+                  >
+                  <MenuItem>
+                  <DeleteOutlined className='menu-option-icon' />
                     Delete
                   </MenuItem>
+                  </ConfirmActionModal>
                 </Menu>
               </div>
             </div>
@@ -118,7 +123,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteSchedule: (id) => dispatch(deleteSchedule(id)),
+    deleteSchedule: (id) => () => dispatch(deleteSchedule(id)),
   }
 };
 

@@ -194,7 +194,6 @@ class JobsCard extends Component {
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     let data;
     if (filterForm) {
-      debugger;
       data = jobs.data
         .filter(job => job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || ''))
         .map(job => createData(job));
@@ -214,7 +213,7 @@ class JobsCard extends Component {
                 <ScalaLoader centered active={fetching} />
               ) :
               (
-                <Fade in={!fetching} timeout={600} >
+                <Fade in={!fetching} timeout={400} >
 
                   <Table className={classes.table} aria-labelledby="tableTitle">
                     <JobsCardHead

@@ -13,9 +13,6 @@ const ScalaLoader = (props) => {
                         <Loader type="ball-grid-pulse" active={props.active} />
                     </div>
                 ) : <Loader type="ball-grid-pulse" active={props.active} />
-
-
-
             }
         </Fade>
     )

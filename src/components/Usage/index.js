@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import MonthlyUsagePanel from './MonthlyUsagePanel';
@@ -31,7 +31,7 @@ class Usage extends Component {
 
     return (
       <Grid container spacing={16}>
-        <Grid item xs={12} >
+        <Grid item xs={12}>
           <Card>
 
             <div className='usage-summary'>
@@ -44,7 +44,7 @@ class Usage extends Component {
               fetching ? (
                 <ScalaLoader centered active />
               ) :
-              <Fade in animation={600}>
+              <Fade in animation={400}>
                 <div className='summary-container'>
                     {
                       results.map((result, i) => 

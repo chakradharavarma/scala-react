@@ -44,14 +44,14 @@ function getSorting(order, orderBy) {
   return (a, b) => {
     let _a = a[orderBy];
     let _b = b[orderBy];
-  
-    if(_a === _b) {
+
+    if (_a === _b) {
       return 0;
     }
-    else if(typeof _a === 'string') {
-      return order === 'desc' ? _a.localeCompare(_b) : _b.localeCompare(_a) ;
-    }else {
-      return order === 'desc' ? (_a > _b ? 1 : -1) : (_b > _a ? 1 : -1 );
+    else if (typeof _a === 'string') {
+      return order === 'desc' ? _a.localeCompare(_b) : _b.localeCompare(_a);
+    } else {
+      return order === 'desc' ? (_a > _b ? 1 : -1) : (_b > _a ? 1 : -1);
     }
   }
 }
@@ -71,6 +71,8 @@ class Files extends Component {
     orderBy: 'name',
     selected: [],
     page: 0,
+    nameModal: false,
+    renameModal: false,
   }
   createSortHandler = property => event => {
     this.onRequestSort(event, property);
@@ -88,6 +90,18 @@ class Files extends Component {
     this.setState({ order, orderBy });
   };
 
+  toggleNameModal = () => {
+    debugger;
+    this.setState(prevState => {
+      return { nameModal: !prevState.nameModal }
+    })
+  }
+
+  toggleRenameModal = () => {
+    this.setState(prevState => {
+      return { renameModal: !prevState.renameModal }
+    })
+  }
 
   downloadFile = ({ event, ref, data, dataFromProvider }) => {
     let form = document.getElementById('download-file-form');
@@ -109,19 +123,12 @@ class Files extends Component {
 
   render() {
     const { fetchFile, fetchFolder, folder, deleteFile, modal, filter } = this.props;
-    const { orderBy, order } = this.state;
-    let { data, path, fetching, fetched } = folder;
+    const { orderBy, order, nameModal, renameModal } = this.state;
+    let { data, path, fetching } = folder;
     data = data || [];
     if (!folder) {
       return null;
     }
-
-    const newDirTrigger = (
-      <Button color='secondary' >
-        <AddIcon className='button-icon' />
-        New Directory
-      </Button>
-    );
 
     const uploadFileTrigger = (
       <Button color='secondary'>
@@ -130,16 +137,14 @@ class Files extends Component {
       </Button>
     )
 
-    const renameTrigger = (
-      <Item disabled >
-        <Typography>
-          Rename
-        </Typography>
-      </Item>
-    )
     const MyAwesomeMenu = (props) => (
+      <Fragment>
       <ContextMenu animation='fade' id={props.id} >
-        <NameModal type='rename' trigger={renameTrigger} />
+        <Item onClick={this.toggleRenameModal}>
+          <Typography>
+            Rename
+          </Typography>
+        </Item>
 
         <Item onClick={this.downloadFile}>
           <Typography>
@@ -152,16 +157,26 @@ class Files extends Component {
             </Typography>
         </Item>
       </ContextMenu>
+      </Fragment>
     );
 
+    let parts = path.split('/')
+    if(modal) {
+      parts.splice(1,2)
+    }
 
     return (
       <Fragment>
+        <NameModal type='rename' open={renameModal} onClose={this.toggleRenameModal} />
+        <NameModal type='dir' open={nameModal} onClose={this.toggleNameModal} />
         <Card className='file-explorer' elevation={modal ? 0 : 4}>
           <div className={classnames({ 'card-file-header': !modal })} >
             <div className='card-file-header-interactions'>
               <span className='card-file-header-actions'>
-                <NameModal type='dir' trigger={newDirTrigger} />
+                <Button color='secondary' onClick={this.toggleNameModal} >
+                  <AddIcon className='button-icon' />
+                  New Directory
+                </Button>
                 <UploadFileModal trigger={uploadFileTrigger} />
               </span>
               <span className='card-file-header-search-container'>
@@ -170,12 +185,12 @@ class Files extends Component {
             </div>
             <div className='card-file-header-title'>
               {
-                path.split('/')
+                parts
                   .map((part, i) => (
                     <span key={`file-path-${i}`}
                       className='card-file-header-path'
-                      onClick={fetchFolder(folder.path.split('/').slice(0, i + 1).join('/') || '/')} >
-                      {i !== 1 ? '/' : ''} {part}
+                      onClick={fetchFolder(path.split('/').slice(0, i + (modal ? 3 : 1)).join('/') || '/')} >
+                      {(i !== 1 ) ? '/' : ''} {part}
                     </span>
                   ))
               }
@@ -186,74 +201,74 @@ class Files extends Component {
             fetching ? (
               <ScalaLoader centered active />
             ) : (
-              <Fade in timeout={600}>
- <Table>
-            <TableHead>
-              <TableRow>
-                {columnData.map(column => {
-                  return (
-                    <TableCell
-                      key={column.id}
-                      numeric={column.numeric}
-                      padding={column.disablePadding ? 'none' : 'default'}
-                      sortDirection={orderBy === column.id ? order : false}
-                    >
-                      <Tooltip
-                        title="Sort"
-                        placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                        enterDelay={300}
-                      >
-                        <TableSortLabel
-                          active={orderBy === column.id}
-                          direction={order}
-                          onClick={this.createSortHandler(column.id)}
-                        >
-                          {column.label}
-                        </TableSortLabel>
-                      </Tooltip>
-                    </TableCell>
-                  );
-                }, this)}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data
-                .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
-                .sort(getSorting(order, orderBy))
-                .map((row, i) => (
-                  <Fragment key={`file-row-${i}`}>
-                    <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
-                      <TableCell>
-                        <Typography
-                          color={row.isdir ? 'secondary' : 'default'}
-                          className='file-explorer-item'
-                          onClick={row.isdir ?
-                            fetchFolder(urljoin(folder.path, row.name)) :
-                            fetchFile(urljoin(folder.path, row.name))
-                          }
-                        >
-                          {row.name}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        {row.isdir ? 'Directory' : 'File'}
-                      </TableCell>
-                      <TableCell>
-                        {formatModifiedDate(row.modified)}
-                      </TableCell>
-                      <TableCell numeric>
-                        {row.size} bytes
+                <Fade in timeout={400}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        {columnData.map(column => {
+                          return (
+                            <TableCell
+                              key={column.id}
+                              numeric={column.numeric}
+                              padding={column.disablePadding ? 'none' : 'default'}
+                              sortDirection={orderBy === column.id ? order : false}
+                            >
+                              <Tooltip
+                                title="Sort"
+                                placement={column.numeric ? 'bottom-end' : 'bottom-start'}
+                                enterDelay={300}
+                              >
+                                <TableSortLabel
+                                  active={orderBy === column.id}
+                                  direction={order}
+                                  onClick={this.createSortHandler(column.id)}
+                                >
+                                  {column.label}
+                                </TableSortLabel>
+                              </Tooltip>
+                            </TableCell>
+                          );
+                        }, this)}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data
+                        .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
+                        .sort(getSorting(order, orderBy))
+                        .map((row, i) => (
+                          <Fragment key={`file-row-${i}`}>
+                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
+                              <TableCell>
+                                <Typography
+                                  color={row.isdir ? 'secondary' : 'default'}
+                                  className='file-explorer-item'
+                                  onClick={row.isdir ?
+                                    fetchFolder(urljoin(folder.path, row.name)) :
+                                    fetchFile(urljoin(folder.path, row.name))
+                                  }
+                                >
+                                  {row.name}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>
+                                {row.isdir ? 'Directory' : 'File'}
+                              </TableCell>
+                              <TableCell>
+                                {formatModifiedDate(row.modified)}
+                              </TableCell>
+                              <TableCell numeric>
+                                {row.size} bytes
                         </TableCell>
-                    </ContextMenuProvider>
-                    <MyAwesomeMenu id={`row-${i}`} />
-                  </Fragment>
-                )
-                )}
-            </TableBody>
-          </Table>
+                            </ContextMenuProvider>
+                            <MyAwesomeMenu id={`row-${i}`} />
+                          </Fragment>
+                        )
+                        )}
+                    </TableBody>
+                  </Table>
 
-              </Fade>
-            )
+                </Fade>
+              )
 
           }
         </Card>

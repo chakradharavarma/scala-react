@@ -430,6 +430,7 @@ td.status-running {
     padding: 24px;
     min-height: 357px;
     margin: 20px 0;
+    overflow: hidden;
 }
 
 .section-title {
@@ -438,6 +439,8 @@ td.status-running {
 
 .desktop-cards-root {
     margin-top: 24px !important;
+    max-height: 76vh;
+    overflow-y: scroll;
 }
 
 .desktop-card {
@@ -667,6 +670,7 @@ td.status-running {
     height: fit-content;
     font-size: 24px;
     font-weight:bold;
+    flex: 1;
 }
 
 .connection-string {
@@ -791,3 +795,4 @@ div:focus {
 .loader-inner > div {
     background-color: #5e8dbf;
 }
+

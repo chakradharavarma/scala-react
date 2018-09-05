@@ -21,7 +21,6 @@ class CurrentJobs extends Component {
   render() {
     const { jobs } = this.props;
     const { data, fetching, fetched } = jobs;
-    debugger;
     const runningJobs = data.filter(job => VALID_STATUSES.includes(job.status));
     return (
       <Card classes={classes.paper} >
@@ -36,7 +35,7 @@ class CurrentJobs extends Component {
               (
                 runningJobs.length ? 
                   <JobsRunningTable jobs={runningJobs} /> :
-                  <Fade in={!fetching} timeout={600} >
+                  <Fade in={!fetching} timeout={400} >
                     <div className='centered'>
                       <JobsDrawer title='Click to run a workflow' />
                     </div>

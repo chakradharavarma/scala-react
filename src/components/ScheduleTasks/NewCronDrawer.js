@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import ViewSwiper from './ViewSwiper';
 
 const styles = {
@@ -41,7 +39,7 @@ class NewCronDrawer extends React.Component {
           anchor="top"
           open={this.state.top}
           onClose={this.toggleDrawer('top', false)}>
-            <ViewSwiper/>
+            <ViewSwiper handleClose={this.toggleDrawer('top', false)}/>
         </Drawer>
       </div>
     );

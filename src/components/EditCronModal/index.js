@@ -65,8 +65,9 @@ class EditCronModal extends Component {
 
   handleClose = () => {
     const { handleCloseCallback } = this.props;
-    this.setState({ open: false });
     handleCloseCallback()
+    debugger;
+    this.setState({ open: false });
   };
 
   handleSubmit = () => {

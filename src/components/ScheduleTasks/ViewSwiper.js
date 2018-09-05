@@ -9,8 +9,11 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import ScheduleField from './ScheduleField';
 import SelectWorkflow from './SelectWorkflow';
-import { reduxForm, reset, submit } from 'redux-form';
+import { reduxForm, reset, submit, Field } from 'redux-form';
 import submitForm from './handleSubmit';
+import {
+  cronField
+} from '../TextField/fields';
 
 function TabContainer({ children, dir }) {
   return (
@@ -61,11 +64,12 @@ class ViewsSwiper extends Component {
   };
 
   handleSubmit = () => {
-    const { dispatch, handleSubmit } = this.props;
+    const { dispatch, handleSubmit, handleClose } = this.props;
     const submitter = handleSubmit(submitForm.bind(this));
     submitter();
     dispatch(submit('createSchedule'));
     dispatch(reset('createSchedule'));
+    handleClose();
   }
 
   render() {
@@ -100,9 +104,13 @@ class ViewsSwiper extends Component {
           <TabContainer dir={theme.direction}>
             <ScheduleField
               title='Enter a cron expression'
-              name='cron'
-              style={{ width: 128 }}
-            />
+            >
+              <Field
+                name='cron'
+                component={cronField}
+              />
+
+            </ScheduleField>
             <SelectWorkflow />
           </TabContainer>
         </SwipeableViews>

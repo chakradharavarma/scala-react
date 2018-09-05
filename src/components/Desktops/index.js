@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import DesktopCardSection from './DesktopCardSection';
@@ -18,13 +18,15 @@ class Desktops extends Component {
 
   render() {
     const { desktops } = this.props;
+    const { fetching } = desktops;
+
     return (
-      <Grid container spacing={8} className='desktop-root'>
-        <Grid item xs={6}>
-          <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
+      <Grid container spacing={16} className='desktop-root'>
+        <Grid item xs={8}>
+          <DesktopCardSection title='Running Desktops' fetching={fetching} desktops={desktops.data.openDesktops && desktops.data.openDesktops.Reservations} runningCard />
         </Grid>
-        <Grid item xs={6}>
-          <DesktopCardSection title='Running Desktops' desktops={desktops && desktops.data.openDesktops.Reservations} runningCard />
+        <Grid item xs={4}>
+          <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
         </Grid>
       </Grid>
     );
@@ -33,7 +35,7 @@ class Desktops extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    desktop: state.desktops,
+    desktops: state.desktops,
     notification: state.desktops.notification,
   }
 }

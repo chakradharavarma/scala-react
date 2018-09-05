@@ -9,6 +9,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { reduxForm } from 'redux-form';
 import submitForm from './handleSubmit';
 import ViewSwiper from './ViewSwiper';
+import { fetchFolder } from '../../actions/fileActions';
 import axios from 'axios';
 
 const styles = {
@@ -77,6 +78,7 @@ class EditWorkflowModal extends Component {
         diskSpace: '20 GB', // TODO,
         emails: workflow.notifications ? workflow.notifications.emails : '',
         }))
+      dispatch(fetchFolder(`/workflows/${workflow.id}`))
     })
 
   }

@@ -10,7 +10,6 @@ import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 
 import ScalaLoader from '../ScalaLoader';
-import Fade from '@material-ui/core/Fade';
 
 import ConnectionCard from './ConnectionCard';
 import { downloadKeyPair } from '../../actions/generalActions';
@@ -48,7 +47,6 @@ class Connections extends Component {
                 fetching ? (
                   <ScalaLoader centered active />
                 ) :
-                  <Fade in animation={600}>
                     <Grid container className='connection-cards-container sibling-fade'>
                       {
                         fetched && (
@@ -61,7 +59,6 @@ class Connections extends Component {
                         )
                       }
                     </Grid>
-                  </Fade>
               }
             </Card>
           </Grid>
