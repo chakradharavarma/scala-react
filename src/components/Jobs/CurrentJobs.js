@@ -7,8 +7,8 @@ import Card from "@material-ui/core/Card";
 import JobsDrawer from './JobsDrawer';
 import JobsRunningTable from './JobsRunningTable';
 import { VALID_STATUSES } from '../../common/consts';
-import Loader from 'react-loaders'
-import 'loaders.css/loaders.min.css';
+import ScalaLoader from '../ScalaLoader';
+import Fade from '@material-ui/core/Fade';
 
 const classes = {
   paper: {
@@ -20,7 +20,8 @@ class CurrentJobs extends Component {
 
   render() {
     const { jobs } = this.props;
-    const { data, fetching } = jobs;
+    const { data, fetching, fetched } = jobs;
+    debugger;
     const runningJobs = data.filter(job => VALID_STATUSES.includes(job.status));
     return (
       <Card classes={classes.paper} >
@@ -31,21 +32,23 @@ class CurrentJobs extends Component {
         </div>
         <Divider />
         {
-            runningJobs.length ?
-              <JobsRunningTable jobs={runningJobs} /> : (
-                <div className='centered'>
-                  { fetching ? 
-                    <Loader type="ball-grid-pulse" active /> :
-                    <JobsDrawer title='Click to run a workflow' />
-                  }
-                </div>
+            fetched ?
+              (
+                runningJobs.length ? 
+                  <JobsRunningTable jobs={runningJobs} /> :
+                  <Fade in={!fetching} timeout={600} >
+                    <div className='centered'>
+                      <JobsDrawer title='Click to run a workflow' />
+                    </div>
+                  </Fade>
+              )
+              : (
+                  <ScalaLoader active={fetching} centered />
               )
         }
-
       </Card>
     )
   }
-
 }
 
 const mapStateToProps = (state) => {

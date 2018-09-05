@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteConnectionModal from './DeleteConnectionModal';
 
-
 class ConnectionCard extends Component {
 
   handleClick = () => {

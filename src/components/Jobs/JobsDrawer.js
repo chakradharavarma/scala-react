@@ -35,7 +35,7 @@ class JobsDrawer extends Component {
 
     return (
       <React.Fragment>
-        <Button size='large'  variant="contained" color='secondary' onClick={this.toggleDrawer(true)}>{this.props.title}</Button>
+        <Button size='large' variant="contained" color='secondary' onClick={this.toggleDrawer(true)}>{this.props.title}</Button>
         <Drawer
           open={this.state.open}
           onClose={this.toggleDrawer(false)}

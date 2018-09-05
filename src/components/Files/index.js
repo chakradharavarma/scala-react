@@ -18,6 +18,8 @@ import Button from '@material-ui/core/Button';
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { searchField } from '../TextField/fields';
+import ScalaLoader from '../ScalaLoader';
+import Fade from '@material-ui/core/Fade';
 
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
 
@@ -108,7 +110,7 @@ class Files extends Component {
   render() {
     const { fetchFile, fetchFolder, folder, deleteFile, modal, filter } = this.props;
     const { orderBy, order } = this.state;
-    let { data, path } = folder;
+    let { data, path, fetching, fetched } = folder;
     data = data || [];
     if (!folder) {
       return null;
@@ -180,7 +182,12 @@ class Files extends Component {
             </div>
 
           </div>
-          <Table>
+          {
+            fetching ? (
+              <ScalaLoader centered active />
+            ) : (
+              <Fade in timeout={600}>
+ <Table>
             <TableHead>
               <TableRow>
                 {columnData.map(column => {
@@ -244,6 +251,11 @@ class Files extends Component {
                 )}
             </TableBody>
           </Table>
+
+              </Fade>
+            )
+
+          }
         </Card>
         <FileModal />
       </Fragment>

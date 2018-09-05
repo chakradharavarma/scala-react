@@ -6,11 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
 import ScheduleCard from './ScheduleCard';
 import ViewSwiper from './ViewSwiper';
 import NewCronDrawer from './NewCronDrawer';
+import ScalaLoader from '../ScalaLoader';
+import Fade from '@material-ui/core/Fade';
 
 const classes = {
   expansionPanelSummary: {
@@ -23,24 +26,35 @@ class ScheduleTasks extends Component {
 
   render() {
     const { schedules } = this.props;
-    const { fetched, data } = schedules;
+    const { fetching, fetched, data } = schedules;
+    const drawerTriggerTop = (
+      <Button color='secondary'>
+        <AddIcon />
+        Add a new schedule
+      </Button>
+    )
+    const drawerTriggerEmpty = (
+      <Button size='large' variant="contained" color='secondary'>
+        Click to create a new schedule
+      </Button>
+    )
     return (
       <Fragment>
-        <NewCronDrawer />
+        <NewCronDrawer trigger={drawerTriggerTop} />
         {
           false && (
             <ExpansionPanel style={{ padding: '8px 24px', width: '50%' }} >
-            <ExpansionPanelSummary classes={classes.expansionPanelSummary}>
-              <AddIcon style={{ marginRight: 18 }} color='secondary'/>
-              <Typography color='secondary' variant='headline'>
-                Create a New Schedule
+              <ExpansionPanelSummary classes={classes.expansionPanelSummary}>
+                <AddIcon style={{ marginRight: 18 }} color='secondary' />
+                <Typography color='secondary' variant='headline'>
+                  Create a New Schedule
               </Typography>
-            </ExpansionPanelSummary>
-  
-            <ExpansionPanelDetails style={{ display: 'unset' }} >
-              <ViewSwiper />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>  
+              </ExpansionPanelSummary>
+
+              <ExpansionPanelDetails style={{ display: 'unset' }} >
+                <ViewSwiper />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
           )
         }
 
@@ -49,20 +63,34 @@ class ScheduleTasks extends Component {
             Schedules
           </Typography>
           <Divider />
-          <Grid className='schedule-container sibling-fade' container spacing={16} >
-            {
-              fetched &&
-              (
-                data.length ?
-                  data.map((schedule, i) =>
-                    <ScheduleCard
-                      schedule={schedule}
-                      key={`schedule-card-${i}`}
-                    />
-                  ) : 'nasdjkhsdjsdfklsdull'
-              )
-            }
-          </Grid>
+          {
+            fetching ? (
+              <ScalaLoader centered active />
+            ) :
+              <Fade in animation={600}>
+                {
+                  fetched &&
+                  data.length ?
+                  (
+                    <Grid className='schedule-container sibling-fade' container spacing={16} >
+                      {
+                        data.map((schedule, i) =>
+                          <ScheduleCard
+                            schedule={schedule}
+                            key={`schedule-card-${i}`}
+                          />
+                        )
+                      }
+                    </Grid>
+                  ) :
+                  (
+                    <div className='centered'>
+                      <NewCronDrawer trigger={drawerTriggerEmpty} />
+                    </div>
+                  )
+              }
+              </Fade>
+          }
         </Card>
       </Fragment>
     );

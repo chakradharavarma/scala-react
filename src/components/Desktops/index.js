@@ -17,25 +17,23 @@ const availableDesktops = [
 class Desktops extends Component {
 
   render() {
-    const { runningDesktops } = this.props;
+    const { desktops } = this.props;
     return (
-      <Fragment>
-        <Grid container spacing={8} className='desktop-root'>
-          <Grid item xs={6} lg={4}>
-            <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
-          </Grid>
-          <Grid item xs={6} lg={4}>
-            <DesktopCardSection title='Running Desktops' desktops={runningDesktops && runningDesktops.Reservations} runningCard />
-          </Grid>
+      <Grid container spacing={8} className='desktop-root'>
+        <Grid item xs={6}>
+          <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
         </Grid>
-      </Fragment>
+        <Grid item xs={6}>
+          <DesktopCardSection title='Running Desktops' desktops={desktops && desktops.data.openDesktops.Reservations} runningCard />
+        </Grid>
+      </Grid>
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    runningDesktops: state.desktops.data.openDesktops,
+    desktop: state.desktops,
     notification: state.desktops.notification,
   }
 }

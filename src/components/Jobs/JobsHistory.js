@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,11 +13,12 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from "@material-ui/core/Divider";
-import { connect } from 'react-redux';
 import JobsCardHeader from './JobsCardHeader'
+import ScalaLoader from '../ScalaLoader';
+import Fade from '@material-ui/core/Fade';
 
 let counter = 0;
-function createData({name, status, updated, duration, desktop}) {
+function createData({ name, status, updated, duration, desktop }) {
   counter += 1;
   return { id: counter, name, status, updated, duration, desktop, result: desktop };
 }
@@ -25,14 +27,14 @@ function getSorting(order, orderBy) {
   return (a, b) => {
     let _a = a[orderBy];
     let _b = b[orderBy];
-  
-    if(_a === _b) {
+
+    if (_a === _b) {
       return 0;
     }
-    else if(typeof _a === 'string') {
-      return order === 'desc' ? _a.localeCompare(_b) : _b.localeCompare(_a) ;
-    }else {
-      return order === 'desc' ? (_a > _b ? 1 : -1) : (_b > _a ? 1 : -1 );
+    else if (typeof _a === 'string') {
+      return order === 'desc' ? _a.localeCompare(_b) : _b.localeCompare(_a);
+    } else {
+      return order === 'desc' ? (_a > _b ? 1 : -1) : (_b > _a ? 1 : -1);
     }
   }
 }
@@ -118,10 +120,10 @@ class JobsCard extends Component {
   constructor(props) {
     super(props);
     const { jobs } = this.props;
-    if(jobs.initialState) {
+    if (jobs.initialState) {
       // todo
     }
-    if(!jobs.data){
+    if (!jobs.data) {
       // todo
     }
     const data = []
@@ -187,15 +189,17 @@ class JobsCard extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, filterForm } = this.props;
+    const { classes, filterForm, jobs } = this.props;
+    const { fetching } = jobs;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     let data;
-    if(filterForm) {
-      data = this.props.jobs.data
+    if (filterForm) {
+      debugger;
+      data = jobs.data
         .filter(job => job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || ''))
         .map(job => createData(job));
-    }else {
-      data = this.props.jobs.data
+    } else {
+      data = jobs.data
         .map(job => createData(job));
     }
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
@@ -204,54 +208,67 @@ class JobsCard extends Component {
         <JobsCardHeader numSelected={selected.length} />
         <Divider />
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
-            <JobsCardHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
-            />
-            <TableBody>
-              {data
-                .sort(getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n.id);
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => null} // TODO
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      tabIndex={-1}
-                      key={n.id}
-                      selected={isSelected}
-                    >
-                      <TableCell padding="checkbox"/>
-                      <TableCell component="th" scope="row" padding="none">
-                        {n.name}
-                      </TableCell>
-                      <TableCell className={classnames(
-                        `status-${n.status.toLowerCase()}`
-                      )}>{n.status}</TableCell>
-                      <TableCell>{n.updated}</TableCell>
-                      <TableCell>{n.duration}</TableCell>
-                      <TableCell>{n.desktop}</TableCell>
-                      <TableCell >{n.result}</TableCell>
-                      <TableCell >{n.options}</TableCell>
+          {
+            fetching ?
+              (
+                <ScalaLoader centered active={fetching} />
+              ) :
+              (
+                <Fade in={!fetching} timeout={600} >
 
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                  <Table className={classes.table} aria-labelledby="tableTitle">
+                    <JobsCardHead
+                      numSelected={selected.length}
+                      order={order}
+                      orderBy={orderBy}
+                      onSelectAllClick={this.handleSelectAllClick}
+                      onRequestSort={this.handleRequestSort}
+                      rowCount={data.length}
+                    />
+                    <TableBody>
+                      {
+                        data
+                          .sort(getSorting(order, orderBy))
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map(n => {
+                            const isSelected = this.isSelected(n.id);
+                            return (
+                              <TableRow
+                                hover
+                                onClick={event => null} // TODO
+                                role="checkbox"
+                                aria-checked={isSelected}
+                                tabIndex={-1}
+                                key={n.id}
+                                selected={isSelected}
+                              >
+                                <TableCell padding="checkbox" />
+                                <TableCell component="th" scope="row" padding="none">
+                                  {n.name}
+                                </TableCell>
+                                <TableCell className={classnames(
+                                  `status-${n.status.toLowerCase()}`
+                                )}>{n.status}</TableCell>
+                                <TableCell>{n.updated}</TableCell>
+                                <TableCell>{n.duration}</TableCell>
+                                <TableCell>{n.desktop}</TableCell>
+                                <TableCell >{n.result}</TableCell>
+                                <TableCell >{n.options}</TableCell>
+                              </TableRow>
+                            );
+                          })
+                      }
+                      {emptyRows > 0 && (
+                        <TableRow style={{ height: 49 * emptyRows }}>
+                          <TableCell colSpan={6} />
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </Fade>
+              )
+          }
+
         </div>
         <TablePagination
           component="div"

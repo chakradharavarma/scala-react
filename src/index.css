@@ -663,7 +663,8 @@ td.status-running {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 148px;
+    min-height: 184px;
+    height: fit-content;
     font-size: 24px;
     font-weight:bold;
 }

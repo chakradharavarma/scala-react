@@ -9,6 +9,9 @@ import Button from '@material-ui/core/Button';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 
+import ScalaLoader from '../ScalaLoader';
+import Fade from '@material-ui/core/Fade';
+
 import ConnectionCard from './ConnectionCard';
 import { downloadKeyPair } from '../../actions/generalActions';
 import { createConnection, deleteConnection } from '../../actions/connectionActions';
@@ -17,42 +20,49 @@ class Connections extends Component {
 
   render() {
     const { connections, downloadKeyPair, handleClickDelete, handleClickCreateConnection } = this.props;
-    const { fetched, data } = connections;
+    const { fetching, fetched, data } = connections;
     return (
       <Fragment>
         <div>
-        <Button color='secondary' onClick={downloadKeyPair}>
-          <ArrowDownward />
-          <Typography color='secondary'>
+          <Button color='secondary' onClick={downloadKeyPair}>
+            <ArrowDownward />
+            <Typography color='secondary'>
               Download Key Pair
           </Typography>
-        </Button>
-        <Button color='secondary' onClick={handleClickCreateConnection}>
-          <AddIcon />
-          <Typography color='secondary'>
+          </Button>
+          <Button color='secondary' onClick={handleClickCreateConnection}>
+            <AddIcon />
+            <Typography color='secondary'>
               Launch a shell session
           </Typography>
-        </Button>
+          </Button>
         </div>
         <Grid container spacing={16} className='connections-root'>
           <Grid item xs={12} >
             <Card elevation={8} className='desktop-section-container'>
               <Typography variant='headline' color='secondary'>
-                  Terminals
+                Terminals
               </Typography>
               <Divider />
-                <Grid container className='connection-cards-container sibling-fade'>
-                  {
-                    fetched && (
-                      data.Reservations
-                        .sort((a, b) => moment(a.Instances[0] - moment(b.Instances[0])))
-                        .filter(shell => shell.Instances.find(instance => instance.InstanceId !== undefined).State.Name !== 'terminated')
-                        .map((shell, i) =>
-                          <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
+              {
+                fetching ? (
+                  <ScalaLoader centered active />
+                ) :
+                  <Fade in animation={600}>
+                    <Grid container className='connection-cards-container sibling-fade'>
+                      {
+                        fetched && (
+                          data.Reservations
+                            .sort((a, b) => moment(a.Instances[0] - moment(b.Instances[0])))
+                            .filter(shell => shell.Instances.find(instance => instance.InstanceId !== undefined).State.Name !== 'terminated')
+                            .map((shell, i) =>
+                              <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
+                            )
                         )
-                    )
-                  }
-                </Grid>
+                      }
+                    </Grid>
+                  </Fade>
+              }
             </Card>
           </Grid>
         </Grid>

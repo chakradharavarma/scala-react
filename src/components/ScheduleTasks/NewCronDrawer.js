@@ -30,12 +30,12 @@ class NewCronDrawer extends React.Component {
   };
 
   render() {
+
     return (
       <div>
-        <Button color='secondary' onClick={this.toggleDrawer('top', true)}>
-          <AddIcon />
-          Add a new schedule
-        </Button>
+        { 
+          React.cloneElement(this.props.trigger, { onClick: this.toggleDrawer('top', true) })
+        }
         <Drawer
           variant='temporary'
           anchor="top"
