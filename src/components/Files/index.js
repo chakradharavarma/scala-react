@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames'
 import FileModal from './FileModal';
 import NameModal from './NameModal';
+import ScalaLoader from '../ScalaLoader';
 import UploadFileModal from './UploadFileModal';
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
@@ -16,15 +17,13 @@ import TableCell from "@material-ui/core/TableCell";
 import AddIcon from "@material-ui/icons/Add";
 import Button from '@material-ui/core/Button';
 import UploadIcon from "@material-ui/icons/CloudUpload";
+import Fade from '@material-ui/core/Fade';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { searchField } from '../TextField/fields';
-import ScalaLoader from '../ScalaLoader';
-import Fade from '@material-ui/core/Fade';
-
-import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
-
 import urljoin from 'url-join';
 import { ContextMenu, Item, ContextMenuProvider } from 'react-contexify';
+import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
+
 
 import 'react-contexify/dist/ReactContexify.min.css';
 
@@ -65,7 +64,7 @@ class Files extends Component {
     const hash = window.location.hash;
     if(!modal) {
       if(hash) {
-        fetchFolder(hash.replace('#', ''))()
+        fetchFolder(hash.substring(1))()
       } else {
         fetchFolder('/')();
       }
@@ -85,7 +84,7 @@ class Files extends Component {
     const { fetchFolder, modal } = this.props;
     const hash = window.location.hash;
     if(!modal && hash) {
-      fetchFolder(hash.replace('#', ''))()
+      fetchFolder(hash.substring(1))()
     }
   }
 
@@ -159,7 +158,10 @@ class Files extends Component {
       </Button>
     )
 
-    const MyAwesomeMenu = (props) => (
+    const MyAwesomeMenu = (props) => {
+      debugger;
+      console.log(props)
+      return (
       <Fragment>
       <ContextMenu animation='fade' id={props.id} >
         <Item onClick={this.toggleRenameModal}>
@@ -180,7 +182,8 @@ class Files extends Component {
         </Item>
       </ContextMenu>
       </Fragment>
-    );
+    )
+  };
 
     let parts = path.split('/')
     if(modal) {
@@ -281,7 +284,7 @@ class Files extends Component {
                                 {row.size} bytes
                         </TableCell>
                             </ContextMenuProvider>
-                            <MyAwesomeMenu id={`row-${i}`} />
+                            <MyAwesomeMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}` }} id={`row-${i}`} />
                           </Fragment>
                         )
                         )}

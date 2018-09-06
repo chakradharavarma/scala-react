@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
+import TemplateWorkflowsCard from '../Workflows/TemplateWorkflowsCard'
 import JobsDrawerCard from './JobsDrawerCard';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
@@ -24,7 +25,7 @@ class JobsDrawer extends Component {
   };
 
   render() {
-    const { workflows } = this.props;
+    const { availableWorkflows, templateWorkflows } = this.props;
 
     const createNewWorkflowTrigger = (
       <Button color='secondary'>
@@ -48,25 +49,37 @@ class JobsDrawer extends Component {
               <div className='jobs-drawer-top-section'>
                 <Typography color='secondary' variant='display1'>
                   Available Workflows
-                  </Typography>
+                </Typography>
                 <div className='create-new-job-section'>
                   <CreateWorkflowStepper
                     handleCloseCallback={this.toggleDrawer(false)}
                     trigger={createNewWorkflowTrigger}
                   />
                 </div>
-
               </div>
               <Divider />
               <List>
                 <div className='jobs-drawer-workflows'>
                   <Grid container className='sibling-fade' spacing={16} >
                     {
-                      workflows
-                        .sort((a,b) => a.name.localeCompare(b.name))
+                      availableWorkflows.data
+                        .sort((a, b) => a.name.localeCompare(b.name))
                         .map((workflow, i) => <JobsDrawerCard closeDrawer={this.toggleDrawer(false)} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
                     }
                   </Grid>
+                  <Divider/>
+                  <Typography color='secondary' variant='display1' style={{padding: 24}}>
+                    Template Workflows
+                  </Typography>
+                  <Grid container justify='center' className='sibling-fade' spacing={16} >
+                    {
+                      templateWorkflows.data
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((workflow, i) => <TemplateWorkflowsCard large workflow={workflow} key={`jobs-drawer-card-${i}`} />)
+                    }
+                  </Grid>
+
+
                 </div>
               </List>
             </div>
@@ -84,8 +97,9 @@ JobsDrawer.propTypes = {
 const mapStateToProps = (state) => {
   return (
     {
-      workflows: state.availableWorkflows.data,
-    }  
+      availableWorkflows: state.availableWorkflows,
+      templateWorkflows: state.templateWorkflows,
+    }
   )
 };
 

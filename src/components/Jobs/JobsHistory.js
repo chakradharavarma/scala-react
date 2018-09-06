@@ -18,15 +18,7 @@ import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import DesktopIcon from '@material-ui/icons/DesktopWindows';
-import DesktopDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
 import { createDesktopJob } from '../../actions/desktopActions';
-
-let counter = 0;
-function createData(data) {
-  const { name, status, updated, running_time, desktop, id } = data;
-  counter += 1;
-  return { id: counter, jobId: id, name, status, updated, duration: running_time, desktop, result: desktop };
-}
 
 function getSorting(order, orderBy) {
   return (a, b) => {
@@ -44,14 +36,13 @@ function getSorting(order, orderBy) {
   }
 }
 
-
 const columnData = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Job Name' },
-  { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
-  { id: 'updated', numeric: false, disablePadding: false, label: 'Started' },
-  { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration' },
-  { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop' },
-  { id: 'results', numeric: false, disablePadding: false, label: 'Results' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Job Name', sortable: true },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Status', sortable: true },
+  { id: 'updated', numeric: false, disablePadding: false, label: 'Started', sortable: true },
+  { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration', sortable: true },
+  { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop', sortable: false },
+  { id: 'results', numeric: false, disablePadding: false, label: 'Results', sortable: false },
 ];
 
 class JobsCardHead extends Component {
@@ -72,9 +63,11 @@ class JobsCardHead extends Component {
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderBy === column.id && column.sortable ? order : false}
               >
-                <Tooltip
+              {
+                column.sortable ? (
+                  <Tooltip
                   title="Sort"
                   placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                   enterDelay={300}
@@ -87,6 +80,8 @@ class JobsCardHead extends Component {
                     {column.label}
                   </TableSortLabel>
                 </Tooltip>
+                ) : column.label
+              }
               </TableCell>
             );
           }, this)}
@@ -171,7 +166,7 @@ class JobsCard extends Component {
     this.setState({ selected: newSelected });
   };
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (_, page) => {
     this.setState({ page });
   };
 

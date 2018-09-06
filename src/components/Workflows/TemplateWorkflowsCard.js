@@ -10,13 +10,13 @@ import CreateWorkflowStepper from '../CreateWorkflowStepper';
 export default class TemplateWorkflows extends Component {
 
   render() {
-    const { workflow } = this.props;
+    const { workflow, large } = this.props;
 
     return (
       <CreateWorkflowStepper
         workflow={workflow}
         trigger={(
-          <Grid item xs={12} md={6} lg={4} xl={3} >
+          <Grid item xs={large ? 9 : 3}>
           <Card elevation={1} >
               <CardContent>
                 <div className='workflow-title-container'>

@@ -235,6 +235,10 @@ export default function (state=initialState, action) {
       notification = createNotification('Launched desktop in new tab', INFO);
       state = processQueue(state, notification);
       break
+    case actions.PROMPT_JOB_DESKTOP_DNE:
+      notification = createNotification('Desktop does not exist, creating', INFO);
+      state = processQueue(state, notification);
+      break
     default:
       break;
   }

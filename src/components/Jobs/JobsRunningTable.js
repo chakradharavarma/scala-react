@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { terminateJob } from '../../actions/jobActions';
+import ConfirmActionModal from '../ConfirmActionModal';
 
 const styles = theme => ({
   root: {
@@ -60,8 +61,12 @@ function JobsRunningTable(props) {
                 {job.id}
               </TableCell>
               <TableCell>
+                <ConfirmActionModal
+                  message='Are you sure you want to terminate this job?'
+                  handleConfirm={handleTerminateClick(job.uuid)}
+                >
                   <IconButton
-                    onClick={handleTerminateClick(job.uuid)}
+                    
                     disabled={!job.cancellable}
                     key="close"
                     aria-label="Close"
@@ -69,6 +74,7 @@ function JobsRunningTable(props) {
                   >
                     <CloseIcon />
                   </IconButton>
+                  </ConfirmActionModal>
               </TableCell>
             </TableRow>
           );

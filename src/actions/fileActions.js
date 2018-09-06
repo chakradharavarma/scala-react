@@ -8,6 +8,7 @@ import {
     DOWNLOAD_FILE,
     DELETE_FILE,
     UPLOAD_FILES,
+    RENAME_FILE,
 } from './types';
 
 export const fetchFolder = (path) => {
@@ -82,6 +83,15 @@ export const updateCode = (contents) => {
     }
 }
 
+export const renameFile = (oldName, newName) => {
+    return {
+        type: RENAME_FILE,
+        payload: {
+            oldName,
+            newName,
+        },
+    }
+}
 export const deleteFile = (file) => {
     return {
         type: DELETE_FILE,

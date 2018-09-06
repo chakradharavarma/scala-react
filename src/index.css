@@ -348,6 +348,7 @@ td.status-running {
 .jobs-drawer-workflows > div {
     width: unset !important;
     margin: unset !important;
+    padding-bottom: 24px;
 }
 
 .workflow-card {
@@ -781,8 +782,7 @@ div:focus {
 }
 
 .create-schedule-tab-container {
-    padding-top: 5vh;
-    margin: 0 8vw;
+    padding: 5vh 8vw 0;
     display: flex;
 }
 
@@ -798,3 +798,7 @@ div:focus {
     background-color: #5e8dbf;
 }
 
+.jobs-drawer-card-media {
+    height: 3em;
+    width: 3em;
+}

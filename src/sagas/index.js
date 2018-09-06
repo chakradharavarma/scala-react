@@ -188,6 +188,12 @@ function editWorkflow(payload) {
         .catch(err => err);
 }
 
+function renameFile(payload) {
+    const url = `renameContent`;
+    return axios.post(url, payload)
+        .catch(err => err);
+}
+
 function createConnection() {
     const url = `/createConnection/`;
     return axios.post(url).catch(err => err);
@@ -258,6 +264,15 @@ function* callWorkflowTemplates() {
 function* callDownloadKeyPair() {
     let payload = yield call(getKeyPairURL);
     window.location = payload.data;
+    if (payload.data && payload.data.length) {
+        yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.DOWNLOAD_KEY_PAIR_FAILED, payload });
+    }
+}
+
+function* callRenameFile() {
+    let payload = yield call(renameFile);
     if (payload.data && payload.data.length) {
         yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
     } else {
@@ -461,14 +476,8 @@ function* callCreateDesktopJob(action) {
     if (payload.data) {
         const { conn } = payload.data;
         if(!conn) {
+            yield put({ type: actions.PROMPT_JOB_DESKTOP_DNE, payload });
             yield put({ type: actions.CREATE_DESKTOP, payload });
-            payload = yield call(createDesktopJob, action.payload);
-            if (payload.data) {
-                yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
-                yield callDesktops(action);
-            } else {
-                yield put({ type: actions.CREATE_DESKTOP_JOB_FAILED, payload });
-            }
         } else {
             var { data } = payload;
             var instance = data.desktop;
@@ -644,6 +653,10 @@ function* getDownloadKeyPairSaga() {
     yield takeLatest(actions.DOWNLOAD_KEY_PAIR, callDownloadKeyPair)
 }
 
+function* renameFileSaga() {
+    yield takeLatest(actions.RENAME_FILE, callRenameFile)
+}
+
 
 export default function* root() {
     yield all([
@@ -670,5 +683,6 @@ export default function* root() {
         fork(deleteFileSaga),
         fork(terminateJobSaga),
         fork(createDesktopJobSaga),
+        fork(renameFileSaga),
     ])
 }

@@ -22,12 +22,14 @@ class JobsDrawerCard extends Component {
 
   render() {
     const { handleClick, workflow, closeDrawer } = this.props;
+    debugger;
     return (
       <Grid item xs={6}>
         <Card onClick={handleClick(workflow.id, closeDrawer)}>
-          <CardMedia src=''>
-            <img src={workflow.logo} alt='workflow logo' />
-          </CardMedia>
+          <CardMedia
+            image={workflow.image}
+            title={`${workflow.image.split('/').pop().split('.')[0]} logo`}
+            className='jobs-drawer-card-media' />
           <CardContent>
             <Typography gutterBottom variant="title">
               {workflow.name}
