@@ -18,6 +18,7 @@ import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import DesktopIcon from '@material-ui/icons/DesktopWindows';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import { createDesktopJob } from '../../actions/desktopActions';
 
 function getSorting(order, orderBy) {
@@ -65,23 +66,23 @@ class JobsCardHead extends Component {
                 padding={column.disablePadding ? 'none' : 'default'}
                 sortDirection={orderBy === column.id && column.sortable ? order : false}
               >
-              {
-                column.sortable ? (
-                  <Tooltip
-                  title="Sort"
-                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order}
-                    onClick={this.createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </Tooltip>
-                ) : column.label
-              }
+                {
+                  column.sortable ? (
+                    <Tooltip
+                      title="Sort"
+                      placement={column.numeric ? 'bottom-end' : 'bottom-start'}
+                      enterDelay={300}
+                    >
+                      <TableSortLabel
+                        active={orderBy === column.id}
+                        direction={order}
+                        onClick={this.createSortHandler(column.id)}
+                      >
+                        {column.label}
+                      </TableSortLabel>
+                    </Tooltip>
+                  ) : column.label
+                }
               </TableCell>
             );
           }, this)}
@@ -217,6 +218,7 @@ class JobsCard extends Component {
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {
                             const isSelected = this.isSelected(n.id);
+                            debugger;
                             return (
                               <TableRow
                                 hover
@@ -237,17 +239,27 @@ class JobsCard extends Component {
                                 <TableCell>{n.updated}</TableCell>
                                 <TableCell>{n.running_time}</TableCell>
                                 <TableCell>
-                                  {
-                                    <IconButton 
+                                  <IconButton
                                     aria-label="Desktop"
                                     onClick={onClickDesktop(n.uuid, 'vnc')}
                                   >
                                     <DesktopIcon />
                                   </IconButton>
-
-                                  }
                                 </TableCell>
-                                <TableCell >{n.result}</TableCell>
+                                <Tooltip
+                                  title="No results"
+                                  placement='bottom'
+                                  enterDelay={200}
+                                  disableFocusListener={!n.hasResult}
+                                  disableHoverListener={!n.hasResult}
+                                  disableTouchListener={!n.hasResult}
+                                >
+                                  <TableCell >
+                                    <IconButton disabled={!n.hasResult} >
+                                      <ArchiveIcon />
+                                    </IconButton>
+                                  </TableCell>
+                                </Tooltip>
                               </TableRow>
                             );
                           })
@@ -302,7 +314,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onClickDesktop: (id, desktopType) => () => dispatch(createDesktopJob(id, desktopType)) 
+    onClickDesktop: (id, desktopType) => () => dispatch(createDesktopJob(id, desktopType))
   }
 }
 
