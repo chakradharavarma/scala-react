@@ -59,7 +59,7 @@ class JobInfoModal extends Component {
         >
           <Card style={getModalStyle()} className={classes.paper}>
             <Grid container>
-              <Grid alignContent={'center'} item xs={12} style={{ paddingBottom: 18 }}>
+              <Grid item xs={12} style={{ display: 'flex', paddingBottom: 18, justifyContent: 'center' }}>
                 <Typography style={{ margin: '0 8px', textTransform: 'uppercase', letterSpacing: 2 }} variant='title' color='secondary'>
                   Job Details
                 </Typography>

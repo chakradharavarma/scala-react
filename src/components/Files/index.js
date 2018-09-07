@@ -118,7 +118,7 @@ class Files extends Component {
     })
   }
 
-  toggleRenameModal = () => {
+  toggleRenameModal = (name) => () => {
 
     const { dispatch } = this.props;
     this.setState(prevState => {
@@ -126,8 +126,8 @@ class Files extends Component {
     })
 
     dispatch(initialize('renameFile', {
-      oldName: 'test',
-      newName: 'test',
+      oldName: name,
+      newName: 'name',
     }));
 
   }
@@ -166,30 +166,34 @@ class Files extends Component {
       </Button>
     )
 
-    const MyAwesomeMenu = (props) => 
-    (
-    <Fragment>
-      <ContextMenu animation='fade' id={props.id} >
-        <Item onClick={this.toggleRenameModal}>
-          <Typography>
-            Rename
-          </Typography>
-        </Item>
-
-        <Item onClick={this.downloadFile}>
-          <Typography>
-            Download
-            </Typography>
-        </Item>
-        <Item onClick={deleteFile}>
-          <Typography>
-            Delete
-            </Typography>
-        </Item>
-      </ContextMenu>
-      </Fragment>
-    )
+    const MyAwesomeMenu = (props) =>
+    {
+      debugger;
+      return     (
+        <Fragment>
+          <ContextMenu animation='fade' id={props.id} >
+            <Item onClick={this.toggleRenameModal}>
+              <Typography>
+                Rename
+              </Typography>
+            </Item>
     
+            <Item onClick={this.downloadFile}>
+              <Typography>
+                Download
+                </Typography>
+            </Item>
+            <Item onClick={deleteFile}>
+              <Typography>
+                Delete
+                </Typography>
+            </Item>
+          </ContextMenu>
+          </Fragment>
+        )
+        
+    } 
+
     let parts = path.split('/')
     if(modal) {
       parts.splice(1,2)

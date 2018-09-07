@@ -808,6 +808,10 @@ div:focus {
 }
 
 .job-details-row-item-title {
-    font-weight: 800;
+    font-weight: 900;
     text-transform: uppercase;
+    padding-right: 4px;
+    text-shadow: .3px 0 #888888;
+    letter-spacing: 1px;
+
 }
