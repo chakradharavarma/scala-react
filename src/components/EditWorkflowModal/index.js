@@ -11,6 +11,7 @@ import submitForm from './handleSubmit';
 import ViewSwiper from './ViewSwiper';
 import { fetchFolder } from '../../actions/fileActions';
 import axios from 'axios';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = {
   paper: {
@@ -25,8 +26,11 @@ const styles = {
   },
   button: {
     alignSelf: 'flex-end',
-    marginRight: 24,
-    width: 96,
+    display: 'flex',
+    flexDirection: 'row',
+    width: '12vw',
+    maxWidth: 188,
+    minWidth: 144,
     justifyContent: 'space-between'
   },
   gridContainer: {
@@ -117,10 +121,16 @@ class EditWorkflowModal extends Component {
           }}
         >
           <ViewSwiper />
-          <Button onClick={this.handleSubmit} className={classes.button} color='secondary'>
+          <div className={classes.button}>
+          <Button onClick={this.handleClose} color='secondary'>
+            <CloseIcon />
+              CANCEL
+          </Button>
+          <Button onClick={this.handleSubmit} color='secondary'>
             <SaveIcon />
-            SAVE
-        </Button>
+              SAVE
+          </Button>
+          </div>
 
         </Dialog>
       </React.Fragment>

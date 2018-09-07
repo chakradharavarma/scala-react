@@ -13,6 +13,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from "@material-ui/core/Divider";
+import JobInfoModal from './JobInfoModal'
 import JobsCardHeader from './JobsCardHeader'
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
@@ -218,21 +219,20 @@ class JobsCard extends Component {
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {
                             const isSelected = this.isSelected(n.id);
-                            debugger;
                             return (
                               <TableRow
                                 hover
-                                onClick={event => null} // TODO
                                 role="checkbox"
                                 aria-checked={isSelected}
-                                tabIndex={-1}
                                 key={n.id}
                                 selected={isSelected}
                               >
                                 <TableCell padding="checkbox" />
+                                <JobInfoModal job={n} >
                                 <TableCell component="th" scope="row" padding="none">
                                   {n.name}
                                 </TableCell>
+                                </JobInfoModal>
                                 <TableCell className={classnames(
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
@@ -247,12 +247,12 @@ class JobsCard extends Component {
                                   </IconButton>
                                 </TableCell>
                                 <Tooltip
-                                  title="No results"
+                                  title={n.hasResult ? 'Click to download results' : 'No results'}
                                   placement='bottom'
                                   enterDelay={200}
-                                  disableFocusListener={!n.hasResult}
-                                  disableHoverListener={!n.hasResult}
-                                  disableTouchListener={!n.hasResult}
+                                  disableFocusListener={n.hasResult}
+                                  disableHoverListener={n.hasResult}
+                                  disableTouchListener={n.hasResult}
                                 >
                                   <TableCell >
                                     <IconButton disabled={!n.hasResult} >

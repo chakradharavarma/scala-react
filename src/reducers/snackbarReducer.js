@@ -163,6 +163,14 @@ export default function (state=initialState, action) {
       notification = createNotification(action.payload.message, ERROR);
       state = processQueue(state, notification);
       break;
+    case actions.EDIT_WORKFLOW_SUCCESS:
+      notification = createNotification('Successfully edited workflow', SUCCESS);
+      state = processQueue(state, notification);
+      break;
+    case actions.EDIT_WORKFLOW_FAILED:
+      notification = createNotification(action.payload.message, ERROR);
+      state = processQueue(state, notification);
+      break;
     case actions.DELETE_CONNECTION:
       notification = createNotification('Deleting connection', INFO);
       state = processQueue(state, notification);

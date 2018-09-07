@@ -158,11 +158,9 @@ class Files extends Component {
       </Button>
     )
 
-    const MyAwesomeMenu = (props) => {
-      debugger;
-      console.log(props)
-      return (
-      <Fragment>
+    const MyAwesomeMenu = (props) => 
+    (
+    <Fragment>
       <ContextMenu animation='fade' id={props.id} >
         <Item onClick={this.toggleRenameModal}>
           <Typography>
@@ -183,8 +181,7 @@ class Files extends Component {
       </ContextMenu>
       </Fragment>
     )
-  };
-
+    
     let parts = path.split('/')
     if(modal) {
       parts.splice(1,2)

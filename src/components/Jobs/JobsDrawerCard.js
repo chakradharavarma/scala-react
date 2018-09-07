@@ -22,7 +22,6 @@ class JobsDrawerCard extends Component {
 
   render() {
     const { handleClick, workflow, closeDrawer } = this.props;
-    debugger;
     return (
       <Grid item xs={6}>
         <Card onClick={handleClick(workflow.id, closeDrawer)}>

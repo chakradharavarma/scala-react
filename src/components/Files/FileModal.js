@@ -47,7 +47,6 @@ class FileModal extends Component {
                     <Typography className='edit-file-title' color='secondary' variant='subheading'>
                         { path.substring(path.lastIndexOf('/')+1) }
                     </Typography>
-
                     <CodeMirror
                         mode={getMode(path)}
                         value={contents}

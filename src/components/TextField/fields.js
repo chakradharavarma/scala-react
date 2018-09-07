@@ -32,6 +32,12 @@ export const nameField = TextField({
   autoComplete: 'off'
 })
 
+export const renameField = TextField({
+  margin: "normal",
+  style: { width: 300 },
+  autoComplete: 'off'
+})
+
 export const emailField = TextField({
   label: "Emails",
   margin: "normal",

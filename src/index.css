@@ -802,3 +802,12 @@ div:focus {
     height: 3em;
     width: 3em;
 }
+
+.job-details-row {
+    margin: 4px 0 !important;
+}
+
+.job-details-row-item-title {
+    font-weight: 800;
+    text-transform: uppercase;
+}

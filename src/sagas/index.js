@@ -443,10 +443,10 @@ function* callEditSchedule(action) { // todo, make a real edit
 function* callEditWorkflow(action) { // todo, make a real edit
     const payload = yield call(editWorkflow, action.payload);
     if (payload.data) {
-        yield put({ type: actions.EDIT_SCHEDULE_SUCCESS, payload });
+        yield put({ type: actions.EDIT_WORKFLOW_SUCCESS, payload });
         yield callSchedules(action);
     } else {
-        yield put({ type: actions.EDIT_SCHEDULE_FAILED, payload });
+        yield put({ type: actions.EDIT_WORKFLOW_FAILED, payload });
     }
 }
 
@@ -477,7 +477,14 @@ function* callCreateDesktopJob(action) {
         const { conn } = payload.data;
         if(!conn) {
             yield put({ type: actions.PROMPT_JOB_DESKTOP_DNE, payload });
-            yield put({ type: actions.CREATE_DESKTOP, payload });
+            payload = yield call(checkDesktopJob, action.payload);
+            debugger;
+            if (payload.data) {
+                yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
+                yield callDesktops(action);
+            } else {
+                yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
+            }
         } else {
             var { data } = payload;
             var instance = data.desktop;

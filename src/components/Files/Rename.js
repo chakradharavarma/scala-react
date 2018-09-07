@@ -4,8 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import { createNewFolder } from '../../actions/fileActions'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { renameFile } from '../../actions/fileActions';
+import { renameField } from '../TextField/fields';
+import { reduxForm, Field } from 'redux-form';
 
-class NameFolder extends Component {
+class RenameFile extends Component {
 
     state = {
         value: ''
@@ -15,10 +18,10 @@ class NameFolder extends Component {
         this.setState({ value: e.target.value })
     }
 
-    handleSave = () => {
-        const { createNewFolder, onClose, folder } = this.props;
+    handleRename = () => {
+        const { handleRename, onClose, folder } = this.props;
         const { value } = this.state;
-        createNewFolder(`${folder.path}/${value}`);
+        handleRename(`${folder.path}/${value}`);
         onClose();
     }
 
@@ -33,8 +36,8 @@ class NameFolder extends Component {
                 <div className='edit-file-buttons'>
                     <Button onClick={onClose} variant="contained">
                         Cancel
-                        </Button>
-                    <Button onClick={this.handleSave} variant="contained" color="secondary">
+                    </Button>
+                    <Button onClick={this.handleRename} variant="contained" color="secondary">
                         Save
                     </Button>
                 </div>
@@ -45,7 +48,7 @@ class NameFolder extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createNewFolder: (path) => dispatch(createNewFolder(path))        
+        handleRename: (oldPath, newPath) => dispatch(renameFile(oldPath, newPath))        
     }
 }
 
@@ -55,4 +58,10 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NameFolder);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'renameFile',
+    destroyOnUnmount: false,
+    forceUnregisterOnUnmount: true
+  })(RenameFile)
+);

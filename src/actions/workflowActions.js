@@ -5,12 +5,11 @@ import {
     EDIT_WORKFLOW
 } from './types';
 
-
 export const createWorkflow = (payload) => {
     return {
         type: CREATE_WORKFLOW,
         payload
-    }   
+    }
 }
 
 export const deleteWorkflow = (id) => {
