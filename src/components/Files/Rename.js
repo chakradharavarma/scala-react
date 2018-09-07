@@ -32,7 +32,9 @@ class RenameFile extends Component {
                 <Typography style={{ flex: 1, margin: '0 8px', textTransform: 'uppercase', letterSpacing: 2 }} component='div' variant='subheading' color='secondary'>
                     Rename
                 </Typography>
-                <TextField style={{flex: 1}} onChange={this.handleChange} />
+                <Field name='oldName'
+                    component={renameField}
+                />
                 <div className='edit-file-buttons'>
                     <Button onClick={onClose} variant="contained">
                         Cancel

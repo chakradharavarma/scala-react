@@ -18,7 +18,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from '@material-ui/core/Button';
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import Fade from '@material-ui/core/Fade';
-import { reduxForm, Field, formValueSelector } from 'redux-form';
+import { reduxForm, Field, formValueSelector, initialize } from 'redux-form';
 import { searchField } from '../TextField/fields';
 import urljoin from 'url-join';
 import { ContextMenu, Item, ContextMenuProvider } from 'react-contexify';
@@ -119,9 +119,17 @@ class Files extends Component {
   }
 
   toggleRenameModal = () => {
+
+    const { dispatch } = this.props;
     this.setState(prevState => {
       return { renameModal: !prevState.renameModal }
     })
+
+    dispatch(initialize('renameFile', {
+      oldName: 'test',
+      newName: 'test',
+    }));
+
   }
 
   downloadFile = ({ event, ref, data, dataFromProvider }) => {
