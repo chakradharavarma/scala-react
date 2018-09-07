@@ -127,7 +127,7 @@ class Files extends Component {
 
     dispatch(initialize('renameFile', {
       oldName: name,
-      newName: 'name',
+      newName: name,
     }));
 
   }
@@ -172,7 +172,7 @@ class Files extends Component {
       return     (
         <Fragment>
           <ContextMenu animation='fade' id={props.id} >
-            <Item onClick={this.toggleRenameModal}>
+            <Item onClick={this.toggleRenameModal(props.data.name)}>
               <Typography>
                 Rename
               </Typography>
@@ -270,7 +270,7 @@ class Files extends Component {
                         .sort(getSorting(order, orderBy))
                         .map((row, i) => (
                           <Fragment key={`file-row-${i}`}>
-                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
+                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name } }} id={`row-${i}`}>
                               <TableCell>
                                 <Typography
                                   color={row.isdir ? 'secondary' : 'default'}

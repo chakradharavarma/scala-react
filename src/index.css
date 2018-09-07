@@ -249,25 +249,25 @@ body {
     margin: 0 6px;
 }
 
-td.status-completed {
+.status-completed {
     text-transform: uppercase !important;
     font-weight: 600;
     color: green ;
 }
 
-td.status-terminated {
-    font-weight: 600;
+.status-terminated {
+    font-weight: 600 !important;
     text-transform: uppercase !important;
-    color: #CECECE ;
+    color: #CECECE !important;
 }
 
-td.status-failed {
+.status-failed {
     font-weight: 600;
     text-transform: uppercase !important;
     color: #7C0A02;
 }
 
-td.status-running {
+.status-running {
     font-weight: 600;
     text-transform: uppercase !important;
     color: #132a44;

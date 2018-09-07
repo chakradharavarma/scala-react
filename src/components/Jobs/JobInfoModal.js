@@ -70,12 +70,13 @@ class JobInfoModal extends Component {
                   <span className='job-details-row-item-title'>UUID: </span> {job.uuid}
                 </Typography>
               </Grid>
-              <Grid item xs={6} className='job-details-row'>
-                <Typography gutterBottom>
-                  <span className='job-details-row-item-title'>Status: </span> {job.status}
+              <Grid item xs={12} className='job-details-row'>
+                <Typography>
+                  <span className='job-details-row-item-title'>Status: </span>
+                  <span className={`status-${job.status.toLowerCase()}`}>{job.status}</span>
                 </Typography>
               </Grid>
-              <Grid item xs={6} className='job-details-row'>
+              <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
                   <span className='job-details-row-item-title'>Duration: </span> {job.running_time}
                 </Typography>
