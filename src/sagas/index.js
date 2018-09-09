@@ -286,6 +286,7 @@ function* callRenameFile(action) {
 
 function* callSchedules() {
     const payload = yield call(getSchedules);
+    debugger;
     if (payload.data) {
         yield put({ type: actions.FETCHED_SCHEDULES_SUCCESS, payload });
     } else {
@@ -365,10 +366,11 @@ function* callUploadFiles(action) {
 
 function* callDeleteFile(action) {
     let payload = yield call(deleteFile, action.payload);
-    if (payload.data) {
+    if (payload.data.success) {
         debugger;
         yield put({ type: actions.DELETE_FILE_SUCCESS, payload });
-        action.payload.path = action.payload.file.path.substring(0, action.payload.file.path.lastIndexOf('/')) || '/';
+        action.payload.path = action.payload.path.substring(0, action.payload.path.lastIndexOf('/')) || '/';
+        debugger;
         yield callFolder(action);
     } else {
         debugger;
