@@ -189,7 +189,6 @@ function editWorkflow(payload) {
 }
 
 function renameFile(payload) {
-    debugger;
     const url = `/renameContent/`;
     return axios.post(url, payload)
         .catch(err => err);
@@ -275,11 +274,9 @@ function* callDownloadKeyPair() {
 function* callRenameFile(action) {
     let payload = yield call(renameFile, action.payload);
     if (payload.data) {
-        debugger;
         yield put({ type: actions.RENAME_FILE_SUCCESS, payload });
         yield callFolder(action);
     } else {
-        debugger;
         yield put({ type: actions.RENAME_FILE_FAILED, payload });
     }
 }
@@ -329,7 +326,6 @@ function* callFolder(action) {
         window.location.hash = action.payload.path;
         yield put({ type: actions.FETCHED_FOLDER_SUCCESS, payload });
     } else {
-        debugger;
         yield put({ type: actions.FETCHED_FOLDER_FAILED, payload });
     }
 }
@@ -357,7 +353,6 @@ function* callUploadFiles(action) {
     let payload = yield call(uploadFiles, action.payload);
     if (payload.data) {
         yield put({ type: actions.UPLOAD_FILES_SUCCESS, payload });
-        action.payload.path = action.payload.path.substring(0, action.payload.path.lastIndexOf('/')) || '/';
         yield callFolder(action);
     } else {
         yield put({ type: actions.UPLOAD_FILES_FAILED, payload });
@@ -367,13 +362,10 @@ function* callUploadFiles(action) {
 function* callDeleteFile(action) {
     let payload = yield call(deleteFile, action.payload);
     if (payload.data.success) {
-        debugger;
         yield put({ type: actions.DELETE_FILE_SUCCESS, payload });
         action.payload.path = action.payload.path.substring(0, action.payload.path.lastIndexOf('/')) || '/';
-        debugger;
         yield callFolder(action);
     } else {
-        debugger;
         yield put({ type: actions.DELETE_FILE_FAILED, payload });
     }
 }
@@ -487,7 +479,6 @@ function* callCreateDesktopJob(action) {
         if(!conn) {
             yield put({ type: actions.PROMPT_JOB_DESKTOP_DNE, payload });
             payload = yield call(checkDesktopJob, action.payload);
-            debugger;
             if (payload.data) {
                 yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
                 yield callDesktops(action);
