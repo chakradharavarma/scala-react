@@ -83,12 +83,13 @@ export const updateCode = (contents) => {
     }
 }
 
-export const renameFile = (oldName, newName) => {
+export const renameFile = (oldName, newName, path) => {
     return {
         type: RENAME_FILE,
         payload: {
             oldName,
             newName,
+            path,
         },
     }
 }

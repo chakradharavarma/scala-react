@@ -189,7 +189,8 @@ function editWorkflow(payload) {
 }
 
 function renameFile(payload) {
-    const url = `renameContent`;
+    debugger;
+    const url = `/renameContent/`;
     return axios.post(url, payload)
         .catch(err => err);
 }
@@ -271,12 +272,15 @@ function* callDownloadKeyPair() {
     }
 }
 
-function* callRenameFile() {
-    let payload = yield call(renameFile);
-    if (payload.data && payload.data.length) {
-        yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
+function* callRenameFile(action) {
+    let payload = yield call(renameFile, action.payload);
+    if (payload.data) {
+        debugger;
+        yield put({ type: actions.RENAME_FILE_SUCCESS, payload });
+        yield callFolder(action);
     } else {
-        yield put({ type: actions.DOWNLOAD_KEY_PAIR_FAILED, payload });
+        debugger;
+        yield put({ type: actions.RENAME_FILE_FAILED, payload });
     }
 }
 

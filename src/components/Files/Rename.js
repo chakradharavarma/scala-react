@@ -1,27 +1,23 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import { createNewFolder } from '../../actions/fileActions'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { renameFile } from '../../actions/fileActions';
 import { renameField } from '../TextField/fields';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, reset, submit, Field } from 'redux-form';
+import submitForm from './handleSubmit';
 
 class RenameFile extends Component {
-
-    state = {
-        value: ''
-    }
 
     handleChange = (e) => {
         this.setState({ value: e.target.value })
     }
 
     handleRename = () => {
-        const { handleRename, onClose, folder } = this.props;
-        const { value } = this.state;
-        handleRename(`${folder.path}/${value}`);
+        const { onClose, dispatch, handleSubmit, folder } = this.props;
+        const submitter = handleSubmit(submitForm.bind(this, folder.path));
+        submitter();
+        dispatch(submit('renameFile'));
+        dispatch(reset('renameFile'));  
         onClose();
     }
 
@@ -32,7 +28,7 @@ class RenameFile extends Component {
                 <Typography style={{ flex: 1, margin: '0 8px', textTransform: 'uppercase', letterSpacing: 2 }} component='div' variant='subheading' color='secondary'>
                     Rename
                 </Typography>
-                <Field name='oldName'
+                <Field name='newName'
                     component={renameField}
                 />
                 <div className='edit-file-buttons'>
@@ -47,20 +43,13 @@ class RenameFile extends Component {
         );
     }
 }
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        handleRename: (oldPath, newPath) => dispatch(renameFile(oldPath, newPath))        
-    }
-}
-
 const mapStateToProps = (state) => {
     return {
         folder: state.folder,
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps)(
   reduxForm({
     form: 'renameFile',
     destroyOnUnmount: false,

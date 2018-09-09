@@ -118,18 +118,21 @@ class Files extends Component {
     })
   }
 
-  toggleRenameModal = (name) => () => {
-
+  showRenameModal = (name) => () => {
     const { dispatch } = this.props;
     this.setState(prevState => {
+      if(!prevState.renameModal) {
+        dispatch(initialize('renameFile', {
+          oldName: name,
+          newName: name,
+        }));   
+      }
       return { renameModal: !prevState.renameModal }
     })
+  }
 
-    dispatch(initialize('renameFile', {
-      oldName: name,
-      newName: name,
-    }));
-
+  hideRenameModal = () => {
+    this.setState({ renameModal: false })
   }
 
   downloadFile = ({ event, ref, data, dataFromProvider }) => {
@@ -168,11 +171,10 @@ class Files extends Component {
 
     const MyAwesomeMenu = (props) =>
     {
-      debugger;
       return     (
         <Fragment>
           <ContextMenu animation='fade' id={props.id} >
-            <Item onClick={this.toggleRenameModal(props.data.name)}>
+            <Item onClick={this.showRenameModal(props.data.name)}>
               <Typography>
                 Rename
               </Typography>
@@ -200,7 +202,7 @@ class Files extends Component {
     }
     return (
       <Fragment>
-        <NameModal type='rename' open={renameModal} onClose={this.toggleRenameModal} />
+        <NameModal type='rename' open={renameModal} onClose={this.hideRenameModal} />
         <NameModal type='dir' open={nameModal} onClose={this.toggleNameModal} />
         <Card className='file-explorer' elevation={modal ? 0 : 4}>
           <div className={classnames({ 'card-file-header': !modal })} >
@@ -270,7 +272,7 @@ class Files extends Component {
                         .sort(getSorting(order, orderBy))
                         .map((row, i) => (
                           <Fragment key={`file-row-${i}`}>
-                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name } }} id={`row-${i}`}>
+                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}`} }} id={`row-${i}`}>
                               <TableCell>
                                 <Typography
                                   color={row.isdir ? 'secondary' : 'default'}
@@ -293,7 +295,7 @@ class Files extends Component {
                                 {row.size} bytes
                         </TableCell>
                             </ContextMenuProvider>
-                            <MyAwesomeMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}` }} id={`row-${i}`} />
+                            <MyAwesomeMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name }} id={`row-${i}`} />
                           </Fragment>
                         )
                         )}

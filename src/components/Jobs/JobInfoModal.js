@@ -47,7 +47,6 @@ class JobInfoModal extends Component {
   render() {
     const { classes, children, job } = this.props;
     console.log(job);
-    debugger;
     return (
       <Fragment>
         {React.cloneElement(children, { onClick: this.handleOpen })}

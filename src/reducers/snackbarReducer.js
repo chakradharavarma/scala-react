@@ -247,6 +247,14 @@ export default function (state=initialState, action) {
       notification = createNotification('Desktop does not exist, creating', INFO);
       state = processQueue(state, notification);
       break
+    case actions.RENAME_FILE_SUCCESS:
+      notification = createNotification('Successfully changed file name', SUCCESS);
+      state = processQueue(state, notification);
+      break;
+    case actions.RENAME_FILE_FAILED:
+      notification = createNotification(action.payload.message, ERROR);
+      state = processQueue(state, notification);
+      break
     default:
       break;
   }
