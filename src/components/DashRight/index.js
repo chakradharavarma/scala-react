@@ -68,14 +68,14 @@ class DashRight extends Component {
           mapStyles={mapStyles}
           className="route-wrapper"
         >
-          <Route exact path='/v2/' component={Jobs} />
-          <Route exact path='/v2/jobs' component={Jobs} />
-          <Route exact path='/v2/files' component={Files} />
-          <Route exact path='/v2/workflows' component={Workflows} />
-          <Route exact path='/v2/schedule' component={ScheduleTasks} />
-          <Route exact path='/v2/usage' component={Usage} />
-          <Route exact path='/v2/desktops' component={Desktops} />
-          <Route exact path='/v2/connections' component={Connections} />
+          <Route exact path='/' component={Jobs} />
+          <Route exact path='/jobs' component={Jobs} />
+          <Route exact path='/files' component={Files} />
+          <Route exact path='/workflows' component={Workflows} />
+          <Route exact path='/schedule' component={ScheduleTasks} />
+          <Route exact path='/usage' component={Usage} />
+          <Route exact path='/desktops' component={Desktops} />
+          <Route exact path='/connections' component={Connections} />
         </AnimatedSwitch>
         <Snackbar
           variant={notification ? notification.type : 'default'}

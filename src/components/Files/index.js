@@ -5,7 +5,6 @@ import FileModal from './FileModal';
 import NameModal from './NameModal';
 import ScalaLoader from '../ScalaLoader';
 import UploadFileModal from './UploadFileModal';
-import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -20,15 +19,9 @@ import UploadIcon from "@material-ui/icons/CloudUpload";
 import Fade from '@material-ui/core/Fade';
 import { reduxForm, Field, formValueSelector, initialize } from 'redux-form';
 import { searchField } from '../TextField/fields';
-import urljoin from 'url-join';
-import { ContextMenu, Item, ContextMenuProvider } from 'react-contexify';
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
-
-
+import FileExplorerRow from './FileExplorerRow';
 import 'react-contexify/dist/ReactContexify.min.css';
-
-const formatModifiedDate = (modifiedDate) => new Date(modifiedDate * 1000).toLocaleString();
-
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -36,7 +29,6 @@ const columnData = [
   { id: 'modified', numeric: false, disablePadding: false, label: 'Modified' },
   { id: 'size', numeric: true, disablePadding: false, label: 'Size' },
 ];
-
 
 function getSorting(order, orderBy) {
 
@@ -62,8 +54,8 @@ class Files extends Component {
     window.addEventListener("hashchange", this.onHashChange, false);
     const { fetchFolder, folder, modal } = this.props;
     const hash = window.location.hash;
-    if(!modal) {
-      if(hash) {
+    if (!modal) {
+      if (hash) {
         fetchFolder(hash.substring(1))()
       } else {
         fetchFolder('/')();
@@ -76,14 +68,14 @@ class Files extends Component {
     }
   }
 
-  componentWillUnmount() { 
+  componentWillUnmount() {
     window.removeEventListener("hashchange", this.onHashChange, false);
   }
 
   onHashChange = () => {
     const { fetchFolder, modal } = this.props;
     const hash = window.location.hash;
-    if(!modal && hash) {
+    if (!modal && hash) {
       fetchFolder(hash.substring(1))()
     }
   }
@@ -118,21 +110,8 @@ class Files extends Component {
     })
   }
 
-  showRenameModal = (name) => () => {
-    const { dispatch } = this.props;
-    this.setState(prevState => {
-      if(!prevState.renameModal) {
-        dispatch(initialize('renameFile', {
-          oldName: name,
-          newName: name,
-        }));   
-      }
-      return { renameModal: !prevState.renameModal }
-    })
-  }
-
-  hideRenameModal = () => {
-    this.setState({ renameModal: false })
+  deleteFile = () => {
+    this.confirmActionModalTrigger.click();
   }
 
   downloadFile = ({ event, ref, data, dataFromProvider }) => {
@@ -154,7 +133,7 @@ class Files extends Component {
   }
 
   render() {
-    const { fetchFile, fetchFolder, folder, deleteFile, modal, filter } = this.props;
+    const { fetchFolder, folder, modal, filter } = this.props;
     const { orderBy, order, nameModal, renameModal } = this.state;
     let { data, path, fetching } = folder;
     data = data || [];
@@ -169,41 +148,15 @@ class Files extends Component {
       </Button>
     )
 
-    const MyAwesomeMenu = (props) =>
-    {
-      return     (
-        <Fragment>
-          <ContextMenu animation='fade' id={props.id} >
-            <Item onClick={this.showRenameModal(props.data.name)}>
-              <Typography>
-                Rename
-              </Typography>
-            </Item>
-    
-            <Item onClick={this.downloadFile}>
-              <Typography>
-                Download
-                </Typography>
-            </Item>
-            <Item onClick={deleteFile}>
-              <Typography>
-                Delete
-                </Typography>
-            </Item>
-          </ContextMenu>
-          </Fragment>
-        )
-        
-    } 
-
     let parts = path.split('/')
-    if(modal) {
-      parts.splice(1,2)
+    if (modal) {
+      parts.splice(1, 2)
     }
     return (
       <Fragment>
         <NameModal type='rename' open={renameModal} onClose={this.hideRenameModal} />
         <NameModal type='dir' open={nameModal} onClose={this.toggleNameModal} />
+
         <Card className='file-explorer' elevation={modal ? 0 : 4}>
           <div className={classnames({ 'card-file-header': !modal })} >
             <div className='card-file-header-interactions'>
@@ -225,7 +178,7 @@ class Files extends Component {
                     <span key={`file-path-${i}`}
                       className='card-file-header-path'
                       onClick={fetchFolder(path.split('/').slice(0, i + (modal ? 3 : 1)).join('/') || '/')} >
-                      {(i !== 1 ) ? '/' : ''} {part}
+                      {(i !== 1) ? '/' : ''} {part}
                     </span>
                   ))
               }
@@ -267,38 +220,12 @@ class Files extends Component {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data
-                        .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
-                        .sort(getSorting(order, orderBy))
-                        .map((row, i) => (
-                          <Fragment key={`file-row-${i}`}>
-                            <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}`} }} id={`row-${i}`}>
-                              <TableCell>
-                                <Typography
-                                  color={row.isdir ? 'secondary' : 'default'}
-                                  className='file-explorer-item'
-                                  onClick={row.isdir ?
-                                    fetchFolder(urljoin(folder.path, row.name)) :
-                                    fetchFile(urljoin(folder.path, row.name))
-                                  }
-                                >
-                                  {row.name}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                {row.isdir ? 'Directory' : 'File'}
-                              </TableCell>
-                              <TableCell>
-                                {formatModifiedDate(row.modified)}
-                              </TableCell>
-                              <TableCell numeric>
-                                {row.size} bytes
-                        </TableCell>
-                            </ContextMenuProvider>
-                            <MyAwesomeMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name }} id={`row-${i}`} />
-                          </Fragment>
-                        )
-                        )}
+                      {
+                        data
+                          .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
+                          .sort(getSorting(order, orderBy))
+                          .map((row, i) => <FileExplorerRow i={i} row={row} key={`file-row-${i}`} /> )
+                      }
                     </TableBody>
                   </Table>
 
@@ -318,8 +245,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchFolder: (path) => () => dispatch(fetchFolder(path)),
     fetchFile: (path) => () => dispatch(fetchFile(path)),
     downloadFile: ({ event, ref, data, dataFromProvider }) => dispatch(downloadFile(dataFromProvider.file.path)),
-    deleteFile: ({ event, ref, data, dataFromProvider }) => {
-      dispatch(deleteFile(dataFromProvider)) // todo
+    deleteFile: (data) => () => {
+      dispatch(deleteFile(data)) // todo
     },
 
   }

@@ -30,6 +30,13 @@ const styles = theme => ({
 });
 
 class ConfirmActionModal extends Component {
+
+  constructor(props) {
+    super(props);
+    if(!this.props.children) {
+      throw new Error('ConfirmActionModal requires children')
+    }
+  }
   state = {
     open: false,
   };
@@ -48,7 +55,9 @@ class ConfirmActionModal extends Component {
   }
 
   render() {
-    const { classes, message, } = this.props;
+
+    const { classes, message } = this.props;
+
     return (
       <Fragment>
         {

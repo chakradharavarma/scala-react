@@ -16,7 +16,7 @@ export default class TemplateWorkflows extends Component {
       <CreateWorkflowStepper
         workflow={workflow}
         trigger={(
-          <Grid item xs={large ? 9 : 3}>
+          <Grid item xs={large ? 10 : 3}>
           <Card elevation={1} >
               <CardContent>
                 <div className='workflow-title-container'>

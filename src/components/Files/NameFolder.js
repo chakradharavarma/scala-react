@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { createNewFolder } from '../../actions/fileActions'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { initialize } from 'redux-form'
 
 class NameFolder extends Component {
 
@@ -21,6 +22,30 @@ class NameFolder extends Component {
         createNewFolder(`${folder.path}/${value}`);
         onClose();
     }
+
+  toggleNameModal = () => {
+    this.setState(prevState => {
+      return { nameModal: !prevState.nameModal }
+    })
+  }
+
+  showRenameModal = (name) => () => {
+    const { dispatch } = this.props;
+    this.setState(prevState => {
+      if (!prevState.renameModal) {
+        dispatch(initialize('renameFile', {
+          oldName: name,
+          newName: name,
+        }));
+      }
+      return { renameModal: !prevState.renameModal }
+    })
+  }
+
+  hideRenameModal = () => {
+    this.setState({ renameModal: false })
+  }
+
 
     render() {
         const { onClose } = this.props;

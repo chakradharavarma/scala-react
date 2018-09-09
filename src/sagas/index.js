@@ -78,7 +78,7 @@ function uploadFiles({ files, path }) {
         .catch(err => err);
 }
 
-function deleteFile({ file }) {
+function deleteFile(file) {
     const url = '/deleteItems/';
     const headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -328,6 +328,7 @@ function* callFolder(action) {
         window.location.hash = action.payload.path;
         yield put({ type: actions.FETCHED_FOLDER_SUCCESS, payload });
     } else {
+        debugger;
         yield put({ type: actions.FETCHED_FOLDER_FAILED, payload });
     }
 }
@@ -365,10 +366,12 @@ function* callUploadFiles(action) {
 function* callDeleteFile(action) {
     let payload = yield call(deleteFile, action.payload);
     if (payload.data) {
+        debugger;
         yield put({ type: actions.DELETE_FILE_SUCCESS, payload });
         action.payload.path = action.payload.file.path.substring(0, action.payload.file.path.lastIndexOf('/')) || '/';
         yield callFolder(action);
     } else {
+        debugger;
         yield put({ type: actions.DELETE_FILE_FAILED, payload });
     }
 }

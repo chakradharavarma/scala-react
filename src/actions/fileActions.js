@@ -96,7 +96,7 @@ export const renameFile = (oldName, newName, path) => {
 export const deleteFile = (file) => {
     return {
         type: DELETE_FILE,
-        payload: file,
+        payload: file
     }
 }
 

@@ -819,3 +819,7 @@ div:focus {
 .center-field > div > input {
     text-align: center;
 }
+
+.file-explorer-confirm-delete-menu-handler {
+    display: none;
+}

@@ -10,6 +10,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import ScheduleField from './ScheduleField';
 import SelectWorkflow from './SelectWorkflow';
 import { reduxForm, reset, submit, Field } from 'redux-form';
+import InfoIcon from '@material-ui/icons/Info';
 import submitForm from './handleSubmit';
 import {
   cronField
@@ -110,6 +111,7 @@ class ViewsSwiper extends Component {
                 name='cron'
                 component={cronField}
               />
+              <InfoIcon/>
 
             </ScheduleField>
             <SelectWorkflow />
