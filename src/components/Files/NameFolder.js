@@ -29,7 +29,7 @@ class NameFolder extends Component {
                 <Typography style={{ flex: 1, margin: '0 8px', textTransform: 'uppercase', letterSpacing: 2 }} component='div' variant='subheading' color='secondary'>
                     Name your folder
                 </Typography>
-                <TextField style={{flex: 1}} onChange={this.handleChange} />
+                <TextField className='center-field' style={{flex: 1}} onChange={this.handleChange} />
                 <div className='edit-file-buttons'>
                     <Button onClick={onClose} variant="contained">
                         Cancel

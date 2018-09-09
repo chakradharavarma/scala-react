@@ -28,13 +28,15 @@ export const cpusPerNode = TextField({
 export const nameField = TextField({
   placeholder: 'ex: test-water-300',
   margin: "normal",
+  className: 'center-field',
   style: { width: 300 },
   autoComplete: 'off'
 })
 
 export const renameField = TextField({
   margin: "normal",
-  style: { width: 300 },
+  style: { width: 300},
+  className: 'center-field',
   autoComplete: 'off'
 })
 
