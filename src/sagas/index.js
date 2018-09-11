@@ -416,6 +416,22 @@ function* callDeleteWorkflow(action) {
     if (payload.data) {
         yield put({ type: actions.DELETE_WORKFLOW_SUCCESS, payload });
         yield callWorkflowsAvailable(action);
+
+        // Delete dangling schedules
+        const workflows = yield call(getAvailableWorkflows);
+        const schedules = yield call(getSchedules);
+        debugger;
+        if(workflows.data && schedules.data) {
+            for(let i = 0; i < schedules.data.length; i++) {
+                let schedule = schedules[i];
+                const workflow = workflows.data.find(workflow =>
+                    schedule.workflowId === workflow.id);
+                if(!workflow) {
+                    yield deleteSchedule({payload: schedule });
+                }
+            };
+        }
+
     } else {
         yield put({ type: actions.DELETE_WORKFLOW_FAILED, payload });
     }
@@ -544,11 +560,15 @@ function* callPauseDesktop(action) {
 }
 
 function* callDeleteSchedule(action) {
+    debugger;
     const payload = yield call(deleteSchedule, action.payload);
+    debugger;
     if (payload.data) {
         yield put({ type: actions.DELETE_SCHEDULE_SUCCESS, payload });
+        debugger;
         yield callSchedules(action);
     } else {
+        debugger;
         yield put({ type: actions.DELETE_SCHEDULE_FAILED, payload });
     }
 }

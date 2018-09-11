@@ -43,9 +43,9 @@ class ScheduleCard extends Component {
     }
     const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
     if(!workflow) { // TODO move this somewhere nicer ... this means a workflow's been deleted and not its schedules
-      deleteSchedule(schedule.id)();
       return null;
     }
+
     return (
       <Grid item xs={12} lg={6}  >
         <Card style={{ minHeight: 200 }} >
@@ -86,10 +86,10 @@ class ScheduleCard extends Component {
                     message='Are you sure you want to delete this schedule?'
                     handleConfirm={this._handleClose(deleteSchedule(schedule.id))}
                   >
-                  <MenuItem>
-                  <DeleteOutlined className='menu-option-icon' />
-                    Delete
-                  </MenuItem>
+                    <MenuItem>
+                    <DeleteOutlined className='menu-option-icon' />
+                      Delete
+                    </MenuItem>
                   </ConfirmActionModal>
                 </Menu>
               </div>

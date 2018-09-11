@@ -6,26 +6,13 @@ import Modal from '@material-ui/core/Modal';
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
-
-function getModalStyle() {
-  const top = 38;
-  const left = 50;
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${left}%, -${top}%)`,
-    outline: 'none'
-  };
-}
+import Drawer from '@material-ui/core/Drawer';
 
 const styles = theme => ({
   paper: {
-    position: 'absolute',
-    width: theme.spacing.unit * 50,
     backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: 24,
+    boxShadow: theme.shadows[2],
+    padding: '24px 72px',
   },
 });
 
@@ -50,13 +37,11 @@ class JobInfoModal extends Component {
     return (
       <Fragment>
         {React.cloneElement(children, { onClick: this.handleOpen })}
-        <Modal
-          aria-labelledby="job-info-modal"
+        <Drawer anchor="bottom" 
           open={this.state.open}
           onClose={this.handleClose}
-          className='modal'
         >
-          <Card style={getModalStyle()} className={classes.paper}>
+          <Card className={classes.paper}>
             <Grid container>
               <Grid item xs={12} style={{ display: 'flex', paddingBottom: 18, justifyContent: 'center' }}>
                 <Typography style={{ margin: '0 8px', textTransform: 'uppercase', letterSpacing: 2 }} variant='title' color='secondary'>
@@ -93,7 +78,7 @@ class JobInfoModal extends Component {
 
             </Grid>
           </Card>
-        </Modal>
+        </Drawer>
       </Fragment>
     );
   }
