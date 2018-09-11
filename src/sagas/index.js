@@ -194,6 +194,20 @@ function renameFile(payload) {
         .catch(err => err);
 }
 
+
+function standardError({id}) {
+    const url = `/getstderror/${id}`;
+    return axios.get(url)
+        .catch(err => err);
+}
+
+
+function standardOut({id}) {
+    const url = `/getstdout/${id}`;
+    return axios.get(url)
+        .catch(err => err);
+}
+
 function createConnection() {
     const url = `/createConnection/`;
     return axios.post(url).catch(err => err);
@@ -278,6 +292,24 @@ function* callRenameFile(action) {
         yield callFolder(action);
     } else {
         yield put({ type: actions.RENAME_FILE_FAILED, payload });
+    }
+}
+
+function* callStandardError(action) {
+    let payload = yield call(standardError, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.GET_STD_ERR_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.GET_STD_ERR_FAILED, payload });
+    }
+}
+
+function* callStandardOut(action) {
+    let payload = yield call(standardOut, action.payload);
+    if (payload.data) {
+        yield put({ type: actions.GET_STD_OUT_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.GET_STD_OUT_FAILED, payload });
     }
 }
 
@@ -684,6 +716,14 @@ function* renameFileSaga() {
     yield takeLatest(actions.RENAME_FILE, callRenameFile)
 }
 
+function* getStandardErrorSaga() {
+    yield takeLatest(actions.GET_STD_ERR, callStandardError)
+}
+
+function* getStandardOutSaga() {
+    yield takeLatest(actions.GET_STD_OUT, callStandardOut)
+}
+
 
 export default function* root() {
     yield all([
@@ -711,5 +751,7 @@ export default function* root() {
         fork(terminateJobSaga),
         fork(createDesktopJobSaga),
         fork(renameFileSaga),
+        fork(getStandardErrorSaga),
+        fork(getStandardOutSaga),
     ])
 }
