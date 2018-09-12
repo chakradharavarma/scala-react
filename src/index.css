@@ -813,8 +813,21 @@ div:focus {
     padding-right: 4px;
     text-shadow: .3px 0 #888888;
     letter-spacing: 1px;
-
 }
+
+.job-details-row-item-title.standard-error {
+    color: #7C0A02;
+}
+
+.job-details-row-item-title.standard-out {
+    color: #132a44;
+}
+
+
+.job-details-row-item-title.link:hover {
+    text-decoration: underline;
+}
+
 
 .center-field > div > input {
     text-align: center;

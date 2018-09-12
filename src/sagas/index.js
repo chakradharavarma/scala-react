@@ -315,7 +315,6 @@ function* callStandardOut(action) {
 
 function* callSchedules() {
     const payload = yield call(getSchedules);
-    debugger;
     if (payload.data) {
         yield put({ type: actions.FETCHED_SCHEDULES_SUCCESS, payload });
     } else {
@@ -452,7 +451,6 @@ function* callDeleteWorkflow(action) {
         // Delete dangling schedules
         const workflows = yield call(getAvailableWorkflows);
         const schedules = yield call(getSchedules);
-        debugger;
         if(workflows.data && schedules.data) {
             for(let i = 0; i < schedules.data.length; i++) {
                 let schedule = schedules[i];
@@ -592,15 +590,11 @@ function* callPauseDesktop(action) {
 }
 
 function* callDeleteSchedule(action) {
-    debugger;
     const payload = yield call(deleteSchedule, action.payload);
-    debugger;
     if (payload.data) {
         yield put({ type: actions.DELETE_SCHEDULE_SUCCESS, payload });
-        debugger;
         yield callSchedules(action);
     } else {
-        debugger;
         yield put({ type: actions.DELETE_SCHEDULE_FAILED, payload });
     }
 }

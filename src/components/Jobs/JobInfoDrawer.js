@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer';
+import { connect } from 'react-redux';
+import { getStandardError, getStandardOut } from '../../actions/jobActions';
 
 const styles = theme => ({
   paper: {
@@ -14,31 +16,53 @@ const styles = theme => ({
     boxShadow: theme.shadows[2],
     padding: '24px 72px',
   },
+  modal: {
+    top: '30%',
+    left: '50%',
+    transform: `translate(-50%, -50%)`, 
+    width: '38vw',
+    padding: 24,
+    position: 'absolute',
+  },
+  outputText: {
+    fontFamily: `'Ubuntu Mono', monospace`
+  },
 });
 
-class JobInfoModal extends Component {
+class JobInfoDrawer extends Component {
+
+  componentDidUpdate(prevProps) {
+    const { getStandardOut, getStandardError, job } = this.props;
+    if (job && job !== prevProps.job) {
+      getStandardError(job.uuid);
+      getStandardOut(job.uuid)  
+    }
+  }
+
+  toggleModal = (open, text) => () => {
+    this.setState({
+      open,
+      text
+    })
+  }
+
+  
 
   state = {
     open: false,
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
+  }
 
   render() {
-    const { classes, children, job } = this.props;
+    const { classes, job, open, onClose, standardError, standardOut } = this.props;
+    if(!job) {
+      return null;
+    }
+
     return (
       <Fragment>
-        {React.cloneElement(children, { onClick: this.handleOpen })}
         <Drawer anchor="bottom" 
-          open={this.state.open}
-          onClose={this.handleClose}
+          open={open}
+          onClose={onClose}
         >
           <Card className={classes.paper}>
             <Grid container>
@@ -74,17 +98,48 @@ class JobInfoModal extends Component {
                   <span className='job-details-row-item-title'>Created on: </span> {job.updated}
                 </Typography>
               </Grid>
-
+              <Grid item xs={12} className='job-details-row'>
+                <Typography variant='body2' onClick={this.toggleModal(true, standardOut)}>
+                  <span className='job-details-row-item-title link standard-out'>Standard Out</span>
+                </Typography>
+              </Grid>
+              <Grid item xs={12} className='job-details-row'>
+                <Typography variant='body2' onClick={this.toggleModal(true, standardError)}>
+                  <span className='job-details-row-item-title link standard-error'>Standard Error</span>
+                </Typography>
+              </Grid>
             </Grid>
           </Card>
         </Drawer>
+        <Modal
+          open={this.state.open}
+          onClose={this.toggleModal(false)}
+        >
+          <Card className={classes.modal}>
+            <div className={classes.outputText} dangerouslySetInnerHTML={ {__html: this.state.text} } />
+          </Card>
+        </Modal>
       </Fragment>
     );
   }
 }
 
-JobInfoModal.propTypes = {
+JobInfoDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(JobInfoModal);
+const mapStateToProps = (state) => {
+  return {
+    standardError: state.jobs.standardError,
+    standardOut: state.jobs.standardOut
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getStandardError: (id) => dispatch(getStandardError(id)),
+    getStandardOut: (id) => dispatch(getStandardOut(id)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(JobInfoDrawer));

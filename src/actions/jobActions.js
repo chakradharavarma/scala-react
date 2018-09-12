@@ -1,5 +1,7 @@
 import {
     TERMINATE_JOB,
+    GET_STD_ERR,
+    GET_STD_OUT,
 } from './types';
 
 export const terminateJob = (uuid) => {
@@ -10,3 +12,22 @@ export const terminateJob = (uuid) => {
         }
     }
 }
+
+export const getStandardOut = (id) => {
+    return {
+        type: GET_STD_OUT,
+        payload: {
+            id
+        }
+    }
+}
+
+export const getStandardError = (id) => {
+    return {
+        type: GET_STD_ERR,
+        payload: {
+            id
+        }
+    }
+}
+

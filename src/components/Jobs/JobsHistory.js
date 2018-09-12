@@ -13,7 +13,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Divider from "@material-ui/core/Divider";
-import JobInfoModal from './JobInfoModal'
+import JobInfoDrawer from './JobInfoDrawer'
 import JobsCardHeader from './JobsCardHeader'
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
@@ -126,6 +126,8 @@ class JobsCard extends Component {
     selected: [],
     page: 0,
     rowsPerPage: 5,
+    drawerOpen: false,
+    job: null,
   };
 
   handleRequestSort = (event, property) => {
@@ -176,12 +178,25 @@ class JobsCard extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  setJobDrawer = (job) => () => {
+    this.setState({
+      drawerOpen: true,
+      job
+    })
+  }
+
+  closeJobDrawer = () => {
+    this.setState({
+      drawerOpen: false
+    })
+  }
+
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const { classes, filterForm, jobs, onClickDesktop } = this.props;
     const { fetching } = jobs;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, drawerOpen, job } = this.state;
     let data;
     if (filterForm) {
       data = jobs.data
@@ -225,14 +240,13 @@ class JobsCard extends Component {
                                 role="checkbox"
                                 aria-checked={isSelected}
                                 key={n.id}
+                                onClick={this.setJobDrawer(n)}
                                 selected={isSelected}
                               >
                                 <TableCell padding="checkbox" />
-                                <JobInfoModal job={n} >
                                 <TableCell component="th" scope="row" padding="none">
                                   {n.name}
                                 </TableCell>
-                                </JobInfoModal>
                                 <TableCell className={classnames(
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
@@ -270,6 +284,7 @@ class JobsCard extends Component {
                         </TableRow>
                       )}
                     </TableBody>
+                    <JobInfoDrawer open={drawerOpen} onClose={this.closeJobDrawer} job={job} />
                   </Table>
                 </Fade>
               )
