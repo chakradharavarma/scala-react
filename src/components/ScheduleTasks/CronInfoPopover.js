@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -26,7 +26,7 @@ const styles = theme => ({
   }
 });
 
-class MouseOverPopover extends React.Component {
+class MouseOverPopover extends Component {
   state = {
     anchorEl: null,
   };
@@ -45,12 +45,13 @@ class MouseOverPopover extends React.Component {
     const open = Boolean(anchorEl);
 
     return (
-      <div>
+      <Fragment>
         <InfoIcon
           className='cron-info-icon'
           aria-owns={open ? 'mouse-over-popover' : null}
           aria-haspopup="true"
           onMouseEnter={this.handlePopoverOpen}
+          onMouseLeave={this.handlePopoverClose}
         />
         <Popover
           id="mouse-over-popover"
@@ -131,7 +132,7 @@ class MouseOverPopover extends React.Component {
             </Typography>
           </div>
         </Popover>
-      </div>
+      </Fragment>
     );
   }
 }
