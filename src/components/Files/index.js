@@ -17,7 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from '@material-ui/core/Button';
 import UploadIcon from "@material-ui/icons/CloudUpload";
 import Fade from '@material-ui/core/Fade';
-import { reduxForm, Field, formValueSelector, initialize } from 'redux-form';
+import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { searchField } from '../TextField/fields';
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
 import FileExplorerRow from './FileExplorerRow';
@@ -132,6 +132,14 @@ class Files extends Component {
     form.submit();
   }
 
+
+  toggleRenameModal = (open) => {
+    this.setState({
+      renameModal: open,
+    })
+  }
+
+
   render() {
     const { fetchFolder, folder, modal, filter } = this.props;
     const { orderBy, order, nameModal, renameModal } = this.state;
@@ -152,9 +160,10 @@ class Files extends Component {
     if (modal) {
       parts.splice(1, 2)
     }
+
     return (
       <Fragment>
-        <NameModal type='rename' open={renameModal} onClose={this.hideRenameModal} />
+        <NameModal type='rename' open={renameModal} onClose={this.toggleRenameModal} />
         <NameModal type='dir' open={nameModal} onClose={this.toggleNameModal} />
 
         <Card className='file-explorer' elevation={modal ? 0 : 4}>
@@ -224,7 +233,14 @@ class Files extends Component {
                         data
                           .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
                           .sort(getSorting(order, orderBy))
-                          .map((row, i) => <FileExplorerRow i={i} row={row} key={`file-row-${i}`} /> )
+                          .map((row, i) =>
+                            <FileExplorerRow 
+                              i={i}
+                              toggleRenameModal={this.toggleRenameModal}
+                              row={row}
+                              key={`file-row-${i}`}
+                            /> 
+                          )
                       }
                     </TableBody>
                   </Table>

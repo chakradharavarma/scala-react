@@ -17,6 +17,7 @@ const styles = theme => ({
   cronExample: {
     display: 'flex',
     justifyContent: 'space-between',
+    padding: '4px 0',
   },
   boldType: {
     fontWeight: 800,

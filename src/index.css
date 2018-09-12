@@ -430,7 +430,7 @@ body {
 .desktop-section-container {
     padding: 24px;
     min-height: 357px;
-    margin: 20px 0;
+    margin-bottom: 20px;
     overflow: hidden;
 }
 

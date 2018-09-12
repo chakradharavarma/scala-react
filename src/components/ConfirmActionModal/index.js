@@ -8,17 +8,6 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 
-function getModalStyle() {
-  const top = 38;
-  const left = 50;
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${left}%, -${top}%)`,
-    outline: 'none'
-  };
-}
 
 const styles = theme => ({
   paper: {
@@ -27,6 +16,12 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
   },
+  modal: {
+    top: `38%`,
+    left: `50%`,
+    transform: `translate(-50%, -38%)`,
+    outline: 'none'
+  }
 });
 
 class ConfirmActionModal extends Component {
@@ -69,7 +64,7 @@ class ConfirmActionModal extends Component {
           onClose={this.handleClose}
           className='modal'
         >
-          <div style={getModalStyle()} className={classes.paper}>
+          <div className={`${classes.paper} ${classes.modal}`}>
             <div className='delete-session-warning-container'>
             <IconButton
               key="close"
@@ -84,7 +79,7 @@ class ConfirmActionModal extends Component {
               <div className='modal-title'>
               <Typography style={{ lineHeight: '1.4em'}} color='inherit' variant="title">
                 { message }
-            </Typography>
+             </Typography>
             </div>
             </div>
             <div className='delete-session-button-group'>

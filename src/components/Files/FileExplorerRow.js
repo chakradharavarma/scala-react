@@ -15,10 +15,7 @@ const formatModifiedDate = (modifiedDate) => new Date(modifiedDate * 1000).toLoc
 
 class FileExplorerRow extends Component {
 
-  constructor(props) {
-    super(props);
-    this.confirmActionModalTrigger = React.createRef();
-  }
+  confirmActionModalTrigger = React.createRef();
 
   state = {
     order: 'asc',
@@ -27,29 +24,21 @@ class FileExplorerRow extends Component {
     page: 0,
     nameModal: false,
     renameModal: false,
-  }
+  };
 
   deleteFile = () => {
-
     this.confirmActionModalTrigger.current.click();
-  }
+  };
 
   showRenameModal = (name) => () => {
-    const { dispatch } = this.props;
+    const { initialize, toggleRenameModal } = this.props;
     this.setState(prevState => {
       if (!prevState.renameModal) {
-        dispatch(initialize('renameFile', {
-          oldName: name,
-          newName: name,
-        }));
+        initialize(name);
+        toggleRenameModal(true);
       }
-      return { renameModal: !prevState.renameModal }
     })
-  }
-
-  hideRenameModal = () => {
-    this.setState({ renameModal: false })
-  }
+  };
 
   downloadFile = ({ event, ref, data, dataFromProvider }) => {
     let form = document.getElementById('download-file-form');
@@ -76,7 +65,7 @@ class FileExplorerRow extends Component {
       return (
         <Fragment>
           <ContextMenu animation='fade' id={props.id} >
-            <Item onClick={this.showRenameModal(props.data.name)}>
+            <Item onClick={this.showRenameModal(props.data.name).bind(this)}>
               <Typography>
                 Rename
               </Typography>
@@ -139,6 +128,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchFile: (path) => () => dispatch(fetchFile(path)),
     downloadFile: ({ event, ref, data, dataFromProvider }) => dispatch(downloadFile(dataFromProvider.file.path)),
     deleteFile: (data) => () => dispatch(deleteFile(data)), // todo
+    initialize: (name) => dispatch(initialize('renameFile', {
+      oldName: name,
+      newName: name,
+    })),
   }
 }
 
