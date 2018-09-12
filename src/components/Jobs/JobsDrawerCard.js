@@ -23,7 +23,7 @@ class JobsDrawerCard extends Component {
   render() {
     const { handleClick, workflow, closeDrawer } = this.props;
     return (
-      <Grid item xs={6}>
+      <Grid item xs={10}>
         <Card onClick={handleClick(workflow.id, closeDrawer)}>
           <CardMedia
             image={workflow.image}

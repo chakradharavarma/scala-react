@@ -50,27 +50,27 @@ class JobsDrawer extends Component {
                 <Typography color='secondary' variant='display1'>
                   Available Workflows
                 </Typography>
-                <div className='create-new-job-section'>
-                  <CreateWorkflowStepper
-                    handleCloseCallback={this.toggleDrawer(false)}
-                    trigger={createNewWorkflowTrigger}
-                  />
-                </div>
               </div>
-              <Divider />
               <List>
                 <div className='jobs-drawer-workflows'>
-                  <Grid container className='sibling-fade' spacing={16} >
+                  <Grid container justify='center' className='sibling-fade' spacing={16} >
                     {
                       availableWorkflows.data
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((workflow, i) => <JobsDrawerCard closeDrawer={this.toggleDrawer(false)} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
                     }
                   </Grid>
-                  <Divider/>
+                    <Divider/>
                   <Typography color='secondary' variant='display1' style={{padding: 24}}>
                     Template Workflows
                   </Typography>
+                  <div className='create-new-job-section'>
+                    <CreateWorkflowStepper
+                      handleCloseCallback={this.toggleDrawer(false)}
+                      trigger={createNewWorkflowTrigger}
+                    />
+                  </div>
+
                   <Grid container justify='center' className='sibling-fade' spacing={16} >
                     {
                       templateWorkflows.data

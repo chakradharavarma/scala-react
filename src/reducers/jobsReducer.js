@@ -5,7 +5,9 @@ import {
   FETCHED_JOBS_STATUS_SUCCESS,
   FETCHED_JOBS_STATUS_FAILED,
   GET_STD_ERR_SUCCESS,
+  GET_STD_ERR_FAILED,
   GET_STD_OUT_SUCCESS,
+  GET_STD_OUT_FAILED,
 } from '../actions/types';
 
 const initialState = {
@@ -36,8 +38,14 @@ export default function (state=initialState, action) {
     case GET_STD_ERR_SUCCESS:
       state = { ...state, standardOut: action.payload.data};
       break;
+    case GET_STD_ERR_FAILED:
+      state = { ...state, standardError: 'No data'};
+      break;
     case GET_STD_OUT_SUCCESS:
-      state = { ...state, standardError: action.payload.data};
+      state = { ...state, standardOut: action.payload.data};
+      break;
+    case GET_STD_OUT_FAILED:
+      state = { ...state, standardOut: 'No data'};
       break;
     default:
       break;

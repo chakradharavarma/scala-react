@@ -252,7 +252,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.RENAME_FILE_FAILED:
-      notification = createNotification(action.payload.message, ERROR);
+      notification = createNotification('Unable to rename file', ERROR);
+      state = processQueue(state, notification);
+      break
+    case actions.GET_STD_ERR_FAILED:
+      notification = createNotification('Unable to fetch standard error', ERROR);
       state = processQueue(state, notification);
       break
     default:

@@ -348,7 +348,6 @@ body {
 .jobs-drawer-workflows > div {
     width: unset !important;
     margin: unset !important;
-    padding-bottom: 24px;
 }
 
 .workflow-card {
