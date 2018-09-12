@@ -836,3 +836,10 @@ div:focus {
 .file-explorer-confirm-delete-menu-handler {
     display: none;
 }
+
+.cron-info-icon {
+    color: rgb(94, 141, 191);
+    justify-self: flex-end;
+    align-self: flex-end;
+    padding: 8px;
+}

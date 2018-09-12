@@ -10,11 +10,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import ScheduleField from './ScheduleField';
 import SelectWorkflow from './SelectWorkflow';
 import { reduxForm, reset, submit, Field } from 'redux-form';
-import InfoIcon from '@material-ui/icons/Info';
+import CronInfoPopover from './CronInfoPopover';
 import submitForm from './handleSubmit';
-import {
-  cronField
-} from '../TextField/fields';
+import { cronField } from '../TextField/fields';
 
 function TabContainer({ children, dir }) {
   return (
@@ -111,8 +109,7 @@ class ViewsSwiper extends Component {
                 name='cron'
                 component={cronField}
               />
-              <InfoIcon/>
-
+              <CronInfoPopover />
             </ScheduleField>
             <SelectWorkflow />
           </TabContainer>

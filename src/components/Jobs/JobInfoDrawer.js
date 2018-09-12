@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer';
 import { connect } from 'react-redux';
 import { getStandardError, getStandardOut } from '../../actions/jobActions';
-
 const styles = theme => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -45,8 +44,6 @@ class JobInfoDrawer extends Component {
       text
     })
   }
-
-  
 
   state = {
     open: false,
