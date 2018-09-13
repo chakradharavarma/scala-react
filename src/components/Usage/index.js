@@ -33,7 +33,6 @@ class Usage extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Card>
-
             <div className='usage-summary'>
               <Typography color='secondary' variant='headline'>
                 Monthly Summary

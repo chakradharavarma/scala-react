@@ -72,8 +72,8 @@ class MouseOverPopover extends Component {
           onClose={this.handlePopoverClose}
           disableRestoreFocus
         >
-          <Typography variant='subheading' color='secondary' gutterBottom>
-            Cron Examples
+          <Typography variant='subheading' color='secondary' style={{ textTransform: 'uppercase', textAlign: 'center' }} gutterBottom>
+            Examples
           </Typography>
           <div className={classes.cronExample}>
             <Typography>

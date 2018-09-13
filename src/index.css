@@ -20,7 +20,7 @@ body {
     height: 68px;
     background-size: contain;
     margin: 30px 0 30px 25px;
-    background-image: url('/scala-logo.png')
+    background-image: url('/static/scala-logo.png')
 }
 
 .dash-customer-logo {
@@ -348,6 +348,7 @@ body {
 .jobs-drawer-workflows > div {
     width: unset !important;
     margin: unset !important;
+    padding-bottom: 24px;
 }
 
 .workflow-card {

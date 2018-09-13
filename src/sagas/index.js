@@ -156,10 +156,11 @@ function checkDesktopJob({jobid}) {
     return axios.get(url).catch(err => err);
 }
 
+/*
 function createDesktopJob({jobid, desktopType}) {
     const url = `/createjobdesktop/?desktopType=${desktopType}&jobid=${jobid}`;
     return axios.get(url).catch(err => err);
-}
+}*/
 
 function deleteSchedule({ id }) { /* todo fix form data */
     const data = new FormData();
