@@ -22,15 +22,15 @@ export default class MonthlyUsagePanel extends Component {
       count[job.status] = count[job.status] + 1 || 1;
     });
     const data = Object.keys(count).map(function (category) {
-      return { 'name': category, 'value': count[category] }
+      return { 'name': category.charAt(0) + category.toLowerCase().substring(1), 'value': count[category] }
     })
     return (
       <ExpansionPanel defaultExpanded >
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <div className='monthly-usage-summary'>
-            <Typography variant='subheading' style={{ color: "#696969" }}>
+        <ExpansionPanelSummary className='monthly-usage-summary' expandIcon={<ExpandMoreIcon />}>
+          <div >
+            <Typography variant='subheading' className='expansion-panel-jobs-summary-title'>
               {month} 2018
-              </Typography>
+            </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{ display: 'unset' }} >
@@ -44,17 +44,23 @@ export default class MonthlyUsagePanel extends Component {
             <Typography variant='body2' className='status-terminated' >
               Terminated: {count['TERMINATED'] || 0}
             </Typography>
-
-    	<PieChart width={800} height={400}>
+            <div className='job-status-chart'>
+              <Typography className='job-status-chart-title' component='div' color='secondary' variant='headline'>
+                Job Status
+              </Typography>
+            <PieChart width={300} height={240}>
               <Pie
                 data={data}
                 dataKey="value"
                 nameKey="name"
+                isAnimationActive
                 cx="50%"
                 cy="50%"
                 innerRadius={50}
                 outerRadius={80}
                 label
+                paddingAngle={Math.min(5, (data.length - 1) * 3)}
+                labelClassName
               >
                 {
                   data.map((entry, index) =>
@@ -62,13 +68,15 @@ export default class MonthlyUsagePanel extends Component {
                   )
                 }
               </Pie>
-              <Tooltip
-              />
+              <Legend />
+              <Tooltip />
             </PieChart>
+            </div>
+            
             <div className='expansion-panel-jobs-summary' disabled >
               <Typography className='expansion-panel-jobs-summary-title' variant='subheading'>
-                JOBS
-                  </Typography>
+                Jobs summaries
+              </Typography>
             </div>
             {
               usage.data.map((job, i) =>

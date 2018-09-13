@@ -14,10 +14,10 @@ export const VALID_STATUSES = [
 ];
 
 export const STATUS_COLORS = {
-    'TERMINATED': '#6200EE',
-    'COMPLETED': '#018786',
-    'DEPLOYED': '#03DAC6',
-    'FAILED': '#3700B3',
+    'Terminated': '#5e8dbf',
+    'Completed': '#03DAC6',
+    'Deployed': '#93C5D8',
+    'Failed': '#38628f',
 }
 
 export const MONTHS = [

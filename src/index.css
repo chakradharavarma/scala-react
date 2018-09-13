@@ -424,8 +424,15 @@ body {
 }
 
 .monthly-usage-summary {
+    background-color: #5e8dbf !important;
     display: flex;
-    flex-direction: column;
+    flex: 1;
+    min-height: 48px;
+    padding-left: 24px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
+    align-content: center;
+    margin-bottom: 4px !important;
+    border-radius: 4px;
 }
 
 .desktop-section-container {
@@ -493,6 +500,7 @@ body {
     color: white !important;
     font-weight: 800;
     letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .jobs-drawer-list-container {
@@ -843,4 +851,28 @@ div:focus {
     justify-self: flex-end;
     align-self: flex-end;
     padding: 8px;
+}
+
+.recharts-legend-item-text {
+    font-weight: 300;
+    text-transform: capitalize
+}
+
+.job-status-chart {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    margin: 12px;
+    border: 4px solid #5e8dbf;
+    border-radius: 4px;
+}
+
+.job-status-chart-title {
+    text-transform: uppercase;
+    font-weight: 800 !important;
+    justify-content: center;
+    align-content: center;
+    text-shadow: .3px 0 #888888;
 }

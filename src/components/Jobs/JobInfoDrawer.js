@@ -93,7 +93,7 @@ class JobInfoDrawer extends Component {
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Created on: </span> {job.updated}
+                  <span className='job-details-row-item-title'>Updated on: </span> {job.updated}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
