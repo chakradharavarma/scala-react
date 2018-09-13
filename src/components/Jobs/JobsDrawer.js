@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import CreateWorkflowStepper from '../CreateWorkflowStepper';
 import TemplateWorkflowsCard from '../Workflows/TemplateWorkflowsCard'
 import JobsDrawerCard from './JobsDrawerCard';
-import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -27,13 +25,6 @@ class JobsDrawer extends Component {
   render() {
     const { availableWorkflows, templateWorkflows } = this.props;
 
-    const createNewWorkflowTrigger = (
-      <Button color='secondary'>
-        <AddIcon />
-        Create a New Workflow
-      </Button>
-    );
-
     return (
       <React.Fragment>
         <Button size='large' variant="contained" color='secondary' onClick={this.toggleDrawer(true)}>{this.props.title}</Button>
@@ -46,31 +37,28 @@ class JobsDrawer extends Component {
             role="button"
           >
             <div className='jobs-drawer-list-container'>
-              <div className='jobs-drawer-top-section'>
-                <Typography color='secondary' variant='display1'>
-                  Available Workflows
-                </Typography>
-              </div>
               <List>
                 <div className='jobs-drawer-workflows'>
-                  <Grid container justify='center' className='sibling-fade' spacing={16} >
-                    {
-                      availableWorkflows.data
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((workflow, i) => <JobsDrawerCard closeDrawer={this.toggleDrawer(false)} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
-                    }
-                  </Grid>
-                    <Divider/>
+                {
+                  availableWorkflows.data.length !== 0  && (
+                    <Fragment>
+                      <Typography color='secondary' variant='display1' style={{padding: 24}}>
+                        Available Workflows
+                      </Typography>
+                      <Grid container justify='center' className='sibling-fade' spacing={16} >
+                        {
+                            availableWorkflows.data
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map((workflow, i) => <JobsDrawerCard closeDrawer={this.toggleDrawer(false)} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
+                        }
+                      </Grid>
+                      <Divider/>
+                    </Fragment>
+                  )
+                }
                   <Typography color='secondary' variant='display1' style={{padding: 24}}>
                     Template Workflows
                   </Typography>
-                  <div className='create-new-job-section'>
-                    <CreateWorkflowStepper
-                      handleCloseCallback={this.toggleDrawer(false)}
-                      trigger={createNewWorkflowTrigger}
-                    />
-                  </div>
-
                   <Grid container justify='center' className='sibling-fade' spacing={16} >
                     {
                       templateWorkflows.data
@@ -78,8 +66,6 @@ class JobsDrawer extends Component {
                         .map((workflow, i) => <TemplateWorkflowsCard large workflow={workflow} key={`jobs-drawer-card-${i}`} />)
                     }
                   </Grid>
-
-
                 </div>
               </List>
             </div>

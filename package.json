@@ -37,7 +37,7 @@
     "react-router-transition": "^1.2.1",
     "react-scripts": "^1.1.4",
     "react-swipeable-views": "^0.12.16",
-    "recharts": "^1.1.0",
+    "recharts": "^1.2.0",
     "redux": "^4.0.0",
     "redux-form": "^7.4.2",
     "redux-form-material-ui": "^4.3.4",

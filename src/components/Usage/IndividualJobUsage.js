@@ -8,11 +8,12 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 export default class IndividualJobUsage extends Component {
 
   render() {
+    const { job } = this.props;
     return (
       <ExpansionPanel >
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography variant='subheading' style={{ color: "#696969" }} >
-            {this.props.data.uuid} : { this.props.data.status }
+            {job.uuid} : { job.status }
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -22,3 +23,24 @@ export default class IndividualJobUsage extends Component {
     );
   }
 }
+
+
+/*
+
+
+cancellable : true
+created : "2018-09-13 12:02:32"
+ganglia_url : "s3://sccp-test-scala-bucket/scala/ganglia-graphs/2d074461-1dad-434d-9a17-2205fa79b358"
+has_result : false
+id : 270
+name : "Workflow: Basic Workflow"
+result_link : null
+result_size : ""
+running_time : "N/A"
+status : "DEPLOYED"
+updated : "2018-09-13 12:02:36"
+use_s3_secure_redirect : true
+user : "scala"
+uuid : "2d074461-1dad-434d-9a17-2205fa79b358"
+
+*/

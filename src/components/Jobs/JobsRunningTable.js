@@ -25,6 +25,7 @@ const styles = theme => ({
 
 function JobsRunningTable(props) {
   const { classes, jobs, handleTerminateClick } = props;
+  debugger;
   return (
     <Table className={classes.table}>
       <TableHead>
@@ -32,6 +33,7 @@ function JobsRunningTable(props) {
           <TableCell>Workflow Name</TableCell>
           <TableCell>User</TableCell>
           <TableCell>Results available</TableCell>
+          <TableCell>Status</TableCell>
           <TableCell>Created date</TableCell>
           <TableCell>Updated date</TableCell>
           <TableCell numeric>Job ID</TableCell>
@@ -50,6 +52,9 @@ function JobsRunningTable(props) {
               </TableCell>
               <TableCell>
                 {job.hasResults ? 'Yes' : 'No'}
+              </TableCell>
+              <TableCell>
+                {job.status}
               </TableCell>
               <TableCell>
                 {job.created}

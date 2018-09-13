@@ -252,7 +252,7 @@ body {
 .status-completed {
     text-transform: uppercase !important;
     font-weight: 600;
-    color: green ;
+    color: green !important;
 }
 
 .status-terminated {
@@ -264,7 +264,7 @@ body {
 .status-failed {
     font-weight: 600;
     text-transform: uppercase !important;
-    color: #7C0A02;
+    color: #7C0A02 !important;
 }
 
 .status-running {
@@ -368,6 +368,7 @@ body {
 .section {
     margin-top: 24px;
     padding: 24px;
+    min-height: 280px
 }
 
 .card-metadata {

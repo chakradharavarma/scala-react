@@ -68,7 +68,8 @@ class DashRight extends Component {
           mapStyles={mapStyles}
           className="route-wrapper"
         >
-          <Route exact path='/v2/' component={Jobs} />
+          <Route exact path='/' component={Jobs} />
+          <Route exact path='/v2' component={Jobs} />
           <Route exact path='/v2/jobs' component={Jobs} />
           <Route exact path='/v2/files' component={Files} />
           <Route exact path='/v2/workflows' component={Workflows} />
