@@ -14,6 +14,7 @@ export const VALID_STATUSES = [
 ];
 
 export const STATUS_COLORS = {
+    'Pending': '#ADD8E6',
     'Terminated': '#5e8dbf',
     'Completed': '#03DAC6',
     'Deployed': '#93C5D8',

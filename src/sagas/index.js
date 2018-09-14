@@ -423,7 +423,7 @@ function* callJobStatus() {
 }
 
 function initAxios() { // TODO delete when done w migration
-    axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    axios.defaults.xsrfHeaderName = "X-CSRFToken";
     axios.defaults.xsrfCookieName = "csrftoken";
 }
 

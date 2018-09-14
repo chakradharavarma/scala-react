@@ -46,9 +46,13 @@ class Usage extends Component {
               <Fade in animation={400}>
                 <div className='summary-container'>
                     {
+                      results.length ?
                       results.map((result, i) => 
                         <MonthlyUsagePanel key={`monthly-usage-panel-${i}`} usage={result} />
-                      )}
+                      ) : <Typography className='centered'>
+                        No data
+                      </Typography>
+                    }
                 </div>
               </Fade>
             }
