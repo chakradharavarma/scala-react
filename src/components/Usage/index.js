@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import MonthlyUsagePanel from './MonthlyUsagePanel';
@@ -44,14 +45,15 @@ class Usage extends Component {
                 <ScalaLoader centered active />
               ) :
               <Fade in animation={400}>
-                <div className='summary-container'>
+                <div className={classnames('summary-container', { 'centered': !results.length })} >
                     {
                       results.length ?
-                      results.map((result, i) => 
-                        <MonthlyUsagePanel key={`monthly-usage-panel-${i}`} usage={result} />
-                      ) : <Typography className='centered'>
-                        No data
-                      </Typography>
+                        results.map((result, i) => 
+                          <MonthlyUsagePanel key={`monthly-usage-panel-${i}`} usage={result} />
+                        ) :
+                        <Typography variant='title'>
+                          No usage yet. Run your first job to see more.
+                        </Typography>
                     }
                 </div>
               </Fade>
