@@ -48,41 +48,47 @@ export default class MonthlyUsagePanel extends Component {
               <Typography className='job-status-chart-title' component='div' color='secondary' variant='headline'>
                 Job Status
               </Typography>
-            <PieChart width={300} height={240}>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                isAnimationActive
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={80}
-                label
-                paddingAngle={Math.min(5, (data.length - 1) * 3)}
-                labelClassName
-              >
+              <PieChart width={300} height={240}>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  nameKey="name"
+                  isAnimationActive
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={80}
+                  label
+                  paddingAngle={Math.min(5, (data.length - 1) * 3)}
+                  labelClassName
+                >
+                  {
+                    data.map((entry, index) =>
+                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name]} />
+                    )
+                  }
+                </Pie>
+                <Legend />
+                <Tooltip />
+              </PieChart>
+            </div>
+
+            <ExpansionPanel>
+
+              <ExpansionPanelSummary className='expansion-panel-jobs-summary' expandIcon={<ExpandMoreIcon />}>
+                <Typography className='expansion-panel-jobs-summary-title' variant='subheading'>
+                  Individual Jobs summaries
+              </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails style={{ display: 'unset' }} >
                 {
-                  data.map((entry, index) =>
-                    <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name]} />
+                  usage.data.map((job, i) =>
+                    <IndividualJobUsage key={`individual-job-usage-${i}`} job={job} />
                   )
                 }
-              </Pie>
-              <Legend />
-              <Tooltip />
-            </PieChart>
-            </div>
-            
-            <div className='expansion-panel-jobs-summary' disabled >
-              <Typography className='expansion-panel-jobs-summary-title' variant='subheading'>
-                Jobs summaries
-              </Typography>
-            </div>
-            {
-              usage.data.map((job, i) =>
-                <IndividualJobUsage key={`individual-job-usage-${i}`} job={job} />
-              )
-            }
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
