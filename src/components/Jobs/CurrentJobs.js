@@ -6,7 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
 import JobsDrawer from './JobsDrawer';
 import JobsRunningTable from './JobsRunningTable';
-import { VALID_STATUSES } from '../../common/consts';
+import { ACTIVE_STATUS } from '../../common/consts';
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
 
@@ -21,7 +21,7 @@ class CurrentJobs extends Component {
   render() {
     const { jobs } = this.props;
     const { data, fetching, fetched } = jobs;
-    const runningJobs = data.filter(job => VALID_STATUSES.includes(job.status));
+    const runningJobs = data.filter(job => ACTIVE_STATUS.includes(job.status));
     return (
       <Card classes={classes.paper} >
         <div className={classnames('current-jobs-header')}>

@@ -54,8 +54,8 @@ const JobsCardHeader = props => {
             {numSelected} selected
           </Typography>
         ) : (
-            <Typography variant='headline' color='secondary'>
-              Job History
+          <Typography variant='headline' color='secondary'>
+            Job History
           </Typography>
           )}
       </div>

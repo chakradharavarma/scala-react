@@ -25,7 +25,6 @@ const styles = theme => ({
 
 function JobsRunningTable(props) {
   const { classes, jobs, handleTerminateClick } = props;
-  debugger;
   return (
     <Table className={classes.table}>
       <TableHead>

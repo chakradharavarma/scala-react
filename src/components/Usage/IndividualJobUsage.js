@@ -11,7 +11,7 @@ export default class IndividualJobUsage extends Component {
     const { job } = this.props;
     return (
       <ExpansionPanel >
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon style={{ color: 'white'}}/>}>
           <Typography variant='subheading' style={{ color: "#696969" }} >
             {job.uuid} : { job.status }
           </Typography>

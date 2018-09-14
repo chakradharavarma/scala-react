@@ -343,6 +343,7 @@ function* callJobs() {
 
 function* callDesktops() {
     const payload = yield call(getDesktops);
+    debugger;
     if (payload.data) {
         yield put({ type: actions.FETCHED_DESKTOPS_SUCCESS, payload });
     } else {

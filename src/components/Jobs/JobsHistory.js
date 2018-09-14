@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DesktopIcon from '@material-ui/icons/DesktopWindows';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import { createDesktopJob } from '../../actions/desktopActions';
+import { ACTIVE_STATUS } from '../../common/consts';
 
 function getSorting(order, orderBy) {
   return (a, b) => {
@@ -230,6 +231,7 @@ class JobsCard extends Component {
                     <TableBody>
                       {
                         data
+                          .filter(job => !ACTIVE_STATUS.includes(job.status))
                           .sort(getSorting(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {

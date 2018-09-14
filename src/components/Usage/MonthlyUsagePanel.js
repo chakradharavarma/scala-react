@@ -26,7 +26,7 @@ export default class MonthlyUsagePanel extends Component {
     })
     return (
       <ExpansionPanel defaultExpanded >
-        <ExpansionPanelSummary className='monthly-usage-summary' expandIcon={<ExpandMoreIcon />}>
+        <ExpansionPanelSummary className='monthly-usage-summary' expandIcon={<ExpandMoreIcon style={{ color: 'white'}} />}>
           <div >
             <Typography variant='subheading' className='expansion-panel-jobs-summary-title'>
               {month} 2018
@@ -75,7 +75,7 @@ export default class MonthlyUsagePanel extends Component {
 
             <ExpansionPanel>
 
-              <ExpansionPanelSummary className='expansion-panel-jobs-summary' expandIcon={<ExpandMoreIcon />}>
+              <ExpansionPanelSummary className='expansion-panel-jobs-summary' expandIcon={<ExpandMoreIcon style={{ color: 'white'}} />}>
                 <Typography className='expansion-panel-jobs-summary-title' variant='subheading'>
                   Individual Jobs summaries
               </Typography>
