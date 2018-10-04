@@ -34,7 +34,7 @@ class Scripts extends Component {
 
 Scripts.defaultProps = {
     open: false,
-    contents: '',
+    content: '',
 };
 
 export default reduxForm({

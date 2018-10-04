@@ -183,8 +183,12 @@ export default function (state=initialState, action) {
       notification = createNotification('Unable to fetch folder', ERROR);
       state = processQueue(state, notification);
       break;
-    case actions.SAVE_FILE_SUCCESS:
+      case actions.SAVE_FILE_SUCCESS:
       notification = createNotification('Successfully saved file', SUCCESS);
+      state = processQueue(state, notification);
+      break;
+    case actions.SAVE_FILE_FAILED:
+      notification = createNotification('Unable to save file', ERROR);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_WORKFLOW_FAILED:

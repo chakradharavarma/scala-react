@@ -30,8 +30,8 @@ class FileModal extends Component {
 
     render() {
         const { file, handleClose, handleSave, updateCode } = this.props;
-        const { contents, path } = file;
-        const open = contents !== undefined;
+        const { content, path } = file;
+        const open = content !== undefined;
 
         if (!open) {
             return null;
@@ -49,7 +49,7 @@ class FileModal extends Component {
                     </Typography>
                     <CodeMirror
                         mode={getMode(path)}
-                        value={contents}
+                        value={content}
                         onChange={updateCode}
                         autoFocus
                         options={{ lineNumbers: true }}
@@ -58,7 +58,7 @@ class FileModal extends Component {
                         <Button variant="contained" onClick={handleClose}>
                             Cancel
                             </Button>
-                        <Button variant="contained" color="secondary" onClick={handleSave(path, contents)}>
+                        <Button variant="contained" color="secondary" onClick={handleSave(path, content)}>
                             Save
                         </Button>
                     </div>
@@ -70,14 +70,14 @@ class FileModal extends Component {
 
 FileModal.defaultProps = {
     open: false,
-    contents: '',
+    content: '',
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         handleClose: () => dispatch(handleClose()),
-        handleSave: (path, contents) => () => {
-            dispatch(handleSave(path, contents));
+        handleSave: (path, content) => () => {
+            dispatch(handleSave(path, content));
             dispatch(handleClose());
         },
         updateCode: (code) => dispatch(updateCode(code)),

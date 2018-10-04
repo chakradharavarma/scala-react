@@ -28,7 +28,7 @@ function getModalStyle() {
 
 class NameModal extends Component {
 
-    getModalContents = () => {
+    getModalcontent = () => {
         const { type, onClose } = this.props;
         switch(type){
             case 'dir':
@@ -50,7 +50,7 @@ class NameModal extends Component {
                     onClose={onClose}
                 >
                     <Card  style={getModalStyle()}>
-                        { this.getModalContents() } 
+                        { this.getModalcontent() } 
                     </Card>
                 </Modal>
         );

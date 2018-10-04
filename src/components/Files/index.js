@@ -19,7 +19,7 @@ import UploadIcon from "@material-ui/icons/CloudUpload";
 import Fade from '@material-ui/core/Fade';
 import { reduxForm, Field, formValueSelector } from 'redux-form';
 import { searchField } from '../TextField/fields';
-import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
+import { fetchFolder, fetchFile } from '../../actions/fileActions';
 import FileExplorerRow from './FileExplorerRow';
 import 'react-contexify/dist/ReactContexify.min.css';
 
@@ -108,28 +108,6 @@ class Files extends Component {
     this.setState(prevState => {
       return { nameModal: !prevState.nameModal }
     })
-  }
-
-  deleteFile = () => {
-    this.confirmActionModalTrigger.click();
-  }
-
-  downloadFile = ({ event, ref, data, dataFromProvider }) => {
-    let form = document.getElementById('download-file-form');
-    if (form) { // avoid appending multiple forms
-      document.body.remove(form);
-    }
-    form = document.createElement('form');
-    form.action = '/downloadFromMount/'
-    form.method = 'POST'
-    form.style = 'display: hidden;';
-    form.id = 'download-file-form';
-    let input = document.createElement('input');
-    input.name = 'filesToDownload'
-    input.value = dataFromProvider.file.path;
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
   }
 
 
@@ -260,11 +238,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchFolder: (path) => () => dispatch(fetchFolder(path)),
     fetchFile: (path) => () => dispatch(fetchFile(path)),
-    downloadFile: ({ event, ref, data, dataFromProvider }) => dispatch(downloadFile(dataFromProvider.file.path)),
-    deleteFile: (data) => () => {
-      dispatch(deleteFile(data)) // todo
-    },
-
   }
 }
 

@@ -17,7 +17,7 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: true};
       break;
       case FETCHED_SCHEDULES_SUCCESS:
-      state = { ...state, fetching: false, fetched: true, data: action.payload.data};
+      state = { ...state, fetching: false, fetched: true, data: action.payload.data || []};
       break;
     case FETCHED_SCHEDULES_FAILED:
       state = { ...state, fetching: false, fetched: false};

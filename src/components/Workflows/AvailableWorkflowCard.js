@@ -41,7 +41,8 @@ class AvailableWorkflows extends Component {
   render() {
     const { onClickDelete, onClickRun, workflow } = this.props;
     const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);    
+    const open = Boolean(anchorEl);  
+    debugger;  
     return (
       <Grid item lg={6} xl={4} sm={12} >
         <Card >
@@ -99,14 +100,14 @@ class AvailableWorkflows extends Component {
                 {`v${workflow.version}`}
               </Grid>
               <Grid item xs={4} >
-                {`${workflow.resources.nodes} nodes`}
+                {`${workflow.resources.instanceCount} nodes`}
               </Grid>
               <Grid item xs={4} >
                 {workflow.resources.compute}
               </Grid>
             </Grid>
             <Grid className='card-metadata' container spacing={8} >
-              <Grid item xs={6} >
+            <Grid item xs={4} >
                 {`STATUS: ${workflow.status}`}
               </Grid>
             </Grid>

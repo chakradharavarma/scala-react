@@ -72,7 +72,7 @@ class JobInfoDrawer extends Component {
               <Divider />
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>UUID: </span> {job.uuid}
+                  <span className='job-details-row-item-title'>UUID: </span> {job.job_id}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
@@ -93,7 +93,7 @@ class JobInfoDrawer extends Component {
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Updated on: </span> {job.updated}
+                  <span className='job-details-row-item-title'>Updated on: </span> {job.modified}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>

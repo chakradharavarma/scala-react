@@ -1,20 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Fade from '@material-ui/core/Fade';
-import { Redirect } from 'react-router-dom';
+import { formValueSelector } from 'redux-form';
 
 class ConfirmWorkflow extends Component {
 
   render() {
-    const { registeredFields, values } = this.props.workflow;
-    // TODO
-    if(!registeredFields || !values) {
-      return (
-        <Redirect to='/v2' />
-      )
-    }
+    const { name, cpusPerNode, tasksPerNode, numberOfNodes, compute } = this.props;
+    debugger;
     return (
       <div className='step-content-container'>
         <Typography variant='display1' color='secondary' component='div' className='step-title'>
@@ -27,39 +22,36 @@ class ConfirmWorkflow extends Component {
               Name:
             </Typography>
             <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.name && values.name}
+              {name}
             </Typography>
           </div>
-          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Disk Size:
-            </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.diskSpace && values.diskSpace}
-            </Typography>
-          </div>
-          <div>
+          { 
+            false &&
+            (<Fragment><div>
             <Typography className='confirm-workflow-field' color='secondary' variant='title'>
               CPUs per node:
             </Typography>
             <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.cpusPerNode && values.cpusPerNode}
+              { cpusPerNode }
+            </Typography>
+          </div>          <div>
+            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+              Tasks per node:
+            </Typography>
+            <Typography className='confirm-workflow-value' variant='title'>
+            { tasksPerNode }
             </Typography>
           </div>
+          </Fragment>
+          )
+        }
+
           <div>
             <Typography className='confirm-workflow-field' color='secondary' variant='title'>
               Number of nodes:
             </Typography>
             <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.numberOfNodes && values.numberOfNodes}
-            </Typography>
-          </div>
-          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Tasks per Node:
-            </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.tasksPerNode && values.tasksPerNode}
+              { numberOfNodes }
             </Typography>
           </div>
           <div>
@@ -67,7 +59,7 @@ class ConfirmWorkflow extends Component {
               Cluster Type:
             </Typography>
             <Typography className='confirm-workflow-value' variant='title'>
-              {registeredFields.clusterType && values.clusterType}
+              { compute }
             </Typography>
           </div>
         </Card>
@@ -79,13 +71,16 @@ class ConfirmWorkflow extends Component {
 
 
 
-const mapStateToProps = (state) => {
-  return (
-    {
-      workflow: state.form.createWorkflow
-    }
-  )
-};
+const selector = formValueSelector('createWorkflow');
 
+const mapStateToProps = (state) => {
+  return {
+    name: selector(state, 'name'),
+    compute: selector(state, 'resources.compute'),
+    numberOfNodes: selector(state, 'resources.nodes'),
+    tasksPerNode: selector(state, 'resources.tasksPerNode'),
+    cpusPerNode: selector(state, 'resources.cpusPerNode'),
+  }
+}
 
 export default connect(mapStateToProps)(ConfirmWorkflow);

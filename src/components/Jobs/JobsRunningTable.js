@@ -23,6 +23,8 @@ const styles = theme => ({
   },
 });
 
+const formatDate = (date) => new Date(date).toLocaleString();
+
 function JobsRunningTable(props) {
   const { classes, jobs, handleTerminateClick } = props;
   return (
@@ -34,7 +36,7 @@ function JobsRunningTable(props) {
           <TableCell>Results available</TableCell>
           <TableCell>Status</TableCell>
           <TableCell>Created date</TableCell>
-          <TableCell>Updated date</TableCell>
+          <TableCell>Modified date</TableCell>
           <TableCell numeric>Job ID</TableCell>
           <TableCell>Terminate job</TableCell>
         </TableRow>
@@ -47,7 +49,7 @@ function JobsRunningTable(props) {
                 {job.name}
               </TableCell>
               <TableCell>
-                {job.user}
+                {job.user_id}
               </TableCell>
               <TableCell>
                 {job.hasResults ? 'Yes' : 'No'}
@@ -56,10 +58,10 @@ function JobsRunningTable(props) {
                 {job.status}
               </TableCell>
               <TableCell>
-                {job.created}
+                {formatDate(job.created)}
               </TableCell>
               <TableCell>
-                {job.updated}
+                {formatDate(job.modified)}
               </TableCell>
               <TableCell numeric>
                 {job.id}

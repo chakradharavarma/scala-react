@@ -206,6 +206,7 @@ class JobsCard extends Component {
       data = jobs.data
     }
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    // TODO change hardcoded vnc here
     return (
       <Paper className={classes.root}>
         <JobsCardHeader numSelected={selected.length} />
@@ -252,7 +253,7 @@ class JobsCard extends Component {
                                 <TableCell className={classnames(
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
-                                <TableCell>{n.updated}</TableCell>
+                                <TableCell>{n.created}</TableCell>
                                 <TableCell>{n.running_time}</TableCell>
                                 <TableCell>
                                   <IconButton

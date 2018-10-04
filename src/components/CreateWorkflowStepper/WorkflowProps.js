@@ -37,30 +37,6 @@ const machines = [
   "Intel Xeon E5-2686 v4 128 CPUs 1952GB"
 ]
 
-const disks = [
-  "20 GB",
-  "50 GB",
-  "100 GB",
-  "250 GB",
-  "500 GB",
-  "1 TB",
-  "2 TB",
-]
-
-const diskSpace = TextField({
-  label: "Disk Space",
-  select: true,
-  type: "number",
-  margin: "normal",
-  style: { width: '100%' }
-},
-  disks.map(disk => (
-    <MenuItem key={disk} value={disk}>
-      {disk}
-    </MenuItem>
-  ))
-)
-
 const clusterType = TextField({
   label: "Cluster Type",
   select: true,
@@ -92,31 +68,32 @@ class WorkflowProps extends Component {
         <Grid container style={{ margin: 20 }} justify='center'>
           <Grid container item xs={12} lg={6} spacing={32}>
             <Grid item xs={12}>
-              <Field name="clusterType"
+              <Field name="resources.compute"
                 component={clusterType}
               />
             </Grid>
             <Grid item xs={12} />
-            <Grid item xs={12} lg={6} >
-              <Field name="numberOfNodes"
+            <Grid item xs={12}>
+              <Field name="resources.instanceCount"
                 component={numberOfNodes}
               />
             </Grid>
-            <Grid item xs={12} lg={6} >
-              <Field name="cpusPerNode"
-                component={cpusPerNode}
-              />
-            </Grid>
+            {
+              false &&
+              <Grid item xs={12} lg={6} >
+                <Field name="resources.cpusPerNode"
+                  component={cpusPerNode}
+                />
+              </Grid>
+            }
             <Grid item xs={12} />
             <Grid item xs={12} lg={6} >
-              <Field name="diskSpace"
-                component={diskSpace}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6} >
-              <Field name="tasksPerNode"
-                component={tasksPerNode}
-              />
+              {
+                false &&
+                <Field name="resources.tasksPerNode"
+                  component={tasksPerNode}
+                />
+              }
             </Grid>
             <Grid item xs={12}>
               <Dropzone style={{ width: '100%' }}>

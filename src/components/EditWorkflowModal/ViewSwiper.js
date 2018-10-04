@@ -79,9 +79,9 @@ class ViewsSwiper extends Component {
           indicatorColor="secondary"
           textColor="secondary"
         >
-          <Tab className={classes.tab} disableRipple label="Scripts" />
-          <Tab className={classes.tab} disableRipple label="Files" />
           <Tab className={classes.tab} disableRipple label="Cluster" />
+          <Tab className={classes.tab} disableRipple label="Files" />
+          <Tab className={classes.tab} disableRipple label="Scripts" />
           <Tab className={classes.tab} disableRipple label="Notifications" />
         </Tabs>
         <SwipeableViews
@@ -91,13 +91,13 @@ class ViewsSwiper extends Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-            <Scripts />
+            <WorkflowProps />
           </TabContainer>
           <TabContainer dir={theme.direction}>
             <Files modal />
           </TabContainer>
           <TabContainer dir={theme.direction}>
-            <WorkflowProps />
+            <Scripts />
           </TabContainer>
           <TabContainer dir={theme.direction}>
             <Notifications />

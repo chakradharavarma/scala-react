@@ -9,6 +9,10 @@ export default function submit(values) {
       _error: 'submit failed!',
     });
   } else {
+    if(!values.templateId) {
+      values.templateId = "basic"
+    }
+    debugger;
     store.dispatch(createWorkflow(values))
   }
   return 'done';

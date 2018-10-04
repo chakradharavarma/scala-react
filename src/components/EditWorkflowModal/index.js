@@ -48,9 +48,9 @@ const styles = {
 };
 
 async function getFile(path) {
-  const url = '/getFileContents/';
-  return await axios.post(url, {path}) // TODO make this a get 
-      .then(resp => resp.data.contents)
+  const url = `/api/file/get?path=${path}`;
+  return await axios.get(url)
+      .then(resp => resp.data.content)
       .catch(err => `ERROR: could not resolve path: ${path}`)
 }
 
@@ -76,14 +76,9 @@ class EditWorkflowModal extends Component {
         'scripts_prep': values[0],
         'scripts_run': values[1],
         'scripts_post': values[2],
-        workflow_name: workflow.name,
-        numberOfNodes: workflow.resources.nodes,
-        cpusPerNode: workflow.resources.nodes,
-        clusterType: workflow.resources.compute,
-        workflowId: workflow.id,
-        tasksPerNode: 1, // TODO
-        diskSpace: '20 GB', // TODO,
-        emails: workflow.notifications ? workflow.notifications.emails : '',
+        'resources.size': "20GB",
+        ...workflow,
+
         }))
       dispatch(fetchFolder(`/workflow/${workflow.id}`))
     })

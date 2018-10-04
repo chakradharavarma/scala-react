@@ -21,7 +21,7 @@ class WorkflowProps extends Component {
       <div className='edit-workflow-notification-container'>
         <Grid container justify='center'>
           <Grid container item spacing={16}>
-            <Grid item xs={12} justify='center'>
+            <Grid item xs={12} >
             <Typography color='secondary' variant='headline'>
                 Get email notifications for your workflow
               </Typography>
@@ -30,7 +30,7 @@ class WorkflowProps extends Component {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Field name="emails"
+              <Field name="notifications.emails"
                 component={emailField}
               />
             </Grid>

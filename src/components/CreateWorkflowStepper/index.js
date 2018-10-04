@@ -33,12 +33,7 @@ class CreateWorkflowStepper extends Component {
     const { workflow, dispatch } = this.props;
     if(workflow) {
       dispatch(initialize('createWorkflow', {
-        name: workflow.name,
-        numberOfNodes: workflow.resources.nodes,
-        cpusPerNode: workflow.resources.nodes,
-        clusterType: workflow.resources.compute,
-        tasksPerNode: 1, // TODO
-        diskSpace: '20 GB' // TODO
+        ...workflow
       }));
     }
   };

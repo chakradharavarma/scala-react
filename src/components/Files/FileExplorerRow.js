@@ -8,10 +8,10 @@ import urljoin from 'url-join';
 import { ContextMenu, Item, ContextMenuProvider } from 'react-contexify';
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
 import ConfirmActionModal from '../ConfirmActionModal';
-
+import axios from 'axios'
 import 'react-contexify/dist/ReactContexify.min.css';
 
-const formatModifiedDate = (modifiedDate) => new Date(modifiedDate * 1000).toLocaleString();
+const formatModifiedDate = (modifiedDate) => new Date(modifiedDate).toLocaleString();
 
 class FileExplorerRow extends Component {
 
@@ -40,26 +40,11 @@ class FileExplorerRow extends Component {
     })
   };
 
-  downloadFile = ({ event, ref, data, dataFromProvider }) => {
-    let form = document.getElementById('download-file-form');
-    if (form) { // avoid appending multiple forms
-      document.body.remove(form);
-    }
-    form = document.createElement('form');
-    form.action = '/downloadFromMount/'
-    form.method = 'POST'
-    form.style = 'display: hidden;';
-    form.id = 'download-file-form';
-    let input = document.createElement('input');
-    input.name = 'filesToDownload'
-    input.value = dataFromProvider.file.path;
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-  }
+  formatSize = (a, b) => { if (0 == a) return "0 B"; var c = 1024, d = b || 0, e = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] }
+
 
   render() {
-    const { row, i, folder, fetchFile, fetchFolder, deleteFile } = this.props;
+    const { row, i, folder, fetchFile, fetchFolder, deleteFile, downloadFile } = this.props;
 
     const RightClickMenu = (props) => {
       return (
@@ -70,7 +55,7 @@ class FileExplorerRow extends Component {
                 Rename
               </Typography>
             </Item>
-            <Item onClick={this.downloadFile}>
+            <Item onClick={downloadFile}>
               <Typography>
                 Download
                 </Typography>
@@ -84,7 +69,7 @@ class FileExplorerRow extends Component {
         </Fragment>
       )
     }
-    
+
     return (
       <Fragment>
         <ConfirmActionModal
@@ -113,7 +98,7 @@ class FileExplorerRow extends Component {
             {formatModifiedDate(row.modified)}
           </TableCell>
           <TableCell numeric>
-            {row.size} bytes
+            { this.formatSize(row.size)}
           </TableCell>
         </ContextMenuProvider>
         <RightClickMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name }} id={`row-${i}`} />

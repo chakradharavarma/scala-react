@@ -49,11 +49,12 @@ export const createNewFolder = (path) => {
     }
 }
 
-export const downloadFile = (filesToDownload) => {
+export const downloadFile = (path) => {
+    debugger
     return {
         type: DOWNLOAD_FILE,
         payload: {
-            filesToDownload
+            path
         }
     }
 }
@@ -64,21 +65,21 @@ export const handleClose = () => {
     }
 }
 
-export const handleSave = (path, contents) => {
+export const handleSave = (path, content) => {
     return {
         type: SAVE_FILE,
         payload: {
             path,
-            contents,
+            content,
         }
     }
 }
 
-export const updateCode = (contents) => {
+export const updateCode = (content) => {
     return {
         type: UPDATE_CODE,
         payload: {
-            contents,
+            content,
         }
     }
 }

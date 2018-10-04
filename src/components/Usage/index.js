@@ -23,7 +23,7 @@ class Usage extends Component {
     const { data } = jobs;
 
     const groups = data.reduce(function (r, o) {
-      var m = o.updated.split(('-'))[1];
+      var m = o.modified.split(('-'))[1];
       (r[m]) ? r[m].data.push(o) : r[m] = { group: m, data: [o] };
       return r;
     }, {});

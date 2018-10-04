@@ -35,15 +35,6 @@ export default class MonthlyUsagePanel extends Component {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{ display: 'unset' }} >
           <div style={{ margin: "0 22px" }}>
-            <Typography variant='body2' className='status-completed' >
-              Completed: {count['COMPLETED'] || 0}
-            </Typography>
-            <Typography variant='body2' className='status-failed' >
-              Failed: {count['FAILED'] || 0}
-            </Typography>
-            <Typography variant='body2' className='status-terminated' >
-              Terminated: {count['TERMINATED'] || 0}
-            </Typography>
             <div className='job-status-chart'>
               <Typography className='job-status-chart-title' component='div' color='secondary' variant='headline'>
                 Job Status
