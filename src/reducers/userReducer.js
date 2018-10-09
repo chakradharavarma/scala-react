@@ -1,35 +1,28 @@
+import {
+  LOGIN_FAILED,
+  LOGIN_SUCCESS,
+  REGISTER_FAILED,
+  REGISTER_SUCCESS
+} from '../actions/types';
+
 const initialState = {
-  fetching: false,
-  fetched: false,
-  email: null,
+  data: null,
   error: null
 }
 
-export default function (state={}, action) {
+export default function (state=initialState, action) {
   switch(action.type){
-    case "LOG_IN":
-      state = { ...state, fetching: true};
-      /*
-      post('/api/login', action.payload)
-        .then(state = { ...state, ...action.payload, fetched: true, fetching: false})
-        .then(localStorage.setItem('SERIALIZED_USER', JSON.stringify(state)))
-        .catch((error) => state = { ...state, error: error});*/
-      state = { ...state, ...action.payload, fetched: true, fetching: false}
+    case LOGIN_SUCCESS:
+      state = { ...state, data: action.payload}
       break;
-    case "LOG_OUT": 
-      localStorage.setItem('USER', null)
-      state = initialState;
+    case LOGIN_FAILED:
+      state = { ...state, error: action.payload}
       break;
-    case "FETCH_LOCAL_USER":
-      const localUser = JSON.parse(localStorage.getItem('SERIALIZED_USER'));
-      state = { ...state, ...localUser }
+    case REGISTER_SUCCESS:
+      state = { ...state, data: action.payload.user}
       break;
-
-    case "FETCH_USER_ERROR": 
-      state = { ...state, error: action.payload, fetching: false}
-      break;
-    case "DESTROY_USER":
-      state = { ...state, name: null}
+    case REGISTER_FAILED:
+      state = { ...state, error: action.payload}
       break;
     default:
       break;

@@ -42,7 +42,6 @@ class AvailableWorkflows extends Component {
     const { onClickDelete, onClickRun, workflow } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);  
-    debugger;  
     return (
       <Grid item lg={6} xl={4} sm={12} >
         <Card >

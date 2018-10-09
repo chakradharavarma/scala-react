@@ -1,9 +1,21 @@
-    import * as actions from '../actions/types';
-
+import * as actions from '../actions/types';
 import axios from 'axios';
 import moment from 'moment';
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
-import { jsonToFormData } from '../common/helpers';
+import { COGNITO_CONFIG } from '../common/consts';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import Amplify from 'aws-amplify';
+
+Amplify.configure({
+	Auth: {
+		mandatorySignIn: true,
+		region: process.env.REACT_APP_COGNITO_REGION,
+		userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+		identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+		userPoolWebClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
+	}
+});
+
 
 function getAvailableWorkflows() {
     const url = '/api/workflow/get';
@@ -71,9 +83,9 @@ function uploadFiles({ files, path }) {
         .catch(err => err);
 }
 
-function deleteFile({path}) {
+function deleteFile({ path }) {
     const url = `/api/file/delete?path=${path}`;
-    return axios.delete(url)    
+    return axios.delete(url)
         .catch(err => err);
 }
 
@@ -96,14 +108,13 @@ function deleteConnection({ id }) {
 }
 
 function createWorkflow(payload) {
-    debugger
     const url = `/api/workflow/create`;
     const data = JSON.stringify(payload);
     return axios.post(url, data)
         .catch(err => err);
 }
 
-function deleteWorkflow({id}) {
+function deleteWorkflow({ id }) {
     const url = `/api/workflow/delete?id=${id}`;
     return axios.delete(url)
         .catch(err => err);
@@ -129,7 +140,7 @@ function createFolder(payload) {
 }
 
 
-function checkDesktopJob({jobid}) {
+function checkDesktopJob({ jobid }) {
     const url = `/desktopsJobsAjax/?jobid=${jobid}`;
     return axios.get(url)
         .catch(err => err);
@@ -141,7 +152,7 @@ function createDesktopJob({jobid, desktopType}) {
     return axios.get(url).catch(err => err);
 }*/
 
-function deleteSchedule({id}) { /* todo fix form data */
+function deleteSchedule({ id }) { /* todo fix form data */
     const url = `/api/schedule/delete/${id}`;
     return axios.delete(url).catch(err => err);
 }
@@ -175,23 +186,23 @@ function renameFile(payload) {
 
 function download(blob, filename) {
     if (window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, filename);
+        window.navigator.msSaveOrOpenBlob(blob, filename);
     } else {
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      const url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = filename;
-      a.click();
-      setTimeout(() => {
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }, 0)
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }, 0)
     }
-  }
-  
+}
 
-function downloadFile({path}) {
+
+function downloadFile({ path }) {
     const url = `/api/file/download?path=${path}`;
     const headers = {
         responseType: 'blob'
@@ -201,14 +212,14 @@ function downloadFile({path}) {
 }
 
 
-function standardError({id}) {
+function standardError({ id }) {
     const url = `/getstderror/${id}`;
     return axios.get(url)
         .catch(err => err);
 }
 
 
-function standardOut({id}) {
+function standardOut({ id }) {
     const url = `/getstdout/${id}`;
     return axios.get(url)
         .catch(err => err);
@@ -233,7 +244,7 @@ function deleteDesktop({ desktop_id, con_id }) {
 
 function pauseDesktop({ iid }) { // TODO change route name on back end
     const url = `/stopdesktop/?iid=${iid}`;
-    return axios.get(url, )
+    return axios.get(url)
         .catch(err => err);
 }
 
@@ -365,6 +376,33 @@ function* callDesktops() {
     }
 }
 
+function* callUser() {
+
+    const userPool = new CognitoUserPool(COGNITO_CONFIG);
+    var cognitoUser = userPool.getCurrentUser();
+
+    if (cognitoUser != null) {
+        cognitoUser.getSession(function (err, session) {
+            if (err) {
+                alert(err);
+                return;
+            }
+            alert.log('session validity: ' + session.isValid());
+            /*
+            new CognitoIdentityCredentials({
+                IdentityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+                Logins: {
+                    [`cognito-idp.${process.env.REACT_APP_COGNITO_REGION}.amazonaws.com/${process.env.REACT_APP_COGNITO_USER_POOL_ID}`]: session.getIdToken().getJwtToken()
+                }
+            });*/
+        });
+    }else {
+        console.log("todo, needs login")
+    }
+
+
+}
+
 function* callFolder(action) {
     action.payload = action.payload ? action.payload : { path: '/' }; // TODO clean up
     let payload = yield call(getFolder, action.payload);
@@ -451,6 +489,7 @@ function* callInitApp(action) {
     yield callWorkflowTemplates(action);
     yield callConnections(action);
     yield callDesktops(action);
+    yield callUser(action)
 }
 
 function* callCreateWorkflow(action) {
@@ -473,14 +512,13 @@ function* callDeleteWorkflow(action) {
         // Delete dangling schedules
         const workflows = yield call(getAvailableWorkflows);
         const schedules = yield call(getSchedules);
-        debugger
-        if(workflows.data && schedules.data) {
-            for(let i = 0; i < schedules.data.length; i++) {
+        if (workflows.data && schedules.data) {
+            for (let i = 0; i < schedules.data.length; i++) {
                 let schedule = schedules.data[i];
                 const workflow = workflows.data.find(workflow =>
                     schedule.workflowId === workflow.id);
-                if(!workflow) {
-                    yield deleteSchedule({payload: schedule });
+                if (!workflow) {
+                    yield deleteSchedule({ payload: schedule });
                 }
             };
         }
@@ -545,7 +583,7 @@ function* callCreateDesktopJob(action) {
     let payload = yield call(checkDesktopJob, action.payload);
     if (payload.status === 200) {
         const { conn } = payload.data;
-        if(!conn) {
+        if (!conn) {
             yield put({ type: actions.PROMPT_JOB_DESKTOP_DNE, payload });
             payload = yield call(checkDesktopJob, action.payload);
             if (payload.data) {
@@ -558,16 +596,16 @@ function* callCreateDesktopJob(action) {
             var { data } = payload;
             var instance = data.desktop;
             var state = instance.State.Name;
-    
+
             var serverIp = data.serverIp;
-    
+
             var connectionID = data.conn.identifier;
             var base = btoa([connectionID, "c", "postgresql"].join("\x00"));
-    
+
             var now = moment();
             var launchDate = moment(instance.LaunchTime);
             var duration = moment.duration(now.diff(launchDate));
-    
+
             if (state === "running" && duration.asMinutes() > 10) {
                 let connect = "http://" + serverIp + ":8080/guacamole/#/client/" + base + "?token=" + data.token;
                 window.open(connect, '_blank')

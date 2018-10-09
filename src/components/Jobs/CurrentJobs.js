@@ -22,7 +22,6 @@ class CurrentJobs extends Component {
     const { jobs } = this.props;
     const { data, fetching, fetched } = jobs;
     const runningJobs = data.filter(job => ACTIVE_STATUS.includes(job.status));
-    debugger;
     return (
       <Card classes={classes.paper} >
         <div className={classnames('current-jobs-header')}>

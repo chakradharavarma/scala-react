@@ -50,7 +50,6 @@ export const createNewFolder = (path) => {
 }
 
 export const downloadFile = (path) => {
-    debugger
     return {
         type: DOWNLOAD_FILE,
         payload: {

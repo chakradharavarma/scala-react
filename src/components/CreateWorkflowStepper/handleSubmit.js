@@ -12,7 +12,6 @@ export default function submit(values) {
     if(!values.templateId) {
       values.templateId = "basic"
     }
-    debugger;
     store.dispatch(createWorkflow(values))
   }
   return 'done';

@@ -8,7 +8,6 @@ import urljoin from 'url-join';
 import { ContextMenu, Item, ContextMenuProvider } from 'react-contexify';
 import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/fileActions';
 import ConfirmActionModal from '../ConfirmActionModal';
-import axios from 'axios'
 import 'react-contexify/dist/ReactContexify.min.css';
 
 const formatModifiedDate = (modifiedDate) => new Date(modifiedDate).toLocaleString();
@@ -40,7 +39,7 @@ class FileExplorerRow extends Component {
     })
   };
 
-  formatSize = (a, b) => { if (0 == a) return "0 B"; var c = 1024, d = b || 0, e = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] }
+  formatSize = (a, b) => { if (0 === a) return "0 B"; var c = 1024, d = b || 0, e = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] }
 
 
   render() {

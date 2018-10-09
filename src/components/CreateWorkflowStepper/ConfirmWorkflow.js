@@ -9,7 +9,6 @@ class ConfirmWorkflow extends Component {
 
   render() {
     const { name, cpusPerNode, tasksPerNode, numberOfNodes, compute } = this.props;
-    debugger;
     return (
       <div className='step-content-container'>
         <Typography variant='display1' color='secondary' component='div' className='step-title'>
@@ -17,7 +16,7 @@ class ConfirmWorkflow extends Component {
         </Typography>
         <Fade in timeout={{enter: 200, exit: 300}}>
         <Card className='confirm-workflow-card'>
-          <div className=''>
+          <div>
             <Typography className='confirm-workflow-field' color='secondary' variant='title'>
               Name:
             </Typography>

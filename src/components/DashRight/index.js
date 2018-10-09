@@ -11,6 +11,10 @@ import Desktops from '../Desktops';
 import Workflows from '../Workflows';
 import ScheduleTasks from '../ScheduleTasks';
 import Snackbar from '../Snackbar';
+import Login from '../Login';
+import Verify from '../Verify';
+import Register from '../Register';
+import PrivateRoute from '../PrivateRoute';
 
 // we need to map the `scale` prop we define below
 // to the transform style property
@@ -68,15 +72,17 @@ class DashRight extends Component {
           mapStyles={mapStyles}
           className="route-wrapper"
         >
-          <Route exact path='/' component={Jobs} />
-          <Route exact path='/v2' component={Jobs} />
-          <Route exact path='/v2/jobs' component={Jobs} />
-          <Route exact path='/v2/files' component={Files} />
-          <Route exact path='/v2/workflows' component={Workflows} />
-          <Route exact path='/v2/schedule' component={ScheduleTasks} />
-          <Route exact path='/v2/usage' component={Usage} />
-          <Route exact path='/v2/desktops' component={Desktops} />
-          <Route exact path='/v2/connections' component={Connections} />
+          <PrivateRoute exact path='/' component={Jobs} />
+          <PrivateRoute exact path='/jobs' component={Jobs} />
+          <PrivateRoute exact path='/files' component={Files} />
+          <PrivateRoute exact path='/workflows' component={Workflows} />
+          <PrivateRoute exact path='/schedule' component={ScheduleTasks} />
+          <PrivateRoute exact path='/usage' component={Usage} />
+          <PrivateRoute exact path='/desktops' component={Desktops} />
+          <PrivateRoute exact path='/connections' component={Connections} />
+          <Route exact path='/login' component={Login} />
+          <PrivateRoute exact path='/verify' component={Verify} />
+          <Route exact path='/register' component={Register} />
         </AnimatedSwitch>
         <Snackbar
           variant={notification ? notification.type : 'default'}

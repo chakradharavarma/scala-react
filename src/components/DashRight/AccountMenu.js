@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -30,6 +31,7 @@ class AccountMenu extends React.Component {
 
   render() {
     const { open } = this.state;
+    const { user } = this.props;
 
     return (
         <div className='dash-right-options'>
@@ -71,4 +73,12 @@ AccountMenu.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default AccountMenu;
+const mapStateToProps = (state) => {
+  return (
+    {
+      user: state.user,
+    }
+  )
+};
+
+export default connect(mapStateToProps)(AccountMenu);

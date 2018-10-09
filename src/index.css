@@ -876,3 +876,24 @@ div:focus {
     align-content: center;
     text-shadow: .3px 0 #888888;
 }
+
+.auth-card {
+    width: 50vw;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.auth-card-title {
+    font-weight: 800 !important;
+    text-decoration: underline;
+    line-height: 14px;
+}
+
+.auth-fields {
+    margin: 32px 0;
+}
+
+.auth-fields > * {
+    display: flex !important;
+    width: 300px
+}

@@ -1,5 +1,5 @@
 #/bin/bash
 
-NAME=scala/frontend
+NAME=scala/ui
 
 docker build -t $NAME .

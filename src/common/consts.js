@@ -26,3 +26,10 @@ export const MONTHS = [
     'June', 'July', 'August', 'September',
     'October', 'November', 'December'
 ];
+
+
+
+export const COGNITO_CONFIG = {
+    UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+    ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
+};
