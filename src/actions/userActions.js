@@ -10,7 +10,3 @@ export function logIn(user) {
 export function logOut(user) {
   return { type: LOG_OUT, payload: user }
 }
-
-export function fetchLocalUser() {
-  return { type: FETCH_LOCAL_USER }
-}

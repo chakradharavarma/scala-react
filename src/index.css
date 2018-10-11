@@ -897,3 +897,7 @@ div:focus {
     display: flex !important;
     width: 300px
 }
+
+.Section__sectionFooterSecondaryContent {
+    display: none;
+}

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
 import { withRouter } from 'react-router'
 import { spring, AnimatedSwitch } from 'react-router-transition';
-import AccountMenu from './AccountMenu';
 import Files from '../Files';
 import Jobs from '../Jobs';
 import Usage from '../Usage';
@@ -11,9 +9,6 @@ import Desktops from '../Desktops';
 import Workflows from '../Workflows';
 import ScheduleTasks from '../ScheduleTasks';
 import Snackbar from '../Snackbar';
-import Login from '../Login';
-import Verify from '../Verify';
-import Register from '../Register';
 import PrivateRoute from '../PrivateRoute';
 
 // we need to map the `scale` prop we define below
@@ -64,7 +59,6 @@ class DashRight extends Component {
     const { notification } = this.props;
     return (
       <div id='dash-right' className='dash-right'>
-        <AccountMenu username={this.props.username} />
         <AnimatedSwitch
           atEnter={bounceTransition.atEnter}
           atLeave={bounceTransition.atLeave}
@@ -80,9 +74,6 @@ class DashRight extends Component {
           <PrivateRoute exact path='/usage' component={Usage} />
           <PrivateRoute exact path='/desktops' component={Desktops} />
           <PrivateRoute exact path='/connections' component={Connections} />
-          <Route exact path='/login' component={Login} />
-          <PrivateRoute exact path='/verify' component={Verify} />
-          <Route exact path='/register' component={Register} />
         </AnimatedSwitch>
         <Snackbar
           variant={notification ? notification.type : 'default'}

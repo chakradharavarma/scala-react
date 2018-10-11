@@ -1,0 +1,14 @@
+{
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "reactscala-20181009135628-authRole",
+            "UnauthRoleArn": "arn:aws:iam::012961716182:role/reactscala-20181009135628-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::012961716182:role/reactscala-20181009135628-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "reactscala-20181009135628-deployment",
+            "UnauthRoleName": "reactscala-20181009135628-unauthRole",
+            "StackName": "reactscala-20181009135628",
+            "StackId": "arn:aws:cloudformation:us-east-2:012961716182:stack/reactscala-20181009135628/a465de60-cbec-11e8-bdca-021b078b4832"
+        }
+    }
+}

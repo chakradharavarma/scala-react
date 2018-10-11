@@ -1,6 +1,8 @@
 import {
     REGISTER_SUCCESS,
-    LOGIN_SUCCESS,
+    LOG_IN_SUCCESS,
+    LOG_OUT,
+    FETCH_LOCAL_COGNITO_USER,
 } from './types';
 
 export const registerSuccess = (user) => {
@@ -21,11 +23,25 @@ export const handleRegister = (user) => {
     }
 }
 
-export const handleLogin = (user) => {
+export const logInSuccess = (user) => {
     return {
-        type: LOGIN_SUCCESS,
+        type: LOG_IN_SUCCESS,
         payload: {
             user
         }
     }
 }
+
+export const handleFetchUser = (user) => {
+    return {
+        type: FETCH_LOCAL_COGNITO_USER,
+        payload: {
+
+        }
+    }
+}
+
+export function logOut(user) {
+    return { type: LOG_OUT, payload: user }
+}
+  

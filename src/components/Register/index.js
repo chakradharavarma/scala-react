@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-import { register } from '../../common/cognito'
 import { handleRegister } from '../../actions/authActions'
 import { Auth } from 'aws-amplify'
 
@@ -11,6 +10,10 @@ class Register extends Component {
   state = {
     email: '',
     password: ''
+  }
+
+  componentDidMount() {
+    Auth.ve
   }
 
   handleChange = (field) => (e) => {

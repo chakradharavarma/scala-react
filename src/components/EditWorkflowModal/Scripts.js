@@ -64,17 +64,17 @@ class Scripts extends Component {
                 >
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_prep" component={codeField()} />
+                            <Field name="scripts_prep.contents" component={codeField()} />
                         </Card>
                     </TabContainer>
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_run" component={codeField()} />
+                            <Field name="scripts_run.contents" component={codeField()} />
                         </Card>
                     </TabContainer>
                     <TabContainer>
                         <Card style={getModalStyle()}>
-                            <Field name="scripts_post" component={codeField()} />
+                            <Field name="scripts_post.contents" component={codeField()} />
                         </Card>
                     </TabContainer>
                 </SwipeableViews>

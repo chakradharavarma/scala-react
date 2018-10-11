@@ -10,6 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { logOut } from '../../actions/userActions';
 
 class AccountMenu extends React.Component {
 
@@ -21,18 +22,21 @@ class AccountMenu extends React.Component {
     this.setState(state => ({ open: !state.open }));
   };
 
-  handleClose = event => {
-    if (this.anchorElement.contains(event.target)) {
+  handleClose = e => {
+    if (this.anchorElement.contains(e.target)) {
       return;
     }
-
     this.setState({ open: false });
   };
+
+  handleLogout = e => {
+    this.props.handleLogout()
+    this.handleClose(e)
+  }
 
   render() {
     const { open } = this.state;
     const { user } = this.props;
-
     return (
         <div className='dash-right-options'>
           <Button
@@ -41,7 +45,7 @@ class AccountMenu extends React.Component {
             }}
             onClick={this.handleToggle}
           >
-            Hi, { this.props.username }
+            Hi, { user.data.username }
             <FontAwesomeIcon className='dash-icon' icon={faChevronDown} />
           </Button>
           <Popper open={open} anchorEl={this.anchorElement} transition style={{zIndex: 1}}>
@@ -54,10 +58,8 @@ class AccountMenu extends React.Component {
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
                   <MenuList>
-                      <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem onClick={this.handleClose}>My Account</MenuItem>
+                      <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                      <MenuItem disabled onClick={this.handleClose}>My Account</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
                 </Paper>
@@ -73,7 +75,7 @@ AccountMenu.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return (
     {
       user: state.user,
@@ -81,4 +83,12 @@ const mapStateToProps = (state) => {
   )
 };
 
-export default connect(mapStateToProps)(AccountMenu);
+const mapDispatchToProps = dispatch => {
+  return (
+    {
+      handleLogout: () => dispatch(logOut())
+    }
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountMenu);

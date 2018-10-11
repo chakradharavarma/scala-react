@@ -73,9 +73,12 @@ class EditWorkflowModal extends Component {
     Promise.all([prep, run, post])
     .then((values) => {
       dispatch(initialize('editWorkflow', {
-        'scripts_prep': values[0],
-        'scripts_run': values[1],
-        'scripts_post': values[2],
+        'scripts_prep.contents': values[0],
+        'scripts_prep.path': `/workflow/${workflow.id}/prep.sh`,
+        'scripts_run.contents': values[1],
+        'scripts_run.path': `/workflow/${workflow.id}/run.sh`,
+        'scripts_post.contents': values[2],
+        'scripts_post.path': `/workflow/${workflow.id}/post.sh`,
         'resources.size': "20GB",
         ...workflow,
 

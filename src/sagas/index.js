@@ -2,18 +2,16 @@ import * as actions from '../actions/types';
 import axios from 'axios';
 import moment from 'moment';
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
-import { COGNITO_CONFIG } from '../common/consts';
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-import Amplify from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 
 Amplify.configure({
-	Auth: {
-		mandatorySignIn: true,
-		region: process.env.REACT_APP_COGNITO_REGION,
-		userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
-		identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
-		userPoolWebClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
-	}
+    Auth: {
+        mandatorySignIn: true,
+        region: process.env.REACT_APP_COGNITO_REGION,
+        userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+        identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+        userPoolWebClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
+    }
 });
 
 
@@ -173,6 +171,12 @@ function editWorkflow(payload) {
     const url = `/api/workflow/update`;
     const data = JSON.stringify(payload);
     return axios.patch(url, data)
+        .catch(err => err);
+}
+
+function getJobMetrics({ id }) {
+    const url = `/api/job/metrics/${id}`;
+    return axios.get(url)
         .catch(err => err);
 }
 
@@ -340,6 +344,16 @@ function* callStandardOut(action) {
     }
 }
 
+function* callLogOut() {
+    const payload = yield Auth.signOut();
+    if(payload) {
+        console.log(payload);
+        alert('what is this? check the console.') //todo
+    }
+    yield put({ type: actions.LOG_OUT_SUCCESS, payload });
+    window.location.reload()
+}
+
 function* callSchedules() {
     const payload = yield call(getSchedules);
     if (payload.status === 200) {
@@ -377,30 +391,13 @@ function* callDesktops() {
 }
 
 function* callUser() {
-
-    const userPool = new CognitoUserPool(COGNITO_CONFIG);
-    var cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser != null) {
-        cognitoUser.getSession(function (err, session) {
-            if (err) {
-                alert(err);
-                return;
-            }
-            alert.log('session validity: ' + session.isValid());
-            /*
-            new CognitoIdentityCredentials({
-                IdentityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
-                Logins: {
-                    [`cognito-idp.${process.env.REACT_APP_COGNITO_REGION}.amazonaws.com/${process.env.REACT_APP_COGNITO_USER_POOL_ID}`]: session.getIdToken().getJwtToken()
-                }
-            });*/
-        });
-    }else {
-        console.log("todo, needs login")
+    const payload = yield Auth.currentAuthenticatedUser()
+    if (payload) {
+        axios.defaults.headers = {
+            Authorization: payload.signInUserSession.accessToken.jwtToken
+        }
+        yield put({ type: actions.FETCH_LOCAL_COGNITO_USER_SUCCESS, payload })
     }
-
-
 }
 
 function* callFolder(action) {
@@ -475,13 +472,8 @@ function* callJobStatus() {
     }
 }
 
-function initAxios() { // TODO delete when done w migration
-    axios.defaults.xsrfHeaderName = "X-CSRFToken";
-    axios.defaults.xsrfCookieName = "csrftoken";
-}
-
 function* callInitApp(action) {
-    initAxios(); // todo delete
+    yield callUser(action)
     yield callWorkflowsAvailable(action);
     yield callJobs(action);
     yield callJobStatus(action);
@@ -489,7 +481,6 @@ function* callInitApp(action) {
     yield callWorkflowTemplates(action);
     yield callConnections(action);
     yield callDesktops(action);
-    yield callUser(action)
 }
 
 function* callCreateWorkflow(action) {
@@ -555,6 +546,16 @@ function* callEditWorkflow(action) { // todo, make a real edit
         yield callWorkflowsAvailable(action);
     } else {
         yield put({ type: actions.EDIT_WORKFLOW_FAILED, payload });
+    }
+}
+
+function* callGetJobMetrics(action) { // todo, make a real edit
+    const payload = yield call(getJobMetrics, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.GET_JOB_METRICS_SUCCESS, payload });
+        yield callWorkflowsAvailable(action);
+    } else {
+        yield put({ type: actions.GET_JOB_METRICS_FAILED, payload });
     }
 }
 
@@ -753,6 +754,10 @@ function* getEditWorkflowSaga() {
     yield takeLatest(actions.EDIT_WORKFLOW, callEditWorkflow)
 }
 
+function* getJobMetricsSaga() {
+    yield takeLatest(actions.GET_JOB_METRICS, callGetJobMetrics)
+}
+
 function* getDeleteScheduleSaga() {
     // todo test
     yield takeLatest(actions.DELETE_SCHEDULE, callDeleteSchedule)
@@ -781,6 +786,14 @@ function* getStandardErrorSaga() {
 
 function* getStandardOutSaga() {
     yield takeLatest(actions.GET_STD_OUT, callStandardOut)
+}
+
+function* logoutSaga() {
+    yield takeLatest(actions.LOG_OUT, callLogOut)
+}
+
+function* loginSaga() {
+    yield takeLatest(actions.FETCH_LOCAL_COGNITO_USER, callUser)
 }
 
 
@@ -813,5 +826,8 @@ export default function* root() {
         fork(getStandardErrorSaga),
         fork(getStandardOutSaga),
         fork(downloadFileSaga),
+        fork(getJobMetricsSaga),
+        fork(logoutSaga),
+        fork(loginSaga),
     ])
 }

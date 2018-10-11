@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-import { login, confirmRegistration } from '../../common/cognito'
-import { handleLogin } from '../../actions/authActions'
+import { logInSuccess } from '../../actions/authActions'
 import { Auth } from 'aws-amplify'
 
 class Login extends Component {
@@ -28,14 +27,11 @@ class Login extends Component {
     const { username, password } = this.state;
     Auth.signIn(username, password)
       .then(user => {
-        debugger;
         return user
       })
       .catch(err => this.setState({ error: err.message }))
 
-
-
-    /*
+      /*
     login(username, password, (user, err) => {
       if(err) {
         switch(err.message) {
@@ -98,7 +94,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleLogin: (user) => dispatch(handleLogin(user))
+    handleLogInSuccess: (user) => dispatch(logInSuccess(user))
   }
 }
 

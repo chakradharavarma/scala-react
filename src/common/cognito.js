@@ -36,7 +36,6 @@ export const login = (username, password, cb) => {
       Username : username,
       Password : password,
   };
-  debugger;
 
   const authenticationDetails = new AuthenticationDetails(authenticationData);
 

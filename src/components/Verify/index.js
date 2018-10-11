@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js'
-import { COGNITO_CONFIG } from '../../common/consts'
 import ReactCodeInput from 'react-code-input'
 import { confirmRegistration } from '../../common/cognito'
-
-const userPool = new CognitoUserPool(COGNITO_CONFIG);
-
 
 class VerifyAccount extends Component {
 
@@ -24,7 +19,6 @@ class VerifyAccount extends Component {
   handleSubmit = () => {
     const { code} = this.state;
     const { user } = this.props;
-    debugger;
     confirmRegistration(user.data.user.username, code)
   }
 

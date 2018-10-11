@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as FontAwesome } from '@fortawesome/react-fontawesome'
 import { faServer, faFile, faBuilding, faBars, faPlug, faDesktop, faComment, faClock } from '@fortawesome/free-solid-svg-icons'
 
-export default class DashLeft extends Component {
+class DashLeft extends Component {
   render() {
+    const { user } = this.props
+    if(!user.data ) {
+      return null
+    }
 
     return (
       <div className='dash-left'>
@@ -56,3 +61,12 @@ export default class DashLeft extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(DashLeft);
