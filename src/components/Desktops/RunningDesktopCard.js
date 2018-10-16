@@ -45,11 +45,11 @@ class RunningDesktopCard extends Component {
     /* TODO delete
     if (desktops.fetching) {
       return null;
-    }*/ 
+    }*/
 
     const instance = desktop.Instances.find(instance => instance.InstanceId !== undefined);
     const { LaunchTime, PrivateIpAddress, InstanceId } = instance;
-    
+
     const now = moment();
     const launch = moment(LaunchTime);
     const duration = moment.duration(now.diff(launch));
@@ -109,7 +109,7 @@ class RunningDesktopCard extends Component {
                     )
                   }
                   <MenuItem onClick={this._handleClose(handleClickPause(InstanceId))}>
-                   <PauseOutlinedIcon className='menu-option-icon' />
+                    <PauseOutlinedIcon className='menu-option-icon' />
                     Pause
                   </MenuItem>
                   <MenuItem onClick={this._handleClose(handleClickResume(InstanceId))}>
@@ -121,7 +121,7 @@ class RunningDesktopCard extends Component {
                     handleConfirm={this._handleClose(handleClickDeleteDesktop(id, InstanceId))}
                   >
                     <MenuItem>
-                    <DeleteOutlinedIcon className='menu-option-icon' />
+                      <DeleteOutlinedIcon className='menu-option-icon' />
                       Delete
                     </MenuItem>
                   </ConfirmActionModal>

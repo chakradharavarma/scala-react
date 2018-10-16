@@ -7,20 +7,17 @@ import CreateWorkflowStepper from '../CreateWorkflowStepper';
 
 class CreateNewWorkflowDrawer extends Component {
   state = {
-    top: false,
-    left: false,
-    bottom: false,
-    right: false,
+    open: false
   };
 
-  toggleDrawer = (side, open) => () => {
+  toggleDrawer = (open) => () => {
     this.setState({
-      [side]: open,
+      open
     });
   };
 
   render() {
-
+    const { open } = this.state;
     const createNewWorkflowTrigger = (
       <Button style={{ alignSelf: 'flex-start', marginLeft: 28 }} color='secondary'>
         <AddIcon />
@@ -30,19 +27,19 @@ class CreateNewWorkflowDrawer extends Component {
 
     return (
       <div>
-        <Button color='secondary' onClick={this.toggleDrawer('top', true)}>
+        <Button color='secondary' onClick={this.toggleDrawer(true)}>
           <AddIcon />
           Add a new workflow
         </Button>
         <Drawer
           variant='temporary'
           anchor="top"
-          open={this.state.top}
-          onClose={this.toggleDrawer('top', false)}>
+          open={open}
+          onClose={this.toggleDrawer(false)}>
           <div style={{ padding: 12 }} > 
             <CreateWorkflowStepper 
               trigger={createNewWorkflowTrigger}
-              handleCloseCallback={this.toggleDrawer('top', false)}
+              handleCloseCallback={this.toggleDrawer(false)}
             />
             <TemplateWorkflows />
           </div>

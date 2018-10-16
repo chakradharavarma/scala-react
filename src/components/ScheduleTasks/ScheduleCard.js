@@ -42,7 +42,8 @@ class ScheduleCard extends Component {
       return null;
     }
     const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
-    if(!workflow) { // TODO move this somewhere nicer ... this means a workflow's been deleted and not its schedules
+    if(!workflow) {
+      deleteSchedule(schedule.id)
       return null;
     }
 

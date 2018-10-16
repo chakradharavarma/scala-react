@@ -73,15 +73,20 @@ class EditWorkflowModal extends Component {
     Promise.all([prep, run, post])
     .then((values) => {
       dispatch(initialize('editWorkflow', {
-        'scripts_prep.contents': values[0],
-        'scripts_prep.path': `/workflow/${workflow.id}/prep.sh`,
-        'scripts_run.contents': values[1],
-        'scripts_run.path': `/workflow/${workflow.id}/run.sh`,
-        'scripts_post.contents': values[2],
-        'scripts_post.path': `/workflow/${workflow.id}/post.sh`,
-        'resources.size': "20GB",
+        'scripts_prep': {
+          'contents':values[0],
+          'path': `/workflow/${workflow.id}/prep.sh`,
+        },
+        'scripts_run': {
+          'contents':values[1],
+          'path': `/workflow/${workflow.id}/run.sh`,
+        },
+        'scripts_post': {
+          'contents':values[2],
+          'path': `/workflow/${workflow.id}/post.sh`,
+        },
+        // 'resources.size': "20GB",  todo visit this
         ...workflow,
-
         }))
       dispatch(fetchFolder(`/workflow/${workflow.id}`))
     })
