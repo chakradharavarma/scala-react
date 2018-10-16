@@ -10,7 +10,7 @@ const initialState = {
   fetching: false,
   fetched: false,
   path: undefined,
-  content: undefined,
+  contents: undefined,
 }
 
 export default function (state=initialState, action) {
@@ -19,16 +19,17 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: true, fetched: false};
       break;
     case FETCHED_FILE_SUCCESS:
-      state = { ...state, fetching: false, fetched: false, path: action.payload.data.path, content: action.payload.data.content};
+      debugger;
+      state = { ...state, fetching: false, fetched: false, path: action.payload.data.path, contents: action.payload.data.contents};
       break;
     case CLEAR_FILE:
-      state = { ...state, fetched: false, path: undefined, content: undefined};
+      state = { ...state, fetched: false, path: undefined, contents: undefined};
       break;
     case FETCHED_FILE_FAILED:
       state = { ...state, fetching: false, error: action.payload};
       break;
     case UPDATE_CODE:
-      state = { ...state, fetching: false, content: action.payload.content};
+      state = { ...state, fetching: false, contents: action.payload.contents};
       break;
     default:
       break;
