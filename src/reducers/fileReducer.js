@@ -19,7 +19,6 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: true, fetched: false};
       break;
     case FETCHED_FILE_SUCCESS:
-      debugger;
       state = { ...state, fetching: false, fetched: false, path: action.payload.data.path, contents: action.payload.data.contents};
       break;
     case CLEAR_FILE:

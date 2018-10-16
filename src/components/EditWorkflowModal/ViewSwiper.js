@@ -53,7 +53,6 @@ class ViewsSwiper extends Component {
   };
 
   handleChange = (event, index) => {
-    debugger;
     this.setState({ index });
   };
 
