@@ -64,21 +64,21 @@ export const handleClose = () => {
     }
 }
 
-export const handleSave = (path, content) => {
+export const handleSave = (path, contents) => {
     return {
         type: SAVE_FILE,
         payload: {
             path,
-            content,
+            contents,
         }
     }
 }
 
-export const updateCode = (content) => {
+export const updateCode = (contents) => {
     return {
         type: UPDATE_CODE,
         payload: {
-            content,
+            contents,
         }
     }
 }

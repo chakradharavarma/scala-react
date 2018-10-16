@@ -47,17 +47,16 @@ const styles = theme => ({
 });
 
 class ViewsSwiper extends Component {
+
   state = {
-    value: 0,
+    index: 0,
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleChange = (event, index) => {
+    debugger;
+    this.setState({ index });
   };
 
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
 
   handleSubmit = () => {
     const { dispatch, handleSubmit } = this.props;
@@ -69,10 +68,11 @@ class ViewsSwiper extends Component {
 
   render() {
     const { classes, theme } = this.props;
+    const { index } = this.state;
     return (
       <div className={classes.root}>
         <Tabs
-          value={this.state.value}
+          value={index}
           onChange={this.handleChange}
           fullWidth
           style={{ height: '5vh' }}
@@ -86,9 +86,8 @@ class ViewsSwiper extends Component {
         </Tabs>
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={this.state.value}
+          index={index}
           className='edit-workflow-swiper'
-          onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
             <WorkflowProps />

@@ -49,7 +49,6 @@ const styles = {
 
 async function getFile(path) {
   const url = `/api/file/get?path=${path}`;
-  debugger;
   return await axios.get(url)
       .then(resp => resp.data.contents)
       .catch(_ => `ERROR: could not resolve path: ${path}`)
