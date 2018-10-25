@@ -1,29 +1,70 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Card, Typography, TextField } from '@material-ui/core';
+import { Button, Card, Typography } from '@material-ui/core';
 import ReactCodeInput from 'react-code-input'
 import { confirmRegistration } from '../../common/cognito'
 
 class VerifyAccount extends Component {
 
-  state = {
-    code: ''
+
+  constructor(props) {
+    super(props)
+    const { user, location } = this.props;
+
+    let username;
+    if(user.data && user.data.user) {
+      username = user.data && user.data.user.username
+    }
+    else if (location.state && location.state.username) {
+      username = location.state.username;
+    } 
+
+    this.state = {
+        code: '',
+        username: username,
+        error: null,
+    }
   }
 
   handleChange = code => {
-    this.setState({
-      code
-    })
+    this.setState({ code })
   }
 
   handleSubmit = () => {
-    const { code} = this.state;
-    const { user } = this.props;
-    confirmRegistration(user.data.user.username, code)
+    const { code, username } = this.state;
+    confirmRegistration(username, code, (err, result) => {
+      if(err) {
+        if(err.message === 'User cannot be confirm. Current status is CONFIRMED') {
+          this.setState({ redirect: '/login'})
+          return
+        }else {
+          this.setState({ error: err.message })
+        }
+      } else if(result === 'SUCCESS') {
+        this.setState({ redirect: '/login' })
+      }else {
+        console.log(result);
+        alert("check the log for the result")
+      }
+    })
   }
 
   render() {
-    const { error} = this.state;
+    const { error, username, redirect } = this.state;
+
+    if(redirect) {
+      return (
+        <Redirect to={redirect} />
+      )
+    }
+    
+    if(!username ) {
+      return (
+        <Redirect to='/register' />
+      )
+    }
+
     return (
       <div className="auth-container">
         <Card className='auth-card'>
@@ -37,9 +78,8 @@ class VerifyAccount extends Component {
             </div>
           </div>
           <Button variant='contained' color='secondary' onClick={this.handleSubmit}>
-              Log In
+              Verify
           </Button>
-
         </Card>
       </div>
     );

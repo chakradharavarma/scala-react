@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { spring, AnimatedSwitch } from 'react-router-transition';
 import Files from '../Files';
@@ -10,6 +11,9 @@ import Workflows from '../Workflows';
 import ScheduleTasks from '../ScheduleTasks';
 import Snackbar from '../Snackbar';
 import PrivateRoute from '../PrivateRoute';
+import Login from '../Login';
+import Register from '../Register';
+import Verify from '../Verify';
 
 // we need to map the `scale` prop we define below
 // to the transform style property
@@ -66,6 +70,9 @@ class DashRight extends Component {
           mapStyles={mapStyles}
           className="route-wrapper"
         >
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/register' component={Register} />
+          <Route exact path='/verify' component={Verify} />
           <PrivateRoute exact path='/' component={Jobs} />
           <PrivateRoute exact path='/jobs' component={Jobs} />
           <PrivateRoute exact path='/files' component={Files} />

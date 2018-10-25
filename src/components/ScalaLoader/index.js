@@ -5,6 +5,11 @@ import Fade from '@material-ui/core/Fade';
 
 
 const ScalaLoader = (props) => {
+
+    if(!props.active) {
+        return props.children
+    }
+
     return (
         <Fade in={props.active} timeout={{ enter: 200, exit: 300 }}>
             {

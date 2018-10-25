@@ -26,9 +26,7 @@ export const handleRegister = (user) => {
 export const logInSuccess = (user) => {
     return {
         type: LOG_IN_SUCCESS,
-        payload: {
-            user
-        }
+        payload: user
     }
 }
 

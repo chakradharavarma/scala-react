@@ -9,6 +9,10 @@ export function createNotification(message, type){
   }
 }
 
+export function formatErrorMessage(message) {
+  return message.replace("ERROR: ", "")
+}
+
 
 export function getMode(path) {
   const ext = path.substring(path.lastIndexOf('.'));

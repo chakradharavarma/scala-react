@@ -877,6 +877,12 @@ div:focus {
     text-shadow: .3px 0 #888888;
 }
 
+.auth-container {
+    display: flex;
+    align-items: center;
+    height: 60vh;
+}
+
 .auth-card {
     width: 50vw;
     margin: 0 auto;

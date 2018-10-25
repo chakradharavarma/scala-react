@@ -1,4 +1,4 @@
-import { createNotification } from '../common/helpers';
+import { createNotification, formatErrorMessage } from '../common/helpers';
 
 import * as actions from '../actions/types';
 
@@ -48,7 +48,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification)
       break
     case actions.FETCHED_CONNECTIONS_FAILED:
-      notification = createNotification('Unable to fetch connections', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification)
       break;
     case actions.CREATE_CONNECTION:
@@ -60,11 +60,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification)
       break;
     case actions.CREATE_CONNECTION_FAILED:
-      notification = createNotification('Unable to create connection', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification)
       break;
     case actions.DELETE_CONNECTION_FAILED:
-      notification = createNotification('Unable to delete connection', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification)
       break;
     case actions.DELETE_CONNECTION_SUCCESS:
@@ -72,11 +72,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification)
       break;
     case actions.DOWNLOAD_KEY_PAIR_FAILED:
-      notification = createNotification('Unable to download key pair', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification)
       break;
     case actions.FETCHED_WORKFLOWS_AVAILABLE_FAILED:
-      notification = createNotification('Unable to fetch workflows', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_WORKFLOW:
@@ -88,11 +88,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.DELETE_WORKFLOW_FAILED:
-      notification = createNotification('Unable to delete workflow', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.FETCHED_DESKTOPS_FAILED:
-      notification = createNotification('Unable to fetch desktops', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_DESKTOP:
@@ -104,7 +104,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.CREATE_DESKTOP_FAILED:
-      notification = createNotification('Unable to create desktop', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_DESKTOP_JOB_SUCCESS:
@@ -112,11 +112,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.CREATE_DESKTOP_JOB_FAILED:
-      notification = createNotification('Unable to create desktop', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_DESKTOP_FAILED:
-      notification = createNotification('Unable to delete desktop', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_DESKTOP_SUCCESS:
@@ -128,7 +128,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.FETCHED_SCHEDULES_FAILED:
-      notification = createNotification('Unable to fetch schedules', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_SCHEDULE: // todo delete
@@ -144,7 +144,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.DELETE_SCHEDULE_FAILED:    
-      notification = createNotification('Unable to delete schedule', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.RUN_WORKFLOW_SUCCESS:    
@@ -152,7 +152,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.RUN_WORKFLOW_FAILED:    
-      notification = createNotification('Unable to run workflow', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.EDIT_SCHEDULE_SUCCESS:
@@ -160,7 +160,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.EDIT_SCHEDULE_FAILED:
-      notification = createNotification('Unable to edit schedule', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.EDIT_WORKFLOW_SUCCESS:
@@ -168,7 +168,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.EDIT_WORKFLOW_FAILED:
-      notification = createNotification('Unable to edit workflow', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_CONNECTION:
@@ -180,7 +180,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.FETCHED_FOLDER_FAILED:
-      notification = createNotification('Unable to fetch folder', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
       case actions.SAVE_FILE_SUCCESS:
@@ -188,11 +188,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.SAVE_FILE_FAILED:
-      notification = createNotification('Unable to save file', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_WORKFLOW_FAILED:
-      notification = createNotification('Workflow submission failed', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_FOLDER_SUCCESS:
@@ -200,7 +200,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.CREATE_FOLDER_FAILED:
-      notification = createNotification('Unable to create folder', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DOWNLOAD_FILE_SUCCESS:
@@ -208,7 +208,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.DOWNLOAD_FILE_FAILED:
-      notification = createNotification('Download failed', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.UPLOAD_FILES_SUCCESS:
@@ -216,11 +216,11 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.UPLOAD_FILES_FAILED:
-      notification = createNotification('Unable to upload', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.FETCHED_FILE_FAILED:
-      notification = createNotification('Unable to fetch file', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_FILE_SUCCESS:
@@ -228,7 +228,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.DELETE_FILE_FAILED:
-      notification = createNotification('Unable to delete file', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.TERMINATE_JOB_SUCCESS:
@@ -236,7 +236,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.TERMINATE_JOB_FAILED:
-      notification = createNotification('Unable to terminate job', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break;
     case actions.DESKTOP_NOT_READY:
@@ -256,7 +256,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.RENAME_FILE_FAILED:
-      notification = createNotification('Unable to rename file', ERROR);
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break
     default:

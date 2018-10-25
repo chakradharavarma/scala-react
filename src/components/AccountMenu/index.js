@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
@@ -70,10 +69,6 @@ class AccountMenu extends React.Component {
     );
   }
 }
-
-AccountMenu.propTypes = {
-  username: PropTypes.string.isRequired,
-};
 
 const mapStateToProps = state => {
   return (

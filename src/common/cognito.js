@@ -1,3 +1,4 @@
+import { Auth } from 'aws-amplify';
 import { AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js'
 import { COGNITO_CONFIG } from './consts'
 
@@ -31,36 +32,32 @@ export const register = (username, password, email, callback) => {
 }
 
 
-export const login = (username, password, cb) => {
-  const authenticationData = {
-      Username : username,
-      Password : password,
-  };
-
-  const authenticationDetails = new AuthenticationDetails(authenticationData);
-
-  const cognitoUser = getCognitoUser(username);
-  cognitoUser.authenticateUser(authenticationDetails, {
-    onSuccess: function (result) {
-      cb(result)
-    },
-    onFailure: function (err) {
-      cb(null, err)
-    },
-  });
+export const login = async (username, password, cb, error) => {
+  await Auth.signIn(username, password)
+    .catch(err => error(err.message))
+  
+  const payload = await Auth.currentAuthenticatedUser()
+    .catch(err => err)
+  
+  if (typeof payload === 'string' || payload instanceof String) {
+    error(payload)
+  }
+  else if (typeof payload === 'object' || payload instanceof Object) {
+    cb(payload)
+  } else {
+    console.log(payload)
+    console.log(typeof payload)
+    alert("what is going on? check console.");
+    // todo remove
+  }
 
 }
 
-export const confirmRegistration = (username, code, callback) => {
+export const confirmRegistration = (username, code, cb) => {
 
   const cognitoUser = getCognitoUser(username);
-  cognitoUser.confirmRegistration(code, true, function(err, result) {
-    if (err) {
-      alert('err')
-      console.log(err)
-    }else {
-
-    }
+  cognitoUser.confirmRegistration(code, true, function (err, result) {
+    cb(err, result)
   });
 
 }

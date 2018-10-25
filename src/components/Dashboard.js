@@ -68,8 +68,7 @@ const theme = createMuiTheme({
 class Dashboard extends Component {
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(initializeApp());
+    this.props.initialize()
   }
 
   render() {
@@ -78,7 +77,7 @@ class Dashboard extends Component {
         <Router>        
           <div className={classnames("dashboard-root")} >
             <DashLeft />
-            <DashRight username='bob' />
+            <DashRight />
           </div>
         </Router>
       </MuiThemeProvider>
@@ -88,8 +87,9 @@ class Dashboard extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
+    initialize: () => dispatch(initializeApp())
   };
 };
 
-export default connect(mapDispatchToProps)(Dashboard);
+export default connect(null, mapDispatchToProps)(Dashboard);
 

@@ -1,18 +1,25 @@
 import React, { Component, Fragment } from 'react';
-import { Route } from 'react-router-dom';
-import { withAuthenticator } from 'aws-amplify-react';
+import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { handleFetchUser } from '../../actions/authActions';
 import AccountMenu from '../AccountMenu'
-
 class PrivateRoute extends Component {
 
 
   render() {
     const { user } = this.props
 
+    if(user.fetching) {
+      return null
+    }
+
     if(!user.data ) {
-      window.location.reload() // todo 
+        return <Redirect to='/login' />
+    }
+
+    const confirmed = user.data.user && user.data.user.userConfirmed;
+    if(typeof confirmed === 'boolean' && confirmed === false) {
+      return <Redirect to='/verify' />
     }
 
     return (
@@ -38,4 +45,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withAuthenticator(PrivateRoute));
+export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);

@@ -4,16 +4,13 @@ import { Redirect } from 'react-router-dom';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
 import { handleRegister } from '../../actions/authActions'
 import { Auth } from 'aws-amplify'
-
+import { getCognitoUser } from '../../common/cognito'
 class Register extends Component {
 
   state = {
     email: '',
-    password: ''
-  }
-
-  componentDidMount() {
-    Auth.ve
+    password: '',
+    redirect: '',
   }
 
   handleChange = (field) => (e) => {
@@ -35,26 +32,39 @@ class Register extends Component {
         }
       })
       .then(user => handleRegister(user))
-      .catch(err => this.setState({message: err.message}))
-
-    /*
-    register(username, password, email, function(err, user){
-      if(err) {
-        this.setState({error: err.message})
-      }else {
-        debugger;
-        handleRegister(user)
-      }
-      
-    }.bind(this));*/
+      .catch(err => {
+        if(err.code === 'UsernameExistsException') {
+          this.setState({redirect: '/login'})
+        }else {
+          this.setState({message: err.message})
+        }
+      })
   }
 
   render() {
-    const { message } = this.state;
+    const { message, redirect, username } = this.state;
     const { user } = this.props;
-    if(user.data) { 
-      return <Redirect to='/verify' />
+
+    if(redirect) {
+      return <Redirect to={{
+          pathname: redirect,
+          state: {
+              'redirect': true,
+            }
+          }}
+        />
     }
+
+    if(user.data) {
+      if(!user.data.attributes) {
+        return null
+      }
+      else if(user.data.attributes.email_verified) {
+        return <Redirect to='/' />
+      }
+      return <Redirect to='/verify'  />
+    }
+
     return (
       <div className="auth-container">
         <Card className='auth-card'>

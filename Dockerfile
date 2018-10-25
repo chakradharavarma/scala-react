@@ -1,22 +1,17 @@
 FROM node:8 as scala-frontend-builder
-WORKDIR /usr/src/app
 
+WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
-RUN yarn --frozen-lockfile
+RUN yarn --pure-lockfile
 COPY . ./
 RUN yarn build
 
 
-FROM alpine:3.8
+FROM nginx:1.15.5-alpine
 
 COPY --from=scala-frontend-builder /usr/src/app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN mkdir /app
-WORKDIR /app
+EXPOSE 80
 
-COPY api ./
-
-COPY meta ./meta
-
-EXPOSE 8080
-CMD ["/app/api"]
+CMD ["nginx", "-g", "daemon off;"]

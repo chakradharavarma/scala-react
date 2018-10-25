@@ -298,8 +298,8 @@ function* callWorkflowTemplates() {
 
 function* callDownloadKeyPair() {
     let payload = yield call(getKeyPairURL);
-    window.location = payload.data;
     if (payload.status === 200) {
+        window.location = payload.data;
         yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
     } else {
         yield put({ type: actions.DOWNLOAD_KEY_PAIR_FAILED, payload });
@@ -392,11 +392,16 @@ function* callDesktops() {
 
 function* callUser() {
     const payload = yield Auth.currentAuthenticatedUser()
-    if (payload) {
+                        .catch(err => err)
+    if (payload instanceof Object) {
         axios.defaults.headers = {
             Authorization: payload.signInUserSession.accessToken.jwtToken
         }
         yield put({ type: actions.FETCH_LOCAL_COGNITO_USER_SUCCESS, payload })
+        return true
+    } else {
+        yield put({ type: actions.FETCH_LOCAL_COGNITO_USER_FAILED, payload })
+        return false
     }
 }
 
@@ -473,14 +478,16 @@ function* callJobStatus() {
 }
 
 function* callInitApp(action) {
-    yield callUser(action)
-    yield callWorkflowsAvailable(action);
-    yield callJobs(action);
-    yield callJobStatus(action);
-    yield callSchedules(action);
-    yield callWorkflowTemplates(action);
-    yield callConnections(action);
-    yield callDesktops(action);
+    const loggedIn = yield callUser(action)
+    if (loggedIn) {
+        yield callWorkflowsAvailable(action);
+        yield callJobs(action);
+        yield callJobStatus(action);
+        yield callSchedules(action);
+        yield callWorkflowTemplates(action);
+        yield callConnections(action);
+        yield callDesktops(action);    
+    }
 }
 
 function* callCreateWorkflow(action) {

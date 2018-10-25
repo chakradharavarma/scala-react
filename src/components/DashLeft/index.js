@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as FontAwesome } from '@fortawesome/react-fontawesome'
 import { faServer, faFile, faBuilding, faBars, faPlug, faDesktop, faComment, faClock } from '@fortawesome/free-solid-svg-icons'
@@ -9,6 +10,13 @@ class DashLeft extends Component {
     const { user } = this.props
     if(!user.data ) {
       return null
+    }
+
+    const confirmed = user.data && user.data.userConfirmed;
+    if(typeof confirmed === 'boolean' && confirmed === false) {
+      return (
+        <Redirect to='/verify' />
+      ) 
     }
 
     return (

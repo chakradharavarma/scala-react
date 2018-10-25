@@ -16,9 +16,10 @@ class MySnackbar extends Component {
   }
 
   render() {
-    const { snackbar, autoHideDuration, handleExited } = this.props
+    const { snackbar, autoHideDuration, handleExited, user } = this.props;
     const { notification, open, queue } = snackbar;
-    if(!notification) {
+
+    if(!notification || !user.fetched ) {
       return null;
     }
     const { key, message, type } = notification
@@ -53,6 +54,7 @@ MySnackbar.defaultProps = {
 const mapStateToProps = (state) => {
   return (
     {
+      user: state.user,
       snackbar: state.snackbar
     }
   )

@@ -2,6 +2,7 @@ import {
   INIT_APP,
   FETCHED_JOBS_SUCCESS,
   FETCHED_JOBS_FAILED,
+  FETCHED_JOBS_STATUS_FAILED,
   GET_STD_ERR_SUCCESS,
   GET_STD_ERR_FAILED,
   GET_STD_OUT_SUCCESS,
@@ -31,10 +32,10 @@ export default function (state=initialState, action) {
     case FETCHED_JOBS_STATUS_SUCCESS:
       state = { ...state, fetching: false, fetched: true};
       break;
+    */
     case FETCHED_JOBS_STATUS_FAILED:
       state = { ...state, fetching: false, fetched: false, error: action.payload};
       break;
-    */
     case GET_STD_ERR_SUCCESS:
       state = { ...state, standardOut: action.payload.data};
       break;

@@ -31,18 +31,30 @@ class CurrentJobs extends Component {
         </div>
         <Divider />
         {
-            fetched ?
+            fetching ?
               (
-                runningJobs.length ? 
+                <ScalaLoader active={fetching} centered />
+              )
+              : (
+
+                fetched ? (
+                  runningJobs.length ? 
                   <JobsRunningTable jobs={runningJobs} /> :
                   <Fade in={!fetching} timeout={400} >
                     <div className='centered'>
                       <JobsDrawer title='Click to run a workflow' />
                     </div>
                   </Fade>
-              )
-              : (
-                  <ScalaLoader active={!fetched} centered />
+                ) : (
+                  <Fade in={!fetching} timeout={400} >
+                    <div className='centered'>
+                      <Typography>
+                        Unable to fetch jobs
+                      </Typography>
+                    </div>
+                  </Fade>
+
+                )
               )
         }
       </Card>
