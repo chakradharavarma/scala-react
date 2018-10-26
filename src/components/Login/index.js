@@ -22,7 +22,6 @@ class Login extends Component {
 
   handleSubmit = async () => {
     const { username, password } = this.state;
-    debugger;
     await Auth.signIn(username, password)
       .catch(err => {
         if(err.code === 'UserNotConfirmedException') {
@@ -53,9 +52,7 @@ class Login extends Component {
     if(!user || user.fetching) {
       return null
     } 
-
-    debugger;
-
+    
     if(redirect) {
       return (
         <Redirect to={{

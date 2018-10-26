@@ -5,7 +5,9 @@ import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import Amplify, { Auth } from 'aws-amplify';
 
 function setAuthConfiguration() {
-    return axios.get("/api/config/get").then(config => {
+    return axios.get("/api/config/get")
+        .then(payload => payload.data)
+        .then(config => {
         Amplify.configure({
             Auth: {
                 mandatorySignIn: true,
@@ -15,10 +17,8 @@ function setAuthConfiguration() {
                 userPoolWebClientId: config.REACT_APP_COGNITO_CLIENT_ID
             }
         });
-        return false
     }).catch(err => err)
 }
-
 
 function getAvailableWorkflows() {
     const url = '/api/workflow/get';

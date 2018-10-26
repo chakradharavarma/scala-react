@@ -34,13 +34,10 @@ class VerifyAccount extends Component {
 
   handleResendCode = async () => {
     const { username } = this.state;
-    debugger;
     await Auth.resendSignUp(username)
       .then(data => {
-        debugger;
-        console.log(data)
+        console.log(data) // todo remove
       }).catch(err => {
-        debugger;
         this.setState({ error: err.message })
       })
 
