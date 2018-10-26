@@ -22,10 +22,11 @@ class Login extends Component {
 
   handleSubmit = async () => {
     const { username, password } = this.state;
+    debugger;
     await Auth.signIn(username, password)
       .catch(err => {
         if(err.code === 'UserNotConfirmedException') {
-          this.setState({ needsVerification: true, username })
+          this.setState({ redirect: '/verify', username })
         }else {
           this.setState({ error: err.message })
         }
@@ -46,17 +47,19 @@ class Login extends Component {
   }
 
   render() {
-    const { error, needsVerification, username } = this.state;
+    const { error, redirect, username } = this.state;
     const { user } = this.props
 
     if(!user || user.fetching) {
       return null
     } 
 
-    if(needsVerification) {
+    debugger;
+
+    if(redirect) {
       return (
         <Redirect to={{
-          pathname: '/verify',
+          pathname: redirect,
             state: {
               redirect: true,
               username: username

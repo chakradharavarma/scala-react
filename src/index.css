@@ -907,3 +907,7 @@ div:focus {
 .Section__sectionFooterSecondaryContent {
     display: none;
 }
+
+.spaced-buttons > * {
+    margin-right: 4px !important;
+}

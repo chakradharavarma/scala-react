@@ -66,5 +66,5 @@
     "postcss-cli": "^6.0.0",
     "postcss-nested": "^3.0.0"
   },
-  "proxy": "http://ec2-52-34-209-5.us-west-2.compute.amazonaws.com:8081"
+  "proxy": "http://localhost:8080"
 }

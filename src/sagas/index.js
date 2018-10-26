@@ -4,15 +4,20 @@ import moment from 'moment';
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import Amplify, { Auth } from 'aws-amplify';
 
-Amplify.configure({
-    Auth: {
-        mandatorySignIn: true,
-        region: process.env.REACT_APP_COGNITO_REGION,
-        userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
-        identityPoolId: process.env.REACT_APP_COGNITO_IDENTITY_POOL_ID,
-        userPoolWebClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
-    }
-});
+function setAuthConfiguration() {
+    return axios.get("/api/config/get").then(config => {
+        Amplify.configure({
+            Auth: {
+                mandatorySignIn: true,
+                region: config.REACT_APP_COGNITO_REGION,
+                userPoolId: config.REACT_APP_COGNITO_USER_POOL_ID,
+                identityPoolId: config.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+                userPoolWebClientId: config.REACT_APP_COGNITO_CLIENT_ID
+            }
+        });
+        return false
+    }).catch(err => err)
+}
 
 
 function getAvailableWorkflows() {
@@ -405,6 +410,18 @@ function* callUser() {
     }
 }
 
+function* callConfigureAuth(action) {
+    // payload is an error in this case
+    const payload = yield call(setAuthConfiguration)
+    if(!payload) {
+        yield put({ type: actions.FETCHED_AUTH_CONFIG_SUCCESS, payload });        
+    } else {
+        yield put({ type: actions.FETCHED_AUTH_CONFIG_FAILED, payload });        
+    }
+
+}
+
+
 function* callFolder(action) {
     action.payload = action.payload ? action.payload : { path: '/' }; // TODO clean up
     let payload = yield call(getFolder, action.payload);
@@ -478,6 +495,7 @@ function* callJobStatus() {
 }
 
 function* callInitApp(action) {
+    yield callConfigureAuth(action)
     const loggedIn = yield callUser(action)
     if (loggedIn) {
         yield callWorkflowsAvailable(action);

@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { handleFetchUser } from '../../actions/authActions';
 import AccountMenu from '../AccountMenu'
-class PrivateRoute extends Component {
 
+class PrivateRoute extends Component {
 
   render() {
     const { user } = this.props
@@ -13,7 +12,7 @@ class PrivateRoute extends Component {
       return null
     }
 
-    if(!user.data ) {
+    if(!user.fetched ) {
         return <Redirect to='/login' />
     }
 
@@ -37,12 +36,4 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchLocalCognitoUser: () => {
-      dispatch(handleFetchUser())
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);
+export default connect(mapStateToProps)(PrivateRoute);

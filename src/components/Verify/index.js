@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Auth } from 'aws-amplify';
 import { Button, Card, Typography } from '@material-ui/core';
 import ReactCodeInput from 'react-code-input'
 import { confirmRegistration } from '../../common/cognito'
 
 class VerifyAccount extends Component {
-
 
   constructor(props) {
     super(props)
@@ -29,6 +29,21 @@ class VerifyAccount extends Component {
 
   handleChange = code => {
     this.setState({ code })
+  }
+
+
+  handleResendCode = async () => {
+    const { username } = this.state;
+    debugger;
+    await Auth.resendSignUp(username)
+      .then(data => {
+        debugger;
+        console.log(data)
+      }).catch(err => {
+        debugger;
+        this.setState({ error: err.message })
+      })
+
   }
 
   handleSubmit = () => {
@@ -77,9 +92,14 @@ class VerifyAccount extends Component {
               { error }
             </div>
           </div>
+          <div className='spaced-buttons'>
           <Button variant='contained' color='secondary' onClick={this.handleSubmit}>
               Verify
           </Button>
+          <Button variant='contained' color='secondary' onClick={this.handleResendCode}>
+              Resend Code
+          </Button>
+          </div>
         </Card>
       </div>
     );

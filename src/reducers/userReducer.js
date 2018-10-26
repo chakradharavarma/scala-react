@@ -11,7 +11,7 @@ import {
 
 const initialState = {
   data: null,
-  fetching: false,
+  fetching: true,
   fetched: false,
   error: null
 }
