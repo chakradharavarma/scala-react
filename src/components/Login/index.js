@@ -1,76 +1,40 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-import { logInSuccess } from '../../actions/authActions'
-import { Auth } from 'aws-amplify'
+import { logIn } from '../../actions/authActions'
 
 class Login extends Component {
 
   state = {
     username: '',
     password: '',
-    needsVerification: false,
-    error: null,
   }
-  
+
   handleChange = (field) => (e) => {
     this.setState({
       [field]: e.target.value
     })
   }
 
-  handleSubmit = async () => {
+  handleLogin = async () => {
     const { username, password } = this.state;
-    await Auth.signIn(username, password)
-      .catch(err => {
-        if(err.code === 'UserNotConfirmedException') {
-          this.setState({ redirect: '/verify', username })
-        }else {
-          this.setState({ error: err.message })
-        }
-      })
-    const payload = await Auth.currentAuthenticatedUser()
-      .catch(err => err)
-    if(typeof payload === 'string' || payload instanceof String) {
-      this.setState({ error: payload })
-    }
-    else if(typeof payload === 'object' || payload instanceof Object) {
-      this.props.handleLogInSuccess(payload)
-    } else {
-      console.log(payload)
-      console.log(typeof payload)
-      alert("what is going on? check console.");
-      // todo remove
-    }
+    this.props.handleLogin(username, password)
   }
 
   render() {
-    const { error, redirect, username } = this.state;
-    const { user } = this.props
-
-    if(!user || user.fetching) {
-      return null
-    } 
-    
-    if(redirect) {
+    const { user } = this.props;
+    if(user.data) {
+      debugger;
       return (
-        <Redirect to={{
-          pathname: redirect,
-            state: {
-              redirect: true,
-              username: username
-            }
-          }}
-        />
+        <Redirect to='/' />
       )
     }
-
-    if(user.fetched) {
-      if(user.data.attributes.email_verified) {
-        return <Redirect to='/' />
-      }
-      return <Redirect to='/verify' />
+    if(user.verification.username && !user.verification.verified) {
+      debugger;
+      return (
+        <Redirect to='/verify' />
+      )
     }
 
     return (
@@ -93,12 +57,19 @@ class Login extends Component {
               margin="normal"
             />
             <div className='error-helper-text'>
-              { error }
+              { user.error ? user.error.message : "" }
             </div>
           </div>
-          <Button variant='contained' color='secondary' onClick={this.handleSubmit}>
-            Log In
+          <div className='auth-buttons'>
+            <Button variant='contained' color='secondary' onClick={this.handleLogin}>
+              Log In
           </Button>
+            <Link className='auth-link' to='/register'>
+              <Button variant="outlined" >
+                Register
+            </Button>
+            </Link>
+          </div>
 
         </Card>
       </div>
@@ -114,7 +85,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleLogInSuccess: (user) => dispatch(logInSuccess(user))
+    handleLogin: (username, password) => dispatch(logIn(username, password))
   }
 }
 

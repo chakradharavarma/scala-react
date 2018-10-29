@@ -5,6 +5,7 @@ import {
   FETCHED_WORKFLOWS_AVAILABLE_FAILED,
   FETCHED_WORKFLOWS_AVAILABLE_SUCCESS,  
   INIT_APP,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -32,6 +33,9 @@ export default function (state={...initialState}, action) {
       break;
     case DELETE_WORKFLOW_FAILED:
       state = { ...state, fetching: false, fetched: false};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

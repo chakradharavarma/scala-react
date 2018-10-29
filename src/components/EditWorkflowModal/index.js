@@ -13,9 +13,6 @@ import { fetchFolder } from '../../actions/fileActions';
 import axios from 'axios';
 import CloseIcon from '@material-ui/icons/Close';
 
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
-axios.defaults.xsrfCookieName = "csrftoken";
-
 const styles = {
   paper: {
     display: 'flex',

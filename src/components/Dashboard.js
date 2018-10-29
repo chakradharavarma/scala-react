@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import { connect } from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import classnames from 'classnames';
@@ -7,6 +8,8 @@ import DashLeft from './DashLeft';
 import DashRight from './DashRight';
 
 import { initializeApp } from '../actions/generalActions'
+import { ConnectedRouter } from 'connected-react-router'
+const history = createBrowserHistory()
 
 const theme = createMuiTheme({
   overrides: {
@@ -34,7 +37,7 @@ const theme = createMuiTheme({
         letterSpacing: 2,
       },
       underline: {
-          '&:before': {
+        '&:before': {
           borderBottom: '1px solid #5e8dbf',// when input is not touched
         },
         '&:hover:not($disabled):not($focused):not($error):before': {
@@ -72,13 +75,16 @@ class Dashboard extends Component {
   }
 
   render() {
+
     return (
       <MuiThemeProvider theme={theme}>
-        <Router>        
-          <div className={classnames("dashboard-root")} >
-            <DashLeft />
-            <DashRight />
-          </div>
+        <Router>
+          <ConnectedRouter history={history}>
+            <div className={classnames("dashboard-root")} >
+              <DashLeft />
+              <DashRight />
+            </div>
+          </ConnectedRouter>
         </Router>
       </MuiThemeProvider>
     );

@@ -1,45 +1,54 @@
 import {
-    REGISTER_SUCCESS,
-    LOG_IN_SUCCESS,
+    REGISTER,
+    VERIFY,
+    LOG_IN,
     LOG_OUT,
-    FETCH_LOCAL_COGNITO_USER,
+    RESEND_CODE,
 } from './types';
 
-export const registerSuccess = (user) => {
+export const verify = (username, code) => {
     return {
-        type: REGISTER_SUCCESS,
+        type: VERIFY,
         payload: {
-            user
+            username,
+            code
         }
     }
 }
 
-export const handleRegister = (user) => {
+export const register = (username, password, email) => {
     return {
-        type: REGISTER_SUCCESS,
+        type: REGISTER,
         payload: {
-            user
+            username,
+            password,
+            email
         }
     }
 }
 
-export const logInSuccess = (user) => {
+export const logIn = (username, password) => {
     return {
-        type: LOG_IN_SUCCESS,
-        payload: user
-    }
-}
-
-export const handleFetchUser = (user) => {
-    return {
-        type: FETCH_LOCAL_COGNITO_USER,
+        type: LOG_IN,
         payload: {
-
+            username,
+            password
         }
     }
 }
 
 export function logOut(user) {
-    return { type: LOG_OUT, payload: user }
+    return {
+        type: LOG_OUT, 
+        payload: user
+    }
 }
   
+export function resendCode(username) {
+    return {
+        type: RESEND_CODE,
+        payload: {
+            username
+        }
+    }
+}

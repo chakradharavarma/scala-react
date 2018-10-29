@@ -1,5 +1,6 @@
 import {
   INIT_APP,
+  LOG_OUT,
   FETCHED_SCHEDULES_FAILED,
   FETCHED_SCHEDULES_SUCCESS,
 } from '../actions/types';
@@ -21,6 +22,9 @@ export default function (state=initialState, action) {
       break;
     case FETCHED_SCHEDULES_FAILED:
       state = { ...state, fetching: false, fetched: false};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

@@ -911,3 +911,13 @@ div:focus {
 .spaced-buttons > * {
     margin-right: 4px !important;
 }
+
+.auth-buttons {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth-link {
+    text-decoration: none;
+}

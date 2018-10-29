@@ -1,5 +1,6 @@
 import {
   INIT_APP,
+  LOG_OUT,
   FETCHED_JOBS_SUCCESS,
   FETCHED_JOBS_FAILED,
   FETCHED_JOBS_STATUS_FAILED,
@@ -47,6 +48,9 @@ export default function (state=initialState, action) {
       break;
     case GET_STD_OUT_FAILED:
       state = { ...state, standardOut: 'No data'};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

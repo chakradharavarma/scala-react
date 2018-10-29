@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { logOut } from '../../actions/userActions';
+import { logOut } from '../../actions/authActions';
 
 class AccountMenu extends React.Component {
 

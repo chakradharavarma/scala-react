@@ -2,6 +2,7 @@ import {
   FETCHED_WORKFLOW_TEMPLATES_SUCCESS,
   FETCHED_WORKFLOW_TEMPLATES_FAILED,
   INIT_APP,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -21,6 +22,9 @@ export default function (state=initialState, action) {
       break;
     case FETCHED_WORKFLOW_TEMPLATES_FAILED:
       state = { ...state, fetching: false, fetched: false, error: action.payload};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

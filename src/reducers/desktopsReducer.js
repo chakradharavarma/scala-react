@@ -2,6 +2,7 @@ import {
   INIT_APP,
   FETCHED_DESKTOPS_FAILED,
   FETCHED_DESKTOPS_SUCCESS,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -20,6 +21,9 @@ export default function (state=initialState, action) {
       break;
     case FETCHED_DESKTOPS_FAILED:
       state = { ...state, fetching: false};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

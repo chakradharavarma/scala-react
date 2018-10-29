@@ -20,6 +20,7 @@ class Connections extends Component {
   render() {
     const { connections, downloadKeyPair, handleClickDelete, handleClickCreateConnection } = this.props;
     const { fetching, fetched, data } = connections;
+
     return (
       <Fragment>
         <div>

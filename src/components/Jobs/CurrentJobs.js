@@ -48,7 +48,7 @@ class CurrentJobs extends Component {
                 ) : (
                   <Fade in={!fetching} timeout={400} >
                     <div className='centered'>
-                      <Typography>
+                      <Typography variant='title'>
                         Unable to fetch jobs
                       </Typography>
                     </div>

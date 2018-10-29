@@ -8,16 +8,44 @@ function setAuthConfiguration() {
     return axios.get("/api/config/get")
         .then(payload => payload.data)
         .then(config => {
-        Amplify.configure({
-            Auth: {
-                mandatorySignIn: true,
-                region: config.REACT_APP_COGNITO_REGION,
-                userPoolId: config.REACT_APP_COGNITO_USER_POOL_ID,
-                identityPoolId: config.REACT_APP_COGNITO_IDENTITY_POOL_ID,
-                userPoolWebClientId: config.REACT_APP_COGNITO_CLIENT_ID
+            // TODO test this by giving nulls
+            if (!config.REACT_APP_COGNITO_REGION ||
+                !config.REACT_APP_COGNITO_USER_POOL_ID ||
+                !config.REACT_APP_COGNITO_IDENTITY_POOL_ID ||
+                !config.REACT_APP_COGNITO_CLIENT_ID) {
+                return new Error("Environment is not properly set")
             }
-        });
-    }).catch(err => err)
+
+            Amplify.configure({
+                Auth: {
+                    mandatorySignIn: true,
+                    region: config.REACT_APP_COGNITO_REGION,
+                    userPoolId: config.REACT_APP_COGNITO_USER_POOL_ID,
+                    identityPoolId: config.REACT_APP_COGNITO_IDENTITY_POOL_ID,
+                    userPoolWebClientId: config.REACT_APP_COGNITO_CLIENT_ID
+                }
+            });
+        }).catch(err => err)
+}
+
+function login({username, password }) {
+    return Auth.signIn(username, password)
+        .catch(err => err)
+}
+
+function register({username, password, email }) {
+    return Auth.signUp({username, password, attributes: { email }})
+        .catch(err => err);
+}
+
+function verify({username, code }) {
+    return Auth.confirmSignUp(username, code)
+        .catch(err => err)
+}
+
+function resendCode({username}) {
+    return Auth.resendSignUp(username)
+        .catch(err => err)
 }
 
 function getAvailableWorkflows() {
@@ -39,7 +67,7 @@ function getSchedules() {
 }
 
 function getConnections() {
-    const url = '/connectionsAjax';
+    const url = '/api/connection/getTODO';
     return axios.get(url)
         .catch(err => err);
 }
@@ -263,6 +291,13 @@ function resumeDesktop({ iid }) {
         .catch(err => err);
 }
 
+function initDirectories(payload) {
+    const url = `/api/config/init`;
+    const data = JSON.stringify(payload)
+    return axios.post(url, data)
+        .catch(err => err);
+}
+
 function* callWorkflowsAvailable() {
     const payload = yield call(getAvailableWorkflows);
     if (payload.status === 200) {
@@ -351,12 +386,40 @@ function* callStandardOut(action) {
 
 function* callLogOut() {
     const payload = yield Auth.signOut();
-    if(payload) {
+    debugger;
+    if (payload) {
+        debugger;
         console.log(payload);
         alert('what is this? check the console.') //todo
     }
+    debugger;
     yield put({ type: actions.LOG_OUT_SUCCESS, payload });
     window.location.reload()
+}
+
+function* callLogIn(action) {
+    const payload = yield call(login, action.payload)
+    if(payload.code) { // it's an error
+        if(payload.code === 'UserNotConfirmedException') {
+            yield put({ type: actions.NEEDS_VERIFICATION, payload: action.payload });
+            debugger;
+        } else {
+            debugger;
+            yield put({ type: actions.LOG_IN_FAILED, payload });            
+        }
+    } else {
+        debugger;
+        yield put({ type: actions.FETCH_LOCAL_COGNITO_USER, payload });
+    }
+}
+
+function* callRegister(action) {
+    const payload = yield call(register, action.payload)
+    if(payload.code) {
+        yield put({ type: actions.REGISTER_FAILED, payload });
+    } else {
+        yield put({ type: actions.REGISTER_SUCCESS, payload });
+    }
 }
 
 function* callSchedules() {
@@ -395,9 +458,10 @@ function* callDesktops() {
     }
 }
 
-function* callUser() {
+function* callUser(action) {
     const payload = yield Auth.currentAuthenticatedUser()
-                        .catch(err => err)
+        .catch(err => err)
+    debugger;
     if (payload instanceof Object) {
         axios.defaults.headers = {
             Authorization: payload.signInUserSession.accessToken.jwtToken
@@ -410,13 +474,43 @@ function* callUser() {
     }
 }
 
+function* callResendCode(action) {
+    const payload = yield call(resendCode, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.RESEND_CODE_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.RESEND_CODE_FAILED, payload });
+    }
+}
+
+function* callVerify(action) {
+    const payload = yield call(verify, action.payload);
+    debugger;
+    if (payload === 'SUCCESS' ||
+        (typeof payload === 'object' 
+            && payload.message === 'User cannot be confirm. Current status is CONFIRMED')) {
+        yield put({ type: actions.VERIFY_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.VERIFY_FAILED, payload });
+    }
+}
+
+function* callInitDirectories(action) {
+    const payload = yield call(initDirectories, action);
+    if (payload.status === 200) {
+        yield put({ type: actions.INITIALIZE_DIRECTORIES_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.INITIALIZE_DIRECTORIES_FAILED, payload });
+    }
+}
+
 function* callConfigureAuth(action) {
     // payload is an error in this case
     const payload = yield call(setAuthConfiguration)
-    if(!payload) {
-        yield put({ type: actions.FETCHED_AUTH_CONFIG_SUCCESS, payload });        
+    if (!payload) {
+        yield put({ type: actions.FETCHED_AUTH_CONFIG_SUCCESS, payload });
     } else {
-        yield put({ type: actions.FETCHED_AUTH_CONFIG_FAILED, payload });        
+        yield put({ type: actions.FETCHED_AUTH_CONFIG_FAILED, payload });
     }
 
 }
@@ -494,17 +588,23 @@ function* callJobStatus() {
     }
 }
 
+function* callGetData(action) {
+    yield callInitDirectories(action);
+    yield callWorkflowsAvailable(action);
+    yield callJobs(action);
+    yield callJobStatus(action);
+    yield callSchedules(action);
+    yield callWorkflowTemplates(action);
+    yield callConnections(action);
+    yield callDesktops(action);
+
+}
+
 function* callInitApp(action) {
     yield callConfigureAuth(action)
     const loggedIn = yield callUser(action)
     if (loggedIn) {
-        yield callWorkflowsAvailable(action);
-        yield callJobs(action);
-        yield callJobStatus(action);
-        yield callSchedules(action);
-        yield callWorkflowTemplates(action);
-        yield callConnections(action);
-        yield callDesktops(action);    
+        yield callGetData(action);
     }
 }
 
@@ -818,9 +918,28 @@ function* logoutSaga() {
 }
 
 function* loginSaga() {
+    yield takeLatest(actions.LOG_IN, callLogIn)
+}
+
+function* registerSaga() {
+    yield takeLatest(actions.REGISTER, callRegister)
+}
+
+function* getDataSaga() {
+    yield takeLatest(actions.FETCH_LOCAL_COGNITO_USER_SUCCESS, callGetData)
+}
+
+function* getUserSaga() {
     yield takeLatest(actions.FETCH_LOCAL_COGNITO_USER, callUser)
 }
 
+function* resendCodeSaga() {
+    yield takeLatest(actions.RESEND_CODE, callResendCode)
+}
+
+function* verifySaga() {
+    yield takeLatest(actions.VERIFY, callVerify)
+}
 
 export default function* root() {
     yield all([
@@ -852,7 +971,12 @@ export default function* root() {
         fork(getStandardOutSaga),
         fork(downloadFileSaga),
         fork(getJobMetricsSaga),
+        fork(getUserSaga),
+        fork(getDataSaga),
         fork(logoutSaga),
         fork(loginSaga),
+        fork(registerSaga),
+        fork(resendCodeSaga),
+        fork(verifySaga),
     ])
 }

@@ -12,12 +12,11 @@ class PrivateRoute extends Component {
       return null
     }
 
-    if(!user.fetched ) {
-        return <Redirect to='/login' />
+    if(!user.verification.username) {
+      return <Redirect to='/login' />
     }
 
-    const confirmed = user.data.user && user.data.user.userConfirmed;
-    if(typeof confirmed === 'boolean' && confirmed === false) {
+    if(!user.verification.verified) {
       return <Redirect to='/verify' />
     }
 

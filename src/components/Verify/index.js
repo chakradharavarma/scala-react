@@ -1,80 +1,38 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Auth } from 'aws-amplify';
 import { Button, Card, Typography } from '@material-ui/core';
 import ReactCodeInput from 'react-code-input'
-import { confirmRegistration } from '../../common/cognito'
+import { verify, resendCode } from '../../actions/authActions'
 
 class VerifyAccount extends Component {
-
-  constructor(props) {
-    super(props)
-    const { user, location } = this.props;
-
-    let username;
-    if(user.data && user.data.user) {
-      username = user.data && user.data.user.username
-    }
-    else if (location.state && location.state.username) {
-      username = location.state.username;
-    } 
-
-    this.state = {
-        code: '',
-        username: username,
-        error: null,
-    }
-  }
 
   handleChange = code => {
     this.setState({ code })
   }
 
+  handleVerifyCode = () => {
+    const { handleVerification } = this.props;
+    const { user } = this.props
+    const { code } = this.state
+    debugger;
+    handleVerification(user.verification.username, code)
 
-  handleResendCode = async () => {
-    const { username } = this.state;
-    await Auth.resendSignUp(username)
-      .then(data => {
-        console.log(data) // todo remove
-      }).catch(err => {
-        this.setState({ error: err.message })
-      })
 
   }
 
-  handleSubmit = () => {
-    const { code, username } = this.state;
-    confirmRegistration(username, code, (err, result) => {
-      if(err) {
-        if(err.message === 'User cannot be confirm. Current status is CONFIRMED') {
-          this.setState({ redirect: '/login'})
-          return
-        }else {
-          this.setState({ error: err.message })
-        }
-      } else if(result === 'SUCCESS') {
-        this.setState({ redirect: '/login' })
-      }else {
-        console.log(result);
-        alert("check the log for the result")
-      }
-    })
+  handleResendCode = () => {
+    const { user } = this.props
+    const { handleResendCode } = this.props;
+    debugger;
+    handleResendCode(user.verification.username)
   }
 
   render() {
-    const { error, username, redirect } = this.state;
+    const { user } = this.props;
 
-    if(redirect) {
-      return (
-        <Redirect to={redirect} />
-      )
-    }
-    
-    if(!username ) {
-      return (
-        <Redirect to='/register' />
-      )
+    if (!user.verification.username || user.verification.verified) {
+      return <Redirect to='/' />
     }
 
     return (
@@ -86,11 +44,11 @@ class VerifyAccount extends Component {
           <div className='auth-fields'>
           <ReactCodeInput onChange={this.handleChange} type='text' fields={6} />
             <div className='error-helper-text'>
-              { error }
+              {  user.error ? user.error.message : '' }
             </div>
           </div>
           <div className='spaced-buttons'>
-          <Button variant='contained' color='secondary' onClick={this.handleSubmit}>
+          <Button variant='contained' color='secondary' onClick={this.handleVerifyCode}>
               Verify
           </Button>
           <Button variant='contained' color='secondary' onClick={this.handleResendCode}>
@@ -109,4 +67,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(VerifyAccount);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleVerification: (username, code) => dispatch(verify(username, code)),
+    handleResendCode: (username) => dispatch(resendCode(username))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VerifyAccount);

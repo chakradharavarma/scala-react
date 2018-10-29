@@ -4,6 +4,7 @@ import {
   FETCHED_FILE_SUCCESS,
   CLEAR_FILE,
   UPDATE_CODE,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -29,6 +30,9 @@ export default function (state=initialState, action) {
       break;
     case UPDATE_CODE:
       state = { ...state, fetching: false, contents: action.payload.contents};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

@@ -2,6 +2,7 @@ import {
   INIT_APP,
   FETCHED_CONNECTIONS_SUCCESS,
   FETCHED_CONNECTIONS_FAILED,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -16,10 +17,13 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: true, fetched: false};
       break;
     case FETCHED_CONNECTIONS_FAILED:
-      state = { ...state, fetching: false, fetched: false};
+      state = { ...state, fetching: false, fetched: false, data: []};
       break;
     case FETCHED_CONNECTIONS_SUCCESS:
       state = { ...state, fetching: false, fetched: true, data: action.payload.data};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;

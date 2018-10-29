@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon as FontAwesome } from '@fortawesome/react-fontawesome'
 import { faServer, faFile, faBuilding, faBars, faPlug, faDesktop, faComment, faClock } from '@fortawesome/free-solid-svg-icons'
@@ -8,15 +7,8 @@ import { faServer, faFile, faBuilding, faBars, faPlug, faDesktop, faComment, faC
 class DashLeft extends Component {
   render() {
     const { user } = this.props
-    if(!user.data ) {
+    if(!user.verification.verified ) {
       return null
-    }
-
-    const confirmed = user.data && user.data.userConfirmed;
-    if(typeof confirmed === 'boolean' && confirmed === false) {
-      return (
-        <Redirect to='/verify' />
-      ) 
     }
 
     return (

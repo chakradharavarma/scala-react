@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-import { handleRegister } from '../../actions/authActions'
-import { Auth } from 'aws-amplify'
-import { getCognitoUser } from '../../common/cognito'
+import { register } from '../../actions/authActions'
+
 class Register extends Component {
 
   state = {
     email: '',
     password: '',
-    redirect: '',
   }
 
   handleChange = (field) => (e) => {
@@ -18,51 +16,22 @@ class Register extends Component {
       [field]: e.target.value
     })
   }
-  
-  handleSubmit = () => {
-    const { email, password } = this.state;
-    const { handleRegister } = this.props;
-    const username = email.substring(0, email.indexOf('@'))
 
-    Auth.signUp({
-				username: username,
-        password: password,
-        attributes: {
-          email: email
-        }
-      })
-      .then(user => handleRegister(user))
-      .catch(err => {
-        if(err.code === 'UsernameExistsException') {
-          this.setState({redirect: '/login'})
-        }else {
-          this.setState({message: err.message})
-        }
-      })
+  handleRegister = () => {
+    const { username, email, password } = this.state;
+    const { handleRegister } = this.props;
+    handleRegister(username, password, email)
   }
 
   render() {
-    const { message, redirect, username } = this.state;
     const { user } = this.props;
 
-    if(redirect) {
-      return <Redirect to={{
-          pathname: redirect,
-          state: {
-              'redirect': true,
-            }
-          }}
-        />
-    }
-
-    if(user.data) {
-      if(!user.data.attributes) {
-        return null
-      }
-      else if(user.data.attributes.email_verified) {
+    if(user.verification.username) {
+      if(user.verification.verified) {
         return <Redirect to='/' />
+      } else {
+        return <Redirect to='/verify' />
       }
-      return <Redirect to='/verify'  />
     }
 
     return (
@@ -72,6 +41,12 @@ class Register extends Component {
             Welcome to the Scala Platform
           </Typography>
           <div className='auth-fields'>
+            <TextField
+              onChange={this.handleChange('username')}
+              label="Username"
+              type="text"
+              margin="normal"
+            />
             <TextField
               onChange={this.handleChange('email')}
               label="Email"
@@ -85,13 +60,19 @@ class Register extends Component {
               margin="normal"
             />
             <div className='helper-text'>
-              { message }
+              { user.error ? user.error.message : "" }
             </div>
           </div>
-          <Button variant='contained' color='secondary' onClick={this.handleSubmit}>
-              Log In
+          <div className='auth-buttons'>
+            <Button variant='contained' color='secondary' onClick={this.handleRegister}>
+              Register
           </Button>
-
+            <Link className='auth-link' to='/login'>
+              <Button variant="outlined" >
+                Login
+            </Button>
+            </Link>
+          </div>
         </Card>
       </div>
     );
@@ -106,7 +87,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleRegister: (user) => dispatch(handleRegister(user))
+    handleRegister: (username, password, email) => dispatch(register(username, password, email))
   }
 }
 

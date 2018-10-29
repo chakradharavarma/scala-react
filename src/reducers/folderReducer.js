@@ -2,6 +2,7 @@ import {
   INIT_APP,
   FETCHED_FOLDER_FAILED,
   FETCHED_FOLDER_SUCCESS,
+  LOG_OUT,
 } from '../actions/types';
 
 const initialState = {
@@ -22,6 +23,9 @@ export default function (state=initialState, action) {
       break;
     case FETCHED_FOLDER_FAILED:
       state = { ...state, fetching: false, error: action.payload};
+      break;
+    case LOG_OUT:
+      state = initialState;
       break;
     default:
       break;
