@@ -386,13 +386,10 @@ function* callStandardOut(action) {
 
 function* callLogOut() {
     const payload = yield Auth.signOut();
-    debugger;
     if (payload) {
-        debugger;
         console.log(payload);
         alert('what is this? check the console.') //todo
     }
-    debugger;
     yield put({ type: actions.LOG_OUT_SUCCESS, payload });
     window.location.reload()
 }
@@ -402,13 +399,10 @@ function* callLogIn(action) {
     if(payload.code) { // it's an error
         if(payload.code === 'UserNotConfirmedException') {
             yield put({ type: actions.NEEDS_VERIFICATION, payload: action.payload });
-            debugger;
         } else {
-            debugger;
             yield put({ type: actions.LOG_IN_FAILED, payload });            
         }
     } else {
-        debugger;
         yield put({ type: actions.FETCH_LOCAL_COGNITO_USER, payload });
     }
 }
@@ -461,7 +455,6 @@ function* callDesktops() {
 function* callUser(action) {
     const payload = yield Auth.currentAuthenticatedUser()
         .catch(err => err)
-    debugger;
     if (payload instanceof Object) {
         axios.defaults.headers = {
             Authorization: payload.signInUserSession.accessToken.jwtToken
@@ -485,7 +478,6 @@ function* callResendCode(action) {
 
 function* callVerify(action) {
     const payload = yield call(verify, action.payload);
-    debugger;
     if (payload === 'SUCCESS' ||
         (typeof payload === 'object' 
             && payload.message === 'User cannot be confirm. Current status is CONFIRMED')) {

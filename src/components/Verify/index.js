@@ -15,7 +15,6 @@ class VerifyAccount extends Component {
     const { handleVerification } = this.props;
     const { user } = this.props
     const { code } = this.state
-    debugger;
     handleVerification(user.verification.username, code)
 
 
@@ -24,7 +23,6 @@ class VerifyAccount extends Component {
   handleResendCode = () => {
     const { user } = this.props
     const { handleResendCode } = this.props;
-    debugger;
     handleResendCode(user.verification.username)
   }
 

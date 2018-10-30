@@ -44,13 +44,11 @@ export default function (state=initialState, action) {
       break;
     case LOG_OUT_SUCCESS:
       state = { ...initialState, fetching: false }
-      debugger;
       break;
     case LOG_IN_FAILED:
       state = { ...state, fetching: false, error: action.payload}
       break;
     case REGISTER_SUCCESS:
-      debugger;
       state = { ...state,
         verification: {
           verified: action.payload.userConfirmed,
@@ -65,7 +63,6 @@ export default function (state=initialState, action) {
       state = { ...initialState, fetching: false }
       break;
     case NEEDS_VERIFICATION:
-    debugger;
       state = {
         ...state,
         verification: {

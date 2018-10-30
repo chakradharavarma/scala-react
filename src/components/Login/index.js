@@ -25,13 +25,11 @@ class Login extends Component {
   render() {
     const { user } = this.props;
     if(user.data) {
-      debugger;
       return (
         <Redirect to='/' />
       )
     }
     if(user.verification.username && !user.verification.verified) {
-      debugger;
       return (
         <Redirect to='/verify' />
       )
