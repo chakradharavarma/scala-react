@@ -259,6 +259,18 @@ export default function (state=initialState, action) {
       notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break
+    case actions.FETCHED_AUTH_CONFIG_FAILED:
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
+      state = processQueue(state, notification);
+      break
+    case actions.IMPERSONATE_USER_FAILED:
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
+      state = processQueue(state, notification);
+      break
+    case actions.IMPERSONATE_USER_SUCCESS:
+      notification = createNotification('Successfully impersonating user', SUCCESS);
+      state = processQueue(state, notification);
+      break
     default:
       break;
   }

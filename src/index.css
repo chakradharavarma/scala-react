@@ -677,11 +677,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 184px;
     height: fit-content;
     font-size: 24px;
     font-weight:bold;
     flex: 1;
+}
+
+.with-height {
+    min-height: 184px;
 }
 
 .connection-string {
@@ -920,4 +923,30 @@ div:focus {
 
 .auth-link {
     text-decoration: none;
+}
+
+.change-user-container {
+    display: flex;
+    height: stretch;
+    justify-content: center;
+    align-items: center;
+}
+
+.change-user-card {
+    margin: 18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: 30vh;
+    min-width: 30vw;
+}
+
+.change-user-fields {
+    margin: 24px 0 !important;
+    flex-direction: column;
+    display: flex;
+}
+
+.change-user-fields > * {
+    padding: 12px 18px !important;
 }

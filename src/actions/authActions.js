@@ -4,6 +4,7 @@ import {
     LOG_IN,
     LOG_OUT,
     RESEND_CODE,
+    IMPERSONATE_USER
 } from './types';
 
 export const verify = (username, code) => {
@@ -49,6 +50,16 @@ export function resendCode(username) {
         type: RESEND_CODE,
         payload: {
             username
+        }
+    }
+}
+
+export function verifyChallenge(challenge, username) {
+    return {
+        type: IMPERSONATE_USER,
+        payload: {
+            challenge,
+            username,
         }
     }
 }

@@ -40,7 +40,6 @@ class CreateWorkflowStepper extends Component {
 
   handleClose = (cb) => () => {
     cb()
-    debugger;
     this.setState({ open: false }, () => {
       setTimeout(() => {
         this.props.dispatch(destroy('createWorkflow'));
@@ -61,7 +60,6 @@ class CreateWorkflowStepper extends Component {
           open={this.state.open}
           onClose={this.handleClose(handleCloseCallback)}
           TransitionComponent={Transition}
-          style={{backgroundColor: 'aliceblue'}}
         >
             <Stepper close={this.handleClose(handleCloseCallback)}/>
         </Dialog>

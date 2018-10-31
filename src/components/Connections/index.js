@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -51,13 +50,10 @@ class Connections extends Component {
                     <Grid container className='connection-cards-container sibling-fade'>
                       {
                         fetched && (
-                          data.Reservations
-                            .sort((a, b) => moment(a.Instances[0] - moment(b.Instances[0])))
-                            .filter(shell => shell.Instances.find(instance => instance.InstanceId !== undefined).State.Name !== 'terminated')
-                            .map((shell, i) =>
-                              <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
-                            )
-                        )
+                          data.map((shell, i) => 
+                            <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
+                          )
+                        ) 
                       }
                     </Grid>
               }

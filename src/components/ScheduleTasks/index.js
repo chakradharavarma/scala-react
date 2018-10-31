@@ -81,7 +81,7 @@ class ScheduleTasks extends Component {
                   </Grid>
                 ) :
                 (
-                  <div className='centered'>
+                  <div className='centered with-height'>
                     <NewCronDrawer trigger={drawerTriggerEmpty} />
                   </div>
                 )

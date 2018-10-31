@@ -11,10 +11,11 @@ function setAuthConfiguration() {
             // TODO test this by giving nulls
             if (!config.REACT_APP_COGNITO_REGION ||
                 !config.REACT_APP_COGNITO_USER_POOL_ID ||
-                !config.REACT_APP_COGNITO_IDENTITY_POOL_ID ||
-                !config.REACT_APP_COGNITO_CLIENT_ID) {
-                return new Error("Environment is not properly set")
-            }
+                !config.REACT_APP_COGNITO_CLIENT_ID) 
+                // !config.REACT_APP_COGNITO_IDENTITY_POOL_ID || todo one day we'll do SAML 
+                {
+                    return new Error("Environment is not properly set")
+                }
 
             Amplify.configure({
                 Auth: {
@@ -48,6 +49,17 @@ function resendCode({username}) {
         .catch(err => err)
 }
 
+
+function impersonateUser({username, challenge}) {
+    const url = '/api/config/tomato';
+    const headers = {
+        'Tomato-User': username,
+        'Tomato-Challenge': challenge,
+    }
+    return axios.post(url, null, { headers })
+        .catch(err => err);
+}
+
 function getAvailableWorkflows() {
     const url = '/api/workflow/get';
     return axios.get(url)
@@ -67,7 +79,7 @@ function getSchedules() {
 }
 
 function getConnections() {
-    const url = '/api/connection/getTODO';
+    const url = '/api/connection/get';
     return axios.get(url)
         .catch(err => err);
 }
@@ -263,13 +275,15 @@ function standardOut({ id }) {
 }
 
 function createConnection() {
-    const url = `/createConnection/`;
-    return axios.post(url).catch(err => err);
+    const url = `/api/connection/create`;
+    return axios.post(url)
+        .catch(err => err);
 }
 
-function createDesktop({ type }) {
-    const url = `/createdesktop/?desktopType=${type}`;
-    return axios.get(url)
+function createDesktop(payload) {
+    const url = `/api/desktop/create`;
+    const data = JSON.stringify(payload)
+    return axios.post(url, data)
         .catch(err => err);
 }
 
@@ -309,7 +323,7 @@ function* callWorkflowsAvailable() {
 
 function* callCreateConnection() {
     const payload = yield call(createConnection);
-    if (payload.status === 200) {
+    if (payload.status === 200) {        
         yield put({ type: actions.CREATE_CONNECTION_SUCCESS, payload });
         yield callConnections();
     } else {
@@ -411,8 +425,11 @@ function* callRegister(action) {
     const payload = yield call(register, action.payload)
     if(payload.code) {
         yield put({ type: actions.REGISTER_FAILED, payload });
-    } else {
+    } else if(payload instanceof Object) {
         yield put({ type: actions.REGISTER_SUCCESS, payload });
+    } else {
+        console.log(payload);
+        alert("Check the console");
     }
 }
 
@@ -425,7 +442,7 @@ function* callSchedules() {
     }
 }
 
-function* callConnections() {
+function* callConnections() {    
     const payload = yield call(getConnections);
     if (payload.status === 200) {
         yield put({ type: actions.FETCHED_CONNECTIONS_SUCCESS, payload });
@@ -457,6 +474,7 @@ function* callUser(action) {
         .catch(err => err)
     if (payload instanceof Object) {
         axios.defaults.headers = {
+            ...axios.defaults.headers,
             Authorization: payload.signInUserSession.accessToken.jwtToken
         }
         yield put({ type: actions.FETCH_LOCAL_COGNITO_USER_SUCCESS, payload })
@@ -484,6 +502,23 @@ function* callVerify(action) {
         yield put({ type: actions.VERIFY_SUCCESS, payload });
     } else {
         yield put({ type: actions.VERIFY_FAILED, payload });
+    }
+}
+
+
+function* callImpersonateUser(action) {
+    const payload = yield call(impersonateUser, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.IMPERSONATE_USER_SUCCESS, payload: action.payload });
+        const { username, challenge } = action.payload
+        axios.defaults.headers = {
+            ...axios.defaults.headers,
+            'Tomato-User': username,
+            'Tomato-Challenge': challenge,
+        }
+        yield callGetData();
+    } else {
+        yield put({ type: actions.IMPERSONATE_USER_FAILED, payload });
     }
 }
 
@@ -678,6 +713,7 @@ function* callGetJobMetrics(action) { // todo, make a real edit
 
 function* callCreateDesktop(action) {
     const payload = yield call(createDesktop, action.payload);
+    debugger;
     if (payload.status === 200) {
         yield put({ type: actions.CREATE_DESKTOP_SUCCESS, payload });
         yield callDesktops(action);
@@ -933,6 +969,10 @@ function* verifySaga() {
     yield takeLatest(actions.VERIFY, callVerify)
 }
 
+function* impersonateUserSaga() {
+    yield takeLatest(actions.IMPERSONATE_USER, callImpersonateUser)
+}
+
 export default function* root() {
     yield all([
         fork(getInitSaga),
@@ -970,5 +1010,7 @@ export default function* root() {
         fork(registerSaga),
         fork(resendCodeSaga),
         fork(verifySaga),
+        fork(impersonateUserSaga),
     ])
 }
+

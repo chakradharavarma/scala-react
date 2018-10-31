@@ -41,13 +41,13 @@ class CurrentJobs extends Component {
                   runningJobs.length ? 
                   <JobsRunningTable jobs={runningJobs} /> :
                   <Fade in={!fetching} timeout={400} >
-                    <div className='centered'>
+                    <div className='centered with-height'>
                       <JobsDrawer title='Click to run a workflow' />
                     </div>
                   </Fade>
                 ) : (
                   <Fade in={!fetching} timeout={400} >
-                    <div className='centered'>
+                    <div className='centered with-height'>
                       <Typography variant='title'>
                         Unable to fetch jobs
                       </Typography>

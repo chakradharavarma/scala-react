@@ -45,7 +45,7 @@ class Usage extends Component {
                 <ScalaLoader centered active />
               ) :
               <Fade in animation={400}>
-                <div className={classnames('summary-container', { 'centered': !results.length })} >
+                <div className={classnames('summary-container', { 'centered with-height': !results.length })} >
                     {
                       results.length ?
                         results.map((result, i) => 

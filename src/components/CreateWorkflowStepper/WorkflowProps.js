@@ -12,6 +12,8 @@ import {
   cpusPerNode,
 } from '../TextField/fields';
 
+
+// TODO delete
 const machines = [
   "Scala Test Small",
   "Scala Test Medium",
@@ -53,11 +55,6 @@ const clusterType = TextField({
 
 class WorkflowProps extends Component {
 
-  onFileLoad = (e, file) => alert(e.target.result, file.name);
-
-  handleChange = prop => event => {
-    this.setState({ [prop]: event.target.value });
-  };
 
   render() {
     return (

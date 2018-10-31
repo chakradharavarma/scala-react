@@ -20,6 +20,7 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: false, fetched: false, data: []};
       break;
     case FETCHED_CONNECTIONS_SUCCESS:
+      debugger;
       state = { ...state, fetching: false, fetched: true, data: action.payload.data};
       break;
     case LOG_OUT:

@@ -16,10 +16,10 @@ class MySnackbar extends Component {
   }
 
   render() {
-    const { snackbar, autoHideDuration, handleExited, user } = this.props;
+    const { snackbar, autoHideDuration, handleExited } = this.props;
     const { notification, open, queue } = snackbar;
 
-    if(!notification || !user.fetched ) {
+    if(!notification) {
       return null;
     }
     const { key, message, type } = notification

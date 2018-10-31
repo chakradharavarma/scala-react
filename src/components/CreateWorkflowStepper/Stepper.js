@@ -143,6 +143,7 @@ class HorizontalNonLinearStepper extends Component {
             );
           })}
         </Stepper>
+        XBUTTON
         <Divider />
         {this.allStepsCompleted() ? (
           null

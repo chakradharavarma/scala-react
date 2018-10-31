@@ -35,7 +35,7 @@ class AccountMenu extends React.Component {
 
   render() {
     const { open } = this.state;
-    const { user } = this.props;
+    const { user, impersonation } = this.props;
     return (
         <div className='dash-right-options'>
           <Button
@@ -44,7 +44,7 @@ class AccountMenu extends React.Component {
             }}
             onClick={this.handleToggle}
           >
-            Hi, { user.data.username }
+            Hi, { impersonation.username || user.data.username }
             <FontAwesomeIcon className='dash-icon' icon={faChevronDown} />
           </Button>
           <Popper open={open} anchorEl={this.anchorElement} transition style={{zIndex: 1}}>
@@ -74,6 +74,7 @@ const mapStateToProps = state => {
   return (
     {
       user: state.user,
+      impersonation: state.impersonation,
     }
   )
 };

@@ -14,7 +14,7 @@ const ScalaLoader = (props) => {
         <Fade in={props.active} timeout={{ enter: 200, exit: 300 }}>
             {
                 props.centered ? (
-                    <div className='centered'>
+                    <div className='centered with-height'>
                         <Loader type="ball-grid-pulse" active={props.active} />
                     </div>
                 ) : <Loader type="ball-grid-pulse" active={props.active} />

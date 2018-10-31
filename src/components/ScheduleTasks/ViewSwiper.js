@@ -65,13 +65,14 @@ class ViewsSwiper extends Component {
 
   handleSubmit = () => {
     const { dispatch, handleSubmit, handleClose } = this.props;
+
     const submitter = handleSubmit(submitForm.bind(this));
     submitter();
     dispatch(submit('createSchedule'));
     dispatch(reset('createSchedule'));
     handleClose();
   }
-
+l
   render() {
     const { classes, theme } = this.props;
     return (
