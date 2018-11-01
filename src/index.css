@@ -907,7 +907,9 @@ div:focus {
 
 .auth-fields {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    min-width: 180px;
+    width: 260px;
 }
 
 .auth-fields > * {
@@ -915,9 +917,6 @@ div:focus {
     letter-spacing: 4px;
     font-weight: 100 !important;
     text-transform: uppercase;
-
-    min-width: 180px;
-    max-width: 300px;
 }
 
 .Section__sectionFooterSecondaryContent {
@@ -979,7 +978,7 @@ div:focus {
 }
 
 .auth-card {
-	background: linear-gradient(-45deg, #DEDEDE, #FEFEFE, #D8D8D8 , #EEEEEE);
+	background: linear-gradient(-45deg, #CECECE, #FEFEFE, #FFFFFF , #EEEEEE);
 	background-size: 400% 400%;
 	animation: Gradient 15s ease infinite;
 }

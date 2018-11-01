@@ -237,6 +237,9 @@ class JobsCard extends Component {
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {
                             const isSelected = this.isSelected(n.id);
+                            const createdDate = new Date(n.created)
+                            const runningTime = new Date(n.running_time)
+                            debugger;
                             return (
                               <TableRow
                                 hover
@@ -253,8 +256,8 @@ class JobsCard extends Component {
                                 <TableCell className={classnames(
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
-                                <TableCell>{n.created}</TableCell>
-                                <TableCell>{n.running_time}</TableCell>
+                                <TableCell>{`${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`}</TableCell>
+                                <TableCell>{new Date(runningTime).toDateString()}</TableCell>
                                 <TableCell>
                                   <IconButton
                                     aria-label="Desktop"
