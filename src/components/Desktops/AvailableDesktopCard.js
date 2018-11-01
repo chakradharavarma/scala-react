@@ -9,7 +9,6 @@ class AvailableDesktopCard extends Component {
   render() {
     const { desktop, createDesktop } = this.props;
     const { name, type } = desktop;
-    debugger;
     return (
       <Grid item xs={10} >
         <Card elevation={1} className='desktop-card' onClick={createDesktop(type)}>

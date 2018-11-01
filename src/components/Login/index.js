@@ -37,9 +37,9 @@ class Login extends Component {
 
     return (
       <div className="auth-container">
-        <Card className='auth-card'>
+        <Card className='auth-card centered' >
           <Typography className='auth-card-title' color='secondary' variant='headline'>
-            Login
+            WELCOME BACK TO THE SCALA PLATFORM
           </Typography>
           <div className='auth-fields'>
             <TextField
@@ -59,11 +59,11 @@ class Login extends Component {
             </div>
           </div>
           <div className='auth-buttons'>
-            <Button variant='contained' color='secondary' onClick={this.handleLogin}>
+            <Button className='auth-button' variant='contained' color='secondary' onClick={this.handleLogin}>
               Log In
           </Button>
             <Link className='auth-link' to='/register'>
-              <Button variant="outlined" >
+              <Button className='auth-button' variant="outlined" >
                 Register
             </Button>
             </Link>

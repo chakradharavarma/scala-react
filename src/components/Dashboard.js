@@ -75,12 +75,13 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { user } = this.props;
 
     return (
       <MuiThemeProvider theme={theme}>
         <Router>
           <ConnectedRouter history={history}>
-            <div className={classnames("dashboard-root")} >
+            <div className={classnames("dashboard-root", {"unauthenticated" : !user.verification.verified })} >
               <DashLeft />
               <DashRight />
             </div>
@@ -91,11 +92,17 @@ class Dashboard extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     initialize: () => dispatch(initializeApp())
   };
 };
 
-export default connect(null, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 

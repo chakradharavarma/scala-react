@@ -883,28 +883,41 @@ div:focus {
 .auth-container {
     display: flex;
     align-items: center;
-    height: 60vh;
+    margin-top: 48px;
 }
 
 .auth-card {
-    width: 50vw;
+    display: flex;
+    max-width: 50vw;
     margin: 0 auto;
     padding: 32px;
+    flex-direction: column;
 }
 
 .auth-card-title {
-    font-weight: 800 !important;
-    text-decoration: underline;
-    line-height: 14px;
+    display: flex;
+    letter-spacing: 4px;
+    font-weight: 100 !important;
+    margin: 16px 0 !important;
+    text-transform: uppercase;
+    max-width: 660px;
+    min-width: 372px;
+    text-align: center
 }
 
 .auth-fields {
-    margin: 32px 0;
+    display: flex;
+    flex-direction: column
 }
 
 .auth-fields > * {
-    display: flex !important;
-    width: 300px
+    display: flex;
+    letter-spacing: 4px;
+    font-weight: 100 !important;
+    text-transform: uppercase;
+
+    min-width: 180px;
+    max-width: 300px;
 }
 
 .Section__sectionFooterSecondaryContent {
@@ -916,9 +929,17 @@ div:focus {
 }
 
 .auth-buttons {
-    width: 300px;
     display: flex;
-    justify-content: space-between;
+    margin: 8px;
+}
+
+.auth-buttons > button, a {
+    margin: 8px;
+}
+
+.auth-button {
+    font-weight: 100 !important;
+    letter-spacing: 2px;
 }
 
 .auth-link {
@@ -949,4 +970,37 @@ div:focus {
 
 .change-user-fields > * {
     padding: 12px 18px !important;
+}
+
+.unauthenticated > .dash-right {
+	background: linear-gradient(-45deg, #DEDEDE, #FEFEFE, #BFBFBF , #DEDEDE);
+	background-size: 400% 400%;
+	animation: Gradient 15s ease infinite;
+}
+
+.auth-card {
+	background: linear-gradient(-45deg, #DEDEDE, #FEFEFE, #D8D8D8 , #EEEEEE);
+	background-size: 400% 400%;
+	animation: Gradient 15s ease infinite;
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+.error-helper-text {
+    font-size: 14px;
+    color: #7C0A02;
+    text-transform: unset;
+    letter-spacing: 2px;
+    margin: 4px 0;
+    min-height: 16px;
 }

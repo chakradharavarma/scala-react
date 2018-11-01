@@ -11,11 +11,11 @@ function setAuthConfiguration() {
             // TODO test this by giving nulls
             if (!config.REACT_APP_COGNITO_REGION ||
                 !config.REACT_APP_COGNITO_USER_POOL_ID ||
-                !config.REACT_APP_COGNITO_CLIENT_ID) 
-                // !config.REACT_APP_COGNITO_IDENTITY_POOL_ID || todo one day we'll do SAML 
-                {
-                    return new Error("Environment is not properly set")
-                }
+                !config.REACT_APP_COGNITO_CLIENT_ID)
+            // !config.REACT_APP_COGNITO_IDENTITY_POOL_ID || todo one day we'll do SAML 
+            {
+                return new Error("Environment is not properly set")
+            }
 
             Amplify.configure({
                 Auth: {
@@ -26,31 +26,36 @@ function setAuthConfiguration() {
                     userPoolWebClientId: config.REACT_APP_COGNITO_CLIENT_ID
                 }
             });
-        }).catch(err => err)
+        }).catch(err => {
+            if(err.response.data.includes('Proxy error')) {
+                err.response.data = 'Unable to fetch auth config. Make sure API is live';
+            }
+            return err
+        })
 }
 
-function login({username, password }) {
+function login({ username, password }) {
     return Auth.signIn(username, password)
         .catch(err => err)
 }
 
-function register({username, password, email }) {
-    return Auth.signUp({username, password, attributes: { email }})
+function register({ username, password, email }) {
+    return Auth.signUp({ username, password, attributes: { email } })
         .catch(err => err);
 }
 
-function verify({username, code }) {
+function verify({ username, code }) {
     return Auth.confirmSignUp(username, code)
         .catch(err => err)
 }
 
-function resendCode({username}) {
+function resendCode({ username }) {
     return Auth.resendSignUp(username)
         .catch(err => err)
 }
 
 
-function impersonateUser({username, challenge}) {
+function impersonateUser({ username, challenge }) {
     const url = '/api/config/tomato';
     const headers = {
         'Tomato-User': username,
@@ -145,8 +150,8 @@ function getKeyPairURL() {
 }
 
 function deleteConnection({ id }) {
-    const url = `/deleteConnection?shell_id=${id}`;
-    return axios.get(url)
+    const url = `/api/connection/delete/${id}`;
+    return axios.delete(url)
         .catch(err => err);
 }
 
@@ -287,8 +292,8 @@ function createDesktop(payload) {
         .catch(err => err);
 }
 
-function deleteDesktop({ desktop_id, con_id }) {
-    const url = `/deletedesktop/?desktop_id=${desktop_id}&con_id=${con_id}`;
+function deleteDesktop({ desktop_id }) {
+    const url = `/api/desktop/delete/${desktop_id}`;
     return axios.delete(url)
         .catch(err => err);
 }
@@ -323,7 +328,7 @@ function* callWorkflowsAvailable() {
 
 function* callCreateConnection() {
     const payload = yield call(createConnection);
-    if (payload.status === 200) {        
+    if (payload.status === 200) {
         yield put({ type: actions.CREATE_CONNECTION_SUCCESS, payload });
         yield callConnections();
     } else {
@@ -410,11 +415,11 @@ function* callLogOut() {
 
 function* callLogIn(action) {
     const payload = yield call(login, action.payload)
-    if(payload.code) { // it's an error
-        if(payload.code === 'UserNotConfirmedException') {
+    if (payload.code) { // it's an error
+        if (payload.code === 'UserNotConfirmedException') {
             yield put({ type: actions.NEEDS_VERIFICATION, payload: action.payload });
         } else {
-            yield put({ type: actions.LOG_IN_FAILED, payload });            
+            yield put({ type: actions.LOG_IN_FAILED, payload });
         }
     } else {
         yield put({ type: actions.FETCH_LOCAL_COGNITO_USER, payload });
@@ -423,13 +428,13 @@ function* callLogIn(action) {
 
 function* callRegister(action) {
     const payload = yield call(register, action.payload)
-    if(payload.code) {
+    if (payload.code || payload instanceof String  || typeof payload === 'string') { // even amazon's not perfect ¯\_(ツ)_/¯
         yield put({ type: actions.REGISTER_FAILED, payload });
-    } else if(payload instanceof Object) {
+    } else if (payload instanceof Object) {
         yield put({ type: actions.REGISTER_SUCCESS, payload });
     } else {
-        console.log(payload);
-        alert("Check the console");
+        console.log(payload)
+        alert("could be a problem, check console")
     }
 }
 
@@ -442,7 +447,7 @@ function* callSchedules() {
     }
 }
 
-function* callConnections() {    
+function* callConnections() {
     const payload = yield call(getConnections);
     if (payload.status === 200) {
         yield put({ type: actions.FETCHED_CONNECTIONS_SUCCESS, payload });
@@ -497,7 +502,7 @@ function* callResendCode(action) {
 function* callVerify(action) {
     const payload = yield call(verify, action.payload);
     if (payload === 'SUCCESS' ||
-        (typeof payload === 'object' 
+        (typeof payload === 'object'
             && payload.message === 'User cannot be confirm. Current status is CONFIRMED')) {
         yield put({ type: actions.VERIFY_SUCCESS, payload });
     } else {
@@ -616,14 +621,17 @@ function* callJobStatus() {
 }
 
 function* callGetData(action) {
+    // first, init the dirs, then do all these async
     yield callInitDirectories(action);
-    yield callWorkflowsAvailable(action);
-    yield callJobs(action);
-    yield callJobStatus(action);
-    yield callSchedules(action);
-    yield callWorkflowTemplates(action);
-    yield callConnections(action);
-    yield callDesktops(action);
+    yield all([
+        callWorkflowsAvailable(action),
+        callJobs(action),
+        callJobStatus(action),
+        callSchedules(action),
+        callWorkflowTemplates(action),
+        callConnections(action),
+        callDesktops(action)
+    ])
 
 }
 
@@ -713,7 +721,6 @@ function* callGetJobMetrics(action) { // todo, make a real edit
 
 function* callCreateDesktop(action) {
     const payload = yield call(createDesktop, action.payload);
-    debugger;
     if (payload.status === 200) {
         yield put({ type: actions.CREATE_DESKTOP_SUCCESS, payload });
         yield callDesktops(action);

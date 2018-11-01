@@ -36,7 +36,7 @@ class Register extends Component {
 
     return (
       <div className="auth-container">
-        <Card className='auth-card'>
+        <Card className='auth-card centered'>
           <Typography className='auth-card-title' color='secondary' variant='headline'>
             Welcome to the Scala Platform
           </Typography>
@@ -59,16 +59,16 @@ class Register extends Component {
               type="password"
               margin="normal"
             />
-            <div className='helper-text'>
+            <div className='error-helper-text'>
               { user.error ? user.error.message : "" }
             </div>
           </div>
           <div className='auth-buttons'>
-            <Button variant='contained' color='secondary' onClick={this.handleRegister}>
+            <Button className='auth-button' variant='contained' color='secondary' onClick={this.handleRegister}>
               Register
           </Button>
             <Link className='auth-link' to='/login'>
-              <Button variant="outlined" >
+              <Button className='auth-button' variant="outlined" >
                 Login
             </Button>
             </Link>

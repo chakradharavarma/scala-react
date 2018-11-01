@@ -27,11 +27,16 @@ export default function (state=initialState, action) {
     case INIT_APP:
       state = { ...state, fetching: true};
       break;
+    case '@@router/LOCATION_CHANGE':
+      state = { ...state, error: null }
+      break;
+
     case FETCH_LOCAL_COGNITO_USER_SUCCESS:
       state = { 
         ...state,
         fetching: false,
-        fetched: true, 
+        fetched: true,
+        error: null,
         verification: { username: action.payload.username, verified: true },
         data: action.payload
       }
@@ -50,6 +55,7 @@ export default function (state=initialState, action) {
       break;
     case REGISTER_SUCCESS:
       state = { ...state,
+        error: null,
         verification: {
           verified: action.payload.userConfirmed,
           username: action.payload.user.username
@@ -60,7 +66,7 @@ export default function (state=initialState, action) {
       state = { ...state, error: action.payload}
       break;
     case VERIFY_SUCCESS:
-      state = { ...initialState, fetching: false }
+      state = { ...initialState, error: null, fetching: false }
       break;
     case NEEDS_VERIFICATION:
       state = {

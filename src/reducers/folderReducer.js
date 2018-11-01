@@ -13,13 +13,13 @@ const initialState = {
 }
 
 export default function (state=initialState, action) {
-  switch(action.type){
+  switch(action.type) {
     case INIT_APP:
       state = { ...state, fetching: true, fetched: false};
       break;
       case FETCHED_FOLDER_SUCCESS:
       const path = action.payload.path;
-      state = { ...state, fetching: false, fetched: false, path: path, data: action.payload.data};
+      state = { ...state, fetching: false, fetched: false, path, data: action.payload.data};
       break;
     case FETCHED_FOLDER_FAILED:
       state = { ...state, fetching: false, error: action.payload};

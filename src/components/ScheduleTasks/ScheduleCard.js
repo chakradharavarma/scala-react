@@ -47,6 +47,8 @@ class ScheduleCard extends Component {
       return null;
     }
 
+    debugger;
+    
     return (
       <Grid item xs={12} lg={6}  >
         <Card style={{ minHeight: 200 }} >
@@ -102,6 +104,9 @@ class ScheduleCard extends Component {
               </Grid>
               <Grid item xs={12} >
                 Scheduler ID: {schedule.id}
+              </Grid>
+              <Grid item xs={12} >
+                Workflow Name: {workflow.name}
               </Grid>
               <Grid item xs={12} >
                 Workflow ID: {schedule.workflowId}

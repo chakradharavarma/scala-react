@@ -35,7 +35,7 @@ class VerifyAccount extends Component {
 
     return (
       <div className="auth-container">
-        <Card className='auth-card'>
+        <Card className='auth-card centered'>
           <Typography className='auth-card-title' color='secondary' variant='headline'>
             Enter your verification code
           </Typography>
@@ -46,10 +46,10 @@ class VerifyAccount extends Component {
             </div>
           </div>
           <div className='spaced-buttons'>
-          <Button variant='contained' color='secondary' onClick={this.handleVerifyCode}>
+          <Button className='auth-button' variant='contained' color='secondary' onClick={this.handleVerifyCode}>
               Verify
           </Button>
-          <Button variant='contained' color='secondary' onClick={this.handleResendCode}>
+          <Button className='auth-button' variant='contained' color='secondary' onClick={this.handleResendCode}>
               Resend Code
           </Button>
           </div>
