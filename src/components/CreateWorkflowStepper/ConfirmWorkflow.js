@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -8,7 +8,7 @@ import { formValueSelector } from 'redux-form';
 class ConfirmWorkflow extends Component {
 
   render() {
-    const { name, cpusPerNode, tasksPerNode, numberOfNodes, compute } = this.props;
+    const { name, instanceCount, compute } = this.props;
     return (
       <div className='step-content-container'>
         <Typography variant='display1' color='secondary' component='div' className='step-title'>
@@ -24,33 +24,12 @@ class ConfirmWorkflow extends Component {
               {name}
             </Typography>
           </div>
-          { 
-            false &&
-            (<Fragment><div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              CPUs per node:
-            </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              { cpusPerNode }
-            </Typography>
-          </div>          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Tasks per node:
-            </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-            { tasksPerNode }
-            </Typography>
-          </div>
-          </Fragment>
-          )
-        }
-
           <div>
             <Typography className='confirm-workflow-field' color='secondary' variant='title'>
               Number of nodes:
             </Typography>
             <Typography className='confirm-workflow-value' variant='title'>
-              { numberOfNodes }
+              { instanceCount }
             </Typography>
           </div>
           <div>
@@ -68,17 +47,15 @@ class ConfirmWorkflow extends Component {
   }
 }
 
-
-
 const selector = formValueSelector('createWorkflow');
 
 const mapStateToProps = (state) => {
   return {
     name: selector(state, 'name'),
     compute: selector(state, 'resources.compute'),
-    numberOfNodes: selector(state, 'resources.nodes'),
-    tasksPerNode: selector(state, 'resources.tasksPerNode'),
-    cpusPerNode: selector(state, 'resources.cpusPerNode'),
+    instanceCount: selector(state, 'resources.instanceCount'),
+    //tasksPerNode: selector(state, 'resources.tasksPerNode'), // TODO delete
+    //cpusPerNode: selector(state, 'resources.cpusPerNode'),
   }
 }
 

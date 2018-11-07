@@ -84,10 +84,10 @@ class Files extends Component {
     order: 'asc',
     orderBy: 'name',
     selected: [],
-    page: 0,
     nameModal: false,
     renameModal: false,
   }
+
   createSortHandler = property => event => {
     this.onRequestSort(event, property);
   };
@@ -110,18 +110,17 @@ class Files extends Component {
     })
   }
 
-
   toggleRenameModal = (open) => {
     this.setState({
       renameModal: open,
     })
   }
 
-
   render() {
     const { fetchFolder, folder, modal, filter } = this.props;
     const { orderBy, order, nameModal, renameModal } = this.state;
     let { data, path, fetching } = folder;
+
     data = data || [];
     if (!folder) {
       return null;
@@ -138,6 +137,11 @@ class Files extends Component {
     if (modal) {
       parts.splice(1, 2)
     }
+
+    const rows = data
+      .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
+      .sort(getSorting(order, orderBy))
+      //.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 
     return (
       <Fragment>
@@ -177,52 +181,52 @@ class Files extends Component {
               <ScalaLoader centered active />
             ) : (
                 <Fade in timeout={400}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        {columnData.map(column => {
-                          return (
-                            <TableCell
-                              key={column.id}
-                              numeric={column.numeric}
-                              padding={column.disablePadding ? 'none' : 'default'}
-                              sortDirection={orderBy === column.id ? order : false}
-                            >
-                              <Tooltip
-                                title="Sort"
-                                placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                                enterDelay={300}
+                  <div className='file-explorer-table-container' >
+                    <Table className="file-explorer-table">
+                      <TableHead>
+                        <TableRow>
+                          {columnData.map(column => {
+                            return (
+                              <TableCell
+                                key={column.id}
+                                numeric={column.numeric}
+                                padding={column.disablePadding ? 'none' : 'default'}
+                                sortDirection={orderBy === column.id ? order : false}
                               >
-                                <TableSortLabel
-                                  active={orderBy === column.id}
-                                  direction={order}
-                                  onClick={this.createSortHandler(column.id)}
+                                <Tooltip
+                                  title="Sort"
+                                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
+                                  enterDelay={300}
                                 >
-                                  {column.label}
-                                </TableSortLabel>
-                              </Tooltip>
-                            </TableCell>
-                          );
-                        }, this)}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {
-                        data
-                          .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
-                          .sort(getSorting(order, orderBy))
-                          .map((row, i) =>
-                            <FileExplorerRow 
-                              i={i}
-                              toggleRenameModal={this.toggleRenameModal}
-                              row={row}
-                              key={`file-row-${i}`}
-                            /> 
-                          )
-                      }
-                    </TableBody>
-                  </Table>
+                                  <TableSortLabel
+                                    active={orderBy === column.id}
+                                    direction={order}
+                                    onClick={this.createSortHandler(column.id)}
+                                  >
+                                    {column.label}
+                                  </TableSortLabel>
+                                </Tooltip>
+                              </TableCell>
+                            );
+                          }, this)}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {
+                          rows
+                            .map((row, i) =>
+                              <FileExplorerRow
+                                i={i}
+                                toggleRenameModal={this.toggleRenameModal}
+                                row={row}
+                                key={`file-row-${i}`}
+                              />
+                            )
+                        }
+                      </TableBody>
 
+                    </Table>
+                  </div>
                 </Fade>
               )
 

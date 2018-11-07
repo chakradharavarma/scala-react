@@ -325,7 +325,8 @@ body {
 .file-explorer-table {
     font-family: 'Ubuntu Mono', monospace !important;
     letter-spacing: 2px;
-    padding: 20px;
+    max-height: stretch;
+    height: fit-content;
 }
 
 .file-path {
@@ -381,6 +382,7 @@ body {
     justify-content: space-between;
     margin: 0 4px;
     align-items: flex-end;
+    margin-bottom: 0.35em;
 }
 
 .workflow-title-container > * {
@@ -529,6 +531,7 @@ body {
 .workflow-logo {
     width: auto;
     height: 24px;
+    margin-left: 4px;
 }
 
 .back-button {
@@ -846,7 +849,7 @@ div:focus {
 }
 
 .file-explorer-confirm-delete-menu-handler {
-    display: none;
+    display: none !important;
 }
 
 .cron-info-icon {
@@ -883,7 +886,7 @@ div:focus {
 .auth-container {
     display: flex;
     align-items: center;
-    margin-top: 48px;
+    margin-top: 10vh;
 }
 
 .auth-card {
@@ -972,13 +975,13 @@ div:focus {
 }
 
 .unauthenticated > .dash-right {
-	background: linear-gradient(-45deg, #DEDEDE, #FEFEFE, #BFBFBF , #DEDEDE);
+	background: linear-gradient(-45deg, #e8f0f6, #FEFEFE, #dae5ee, #DEDEDE);
 	background-size: 400% 400%;
 	animation: Gradient 15s ease infinite;
 }
 
 .auth-card {
-	background: linear-gradient(-45deg, #CECECE, #FEFEFE, #FFFFFF , #EEEEEE);
+	background: linear-gradient(-45deg, #eef4f9, #FEFEFE, #FFFFFF , #EEEEEE);
 	background-size: 400% 400%;
 	animation: Gradient 15s ease infinite;
 }
@@ -1002,4 +1005,82 @@ div:focus {
     letter-spacing: 2px;
     margin: 4px 0;
     min-height: 16px;
+}
+
+.close-modal-button {
+    position: absolute !important;
+    bottom: 36px ;
+    right: 48px;
+}
+
+.available-workflow-card {
+    min-height: 176px !important;
+}
+
+.workflow-template-card-container {
+    min-height: 164px;
+}
+
+.file-explorer-table-container {
+    overflow-y: scroll
+}
+
+/*
+.file-explorer-table tbody{
+    display: block;
+    overflow: scroll;
+    width: max-content;
+}
+/*
+.file-explorer-table thead tr{
+    width:100%;
+    position: relative;
+}*/
+
+tr {
+    display: flex !important;
+    min-height: 60px !important;
+    border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
+}
+
+thead {
+    flex-basis: 60px;
+}
+
+thead > tr { 
+    z-index: 2;
+    background-color: white;
+}
+
+thead, tbody {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 728px;
+    min-height: 60px;
+    user-select: none;
+    vertical-align: middle;
+    visibility: visible;
+}
+
+tbody {
+    position: relative !important;
+    overflow-y: scroll;
+    vertical-align: middle;
+}
+
+table {
+    display: flex !important;
+    flex-direction: column;
+    max-width: stretch;
+}
+
+td, th {
+    border-bottom: 0px !important;
+    display: flex !important;
+    align-items: center;
+    flex-basis: 0%;
+    flex-grow: 1;
+    flex-shrink: 1; 
+    width: 28px;
+    padding: 0 18px !important;
 }

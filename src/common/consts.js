@@ -27,9 +27,4 @@ export const MONTHS = [
     'October', 'November', 'December'
 ];
 
-
-
-export const COGNITO_CONFIG = {
-    UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
-    ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID
-};
+export const DEFAULT_TEMPLATE = 'Basic Workflow';

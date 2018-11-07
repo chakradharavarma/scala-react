@@ -43,11 +43,11 @@ class AvailableWorkflows extends Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);  
     return (
-      <Grid item lg={6} xl={4} sm={12} >
-        <Card >
+      <Grid item lg={6} xl={4} sm={12}>
+        <Card  className='available-workflow-card' >
           <CardContent>
             <div className='workflow-title-container'>
-              <Typography color='secondary' gutterBottom variant="title">
+              <Typography color='secondary' variant="title">
                 {workflow.name}
               </Typography>
               <div>

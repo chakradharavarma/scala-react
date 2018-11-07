@@ -35,6 +35,13 @@ class CreateWorkflowStepper extends Component {
       dispatch(initialize('createWorkflow', {
         ...workflow
       }));
+    } else {
+      dispatch(initialize('createWorkflow', {
+        resources: {
+          instanceCount: 1,
+          compute: 'c4.large'
+        }
+      }));
     }
   };
 

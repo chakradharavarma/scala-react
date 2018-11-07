@@ -25,8 +25,8 @@ class ConnectionCard extends Component {
 
   render() {
     const { shell, handleClickDelete } = this.props;
-    const { instanceID, privateIP, state, keyPair } = shell;    
-    const connectionString = `ssh -i ${keyPair}.pem ubuntu@${privateIP}`;
+    const { instanceID, publicIP, state, keyPair } = shell;    
+    const connectionString = `ssh -i ${keyPair}.pem ubuntu@${publicIP}`;
 
     return (
       <Grid item xs={4}>

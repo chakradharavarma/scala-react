@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
@@ -40,16 +39,17 @@ class RunningDesktopCard extends Component {
 
   render() {
 
-    const { desktop, desktops, handleClickDeleteDesktop, handleClickPause, handleClickResume } = this.props;
+    const { desktop, handleClickDeleteDesktop, handleClickPause, handleClickResume } = this.props;
+    const { id, link, protocol, instanceID } = desktop;
 
     /* TODO delete
     if (desktops.fetching) {
       return null;
     }*/
 
+    /*
     const instance = desktop.Instances.find(instance => instance.InstanceId !== undefined);
     const { LaunchTime, PrivateIpAddress, InstanceId } = instance;
-
     const now = moment();
     const launch = moment(LaunchTime);
     const duration = moment.duration(now.diff(launch));
@@ -71,7 +71,7 @@ class RunningDesktopCard extends Component {
       connect = 'pending'
     } else {
       connect = 'none';
-    }
+    }*/
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
@@ -99,26 +99,27 @@ class RunningDesktopCard extends Component {
                     }
                   }}
                 >
-                  {
-                    connect.length > 10 &&
-                    (
-                      <MenuItem onClick={this._handleClose(this.openSession(connect))}>  { /* todo */}
-                        <LaunchOutlinedIcon className='menu-option-icon' />
-                        Launch
+                  <MenuItem onClick={this._handleClose(this.openSession(link))}>  { /* todo */}
+                    <LaunchOutlinedIcon className='menu-option-icon' />
+                    Launch
                     </MenuItem>
-                    )
+                  {
+                    false &&
+                    <MenuItem onClick={this._handleClose(handleClickPause(instanceID))}>
+                      <PauseOutlinedIcon className='menu-option-icon' />
+                      Pause
+                  </MenuItem>
                   }
-                  <MenuItem onClick={this._handleClose(handleClickPause(InstanceId))}>
-                    <PauseOutlinedIcon className='menu-option-icon' />
-                    Pause
+                  { // TODO delete
+                    false &&
+                    <MenuItem onClick={this._handleClose(handleClickResume(instanceID))}>
+                      <PlayCircleOutlinedIcon className='menu-option-icon' />
+                      Resume
                   </MenuItem>
-                  <MenuItem onClick={this._handleClose(handleClickResume(InstanceId))}>
-                    <PlayCircleOutlinedIcon className='menu-option-icon' />
-                    Resume
-                  </MenuItem>
+                  }
                   <ConfirmActionModal
                     message='Are you sure you want to delete this desktop?'
-                    handleConfirm={this._handleClose(handleClickDeleteDesktop(id, InstanceId))}
+                    handleConfirm={this._handleClose(handleClickDeleteDesktop(desktop))}
                   >
                     <MenuItem>
                       <DeleteOutlinedIcon className='menu-option-icon' />
@@ -132,9 +133,6 @@ class RunningDesktopCard extends Component {
             </Grid>
             <Grid item xs={12} className='card-metadata'>
               Remote ID: {id}
-            </Grid>
-            <Grid item xs={12} className='card-metadata'>
-              State: {state}
             </Grid>
             <Grid item xs={12} className='card-metadata'>
               Desktop: {protocol}
@@ -154,7 +152,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleClickDeleteDesktop: (con_id, desktop_id) => () => dispatch(deleteDesktop(desktop_id, con_id)),
+    handleClickDeleteDesktop: (desktop) => () => dispatch(deleteDesktop(desktop)),
     handleClickPause: (id) => () => dispatch(pauseDesktop(id)),
     handleClickResume: (id) => () => dispatch(resumeDesktop(id)),
   }

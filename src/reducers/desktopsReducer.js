@@ -8,7 +8,7 @@ import {
 const initialState = {
   fetching: false,
   fetched: false,
-  data: {},
+  data: [],
 }
 
 export default function (state=initialState, action) {

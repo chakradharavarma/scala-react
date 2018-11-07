@@ -37,6 +37,12 @@ class FileModal extends Component {
             return null;
         }
 
+        const mode = getMode(path)
+
+        if(!mode) {
+            return null
+        }
+
         return (
             <Modal
                 aria-labelledby="file-editor-modal"
@@ -48,7 +54,7 @@ class FileModal extends Component {
                         { path.substring(path.lastIndexOf('/')+1) }
                     </Typography>
                     <CodeMirror
-                        mode={getMode(path)}
+                        mode
                         value={contents}
                         onChange={updateCode}
                         autoFocus

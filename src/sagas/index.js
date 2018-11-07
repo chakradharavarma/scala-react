@@ -1,6 +1,7 @@
 import * as actions from '../actions/types';
 import axios from 'axios';
 import moment from 'moment';
+import { getMode } from '../common/helpers'
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import Amplify, { Auth } from 'aws-amplify';
 
@@ -91,6 +92,12 @@ function getConnections() {
 
 function getJobs() {
     const url = '/api/job/get';
+    return axios.get(url)
+        .catch(err => err);
+}
+
+function getComputes() {
+    const url = '/api/config/computes';
     return axios.get(url)
         .catch(err => err);
 }
@@ -292,9 +299,11 @@ function createDesktop(payload) {
         .catch(err => err);
 }
 
-function deleteDesktop({ desktop_id }) {
-    const url = `/api/desktop/delete/${desktop_id}`;
-    return axios.delete(url)
+function deleteDesktop(payload) {
+    debugger;
+    const url = `/api/desktop/delete`;
+    const data = JSON.stringify(payload)
+    return axios.post(url, data)
         .catch(err => err);
 }
 
@@ -465,6 +474,15 @@ function* callJobs() {
     }
 }
 
+function* callComputes() {
+    const payload = yield call(getComputes);
+    if (payload.status === 200) {
+        yield put({ type: actions.FETCHED_COMPUTES_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.FETCHED_COMPUTES_FAILED, payload });
+    }
+}
+
 function* callDesktops() {
     const payload = yield call(getDesktops);
     if (payload.status === 200) {
@@ -562,6 +580,11 @@ function* callFolder(action) {
 
 
 function* callFile(action) {
+    if(!getMode(action.payload.path)) {
+        action.payload.response = { data: "Unable to open this file type. Please try to download it instead."}
+        yield put({ type: actions.FETCHED_FILE_FAILED, payload: action.payload } );
+        return;
+    }
     let payload = yield call(getFile, action.payload);
     if (payload.status === 200) {
         yield put({ type: actions.FETCHED_FILE_SUCCESS, payload });
@@ -625,6 +648,7 @@ function* callGetData(action) {
     yield callInitDirectories(action);
     yield all([
         callWorkflowsAvailable(action),
+        callComputes(action),
         callJobs(action),
         callJobStatus(action),
         callSchedules(action),

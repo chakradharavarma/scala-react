@@ -12,7 +12,7 @@ export default class DesktopCardSection extends Component {
 
   render() {
     const { desktops, title, runningCard, fetching } = this.props;
-
+    
     return (
       <Card className='desktop-section-container'>
         <Typography color='secondary' variant='headline' className='desktop-section-title'>
@@ -33,7 +33,7 @@ export default class DesktopCardSection extends Component {
             
             runningCard ? 
                 desktops
-                  .filter(desktop => desktop.Instances[0].State.Name !== 'terminated')
+                  // TODO .filter(desktop => desktop.Instances[0].State.Name !== 'terminated')
                   .map((desktop, i) => <RunningDesktopCard key={`running-desktop-card-${i}`} desktop={desktop} />)
                 : (
                 desktops.map((desktop, i) => <AvailableDesktopCard key={`available-desktop-card-${i}`} desktop={desktop} />)
