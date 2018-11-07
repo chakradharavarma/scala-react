@@ -150,7 +150,7 @@ function getJobsStatus() {
         .catch(err => err);
 }
 
-function getKeyPairURL() {
+function downloadKeyPair() {
     const url = '/api/connection/keypair';
     return axios.get(url)
         .catch(err => err);
@@ -251,12 +251,16 @@ function download(blob, filename) {
     } else {
         const a = document.createElement('a');
         document.body.appendChild(a);
-        const url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = filename;
+        if (typeof blob === "string") {
+            a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(blob)
+            a.download = filename;
+        } else { 
+            const url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = filename;
+        }
         a.click();
         setTimeout(() => {
-            window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
         }, 0)
     }
@@ -300,7 +304,6 @@ function createDesktop(payload) {
 }
 
 function deleteDesktop(payload) {
-    debugger;
     const url = `/api/desktop/delete`;
     const data = JSON.stringify(payload)
     return axios.post(url, data)
@@ -365,9 +368,9 @@ function* callWorkflowTemplates() {
 }
 
 function* callDownloadKeyPair() {
-    let payload = yield call(getKeyPairURL);
+    let payload = yield call(downloadKeyPair);
     if (payload.status === 200) {
-        window.location = payload.data;
+        download(payload.data.contents, payload.data.path)
         yield put({ type: actions.DOWNLOAD_KEY_PAIR_SUCCESS, payload });
     } else {
         yield put({ type: actions.DOWNLOAD_KEY_PAIR_FAILED, payload });
