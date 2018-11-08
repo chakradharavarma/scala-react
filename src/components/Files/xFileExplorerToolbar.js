@@ -28,6 +28,7 @@ const columnData = [
   { id: 'size', numeric: true, disablePadding: false, label: 'Size' },
 ];
 
+
 const toolbarStyles = theme => ({
   root: {
     paddingRight: theme.spacing.unit,

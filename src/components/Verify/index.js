@@ -39,7 +39,7 @@ class VerifyAccount extends Component {
           <Typography className='auth-card-title' color='secondary' variant='headline'>
             Enter your verification code
           </Typography>
-          <div className='auth-fields'>
+          <div className='auth-fields' style={{ width: 300 }}>
           <ReactCodeInput onChange={this.handleChange} type='text' fields={6} />
             <div className='error-helper-text'>
               {  user.error ? user.error.message : '' }

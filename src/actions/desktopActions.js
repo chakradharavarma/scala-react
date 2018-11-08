@@ -6,13 +6,10 @@ import {
     RESUME_DESKTOP,
 } from './types';
 
-export const deleteDesktop = (desktop_id, con_id) => {
+export const deleteDesktop = (desktop) => {
     return {
         type: DELETE_DESKTOP,
-        payload: {
-            desktop_id,
-            con_id
-        }
+        payload: desktop
     }
 }
 

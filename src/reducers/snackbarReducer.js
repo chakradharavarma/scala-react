@@ -52,7 +52,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification)
       break;
     case actions.CREATE_CONNECTION:
-      notification = createNotification('Creating a connection . . .', INFO);
+      notification = createNotification('Creating a connection, this may take a while . . .', INFO);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_CONNECTION_SUCCESS:

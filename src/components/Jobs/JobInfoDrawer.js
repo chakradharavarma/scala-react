@@ -56,6 +56,9 @@ class JobInfoDrawer extends Component {
       return null;
     }
 
+    const createdDate = new Date(job.created)
+    const updatedDate = new Date(job.modified)
+
     return (
       <Fragment>
         <Drawer anchor="bottom" 
@@ -88,12 +91,12 @@ class JobInfoDrawer extends Component {
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Created on: </span> {job.created}
+                  <span className='job-details-row-item-title'>Created on: </span> {`${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Updated on: </span> {job.modified}
+                  <span className='job-details-row-item-title'>Updated on: </span> {`${updatedDate.toLocaleDateString()} ${updatedDate.toLocaleTimeString()}`}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>

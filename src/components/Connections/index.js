@@ -50,7 +50,9 @@ class Connections extends Component {
                     <Grid container className='connection-cards-container sibling-fade'>
                       {
                         fetched && (
-                          data.map((shell, i) => 
+                          data
+                          .filter(shell => shell.publicIP)  
+                          .map((shell, i) => 
                             <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
                           )
                         ) 

@@ -38,24 +38,22 @@ class ScheduleCard extends Component {
     const { deleteSchedule, workflows, schedule } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-    if(!workflows) {
+    if (!workflows) {
       return null;
     }
     const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
-    if(!workflow) {
+    if (!workflow) {
       deleteSchedule(schedule.id)
       return null;
     }
 
-    debugger;
-    
     return (
       <Grid item xs={12} lg={6}  >
         <Card style={{ minHeight: 200 }} >
           <CardContent>
             <div className='workflow-title-container'>
               <Typography color='secondary' gutterBottom variant="title">
-                { workflow.name }
+                {workflow.name}
               </Typography>
               <div>
                 <IconButton
@@ -80,17 +78,17 @@ class ScheduleCard extends Component {
                   <EditCronModal schedule={schedule}
                     handleCloseCallback={this.handleClose}
                     trigger={
-                    <MenuItem onClick={this.handleClose}>  { /* todo */ }
-                      <EditOutlined className='menu-option-icon' />
-                      Edit
+                      <MenuItem onClick={this.handleClose}>  { /* todo */}
+                        <EditOutlined className='menu-option-icon' />
+                        Edit
                     </MenuItem>
-                  } />
+                    } />
                   <ConfirmActionModal
                     message='Are you sure you want to delete this schedule?'
                     handleConfirm={this._handleClose(deleteSchedule(schedule.id))}
                   >
                     <MenuItem>
-                    <DeleteOutlined className='menu-option-icon' />
+                      <DeleteOutlined className='menu-option-icon' />
                       Delete
                     </MenuItem>
                   </ConfirmActionModal>

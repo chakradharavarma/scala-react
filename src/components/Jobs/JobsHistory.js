@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -59,7 +60,11 @@ class JobsCardHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" />
+          {
+            false && (
+              <TableCell padding="checkbox" />
+            )
+          }
           {columnData.map(column => {
             return (
               <TableCell
@@ -105,7 +110,6 @@ JobsCardHead.propTypes = {
 
 const styles = theme => ({
   root: {
-    width: '100%',
     fontFamily: '\'Roboto Mono\', monospace',
     marginTop: theme.spacing.unit * 3,
   },
@@ -113,6 +117,7 @@ const styles = theme => ({
     minWidth: 1020,
   },
   tableWrapper: {
+    maxWidth: 'stetch',
     marginTop: 12,
     overflowX: 'auto',
   },
@@ -238,8 +243,7 @@ class JobsCard extends Component {
                           .map(n => {
                             const isSelected = this.isSelected(n.id);
                             const createdDate = new Date(n.created)
-                            const runningTime = new Date(n.running_time)
-                            debugger;
+                            const duration = moment(createdDate).fromNow().replace(" ago", "")
                             return (
                               <TableRow
                                 hover
@@ -249,7 +253,11 @@ class JobsCard extends Component {
                                 onClick={this.setJobDrawer(n)}
                                 selected={isSelected}
                               >
-                                <TableCell padding="checkbox" />
+                                {
+                                  false && (
+                                    <TableCell padding="checkbox" />
+                                  )
+                                }
                                 <TableCell component="th" scope="row" padding="none">
                                   {n.name}
                                 </TableCell>
@@ -257,7 +265,7 @@ class JobsCard extends Component {
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
                                 <TableCell>{`${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`}</TableCell>
-                                <TableCell>{new Date(runningTime).toDateString()}</TableCell>
+                                <TableCell>{duration}</TableCell>
                                 <TableCell>
                                   <IconButton
                                     aria-label="Desktop"

@@ -17,10 +17,10 @@ export default class TemplateWorkflows extends Component {
         workflow={workflow}
         trigger={(
           <Grid item xs={large ? 10 : 3}>
-          <Card elevation={1} >
+          <Card elevation={1} className='workflow-template-card-container' >
               <CardContent>
                 <div className='workflow-title-container'>
-                  <Typography color='secondary' gutterBottom variant="title">
+                  <Typography color='secondary' variant="title">
                     {workflow.name}
                   </Typography>
                   <img
@@ -38,7 +38,7 @@ export default class TemplateWorkflows extends Component {
                     {`v${workflow.version}`}
                   </Grid>
                   <Grid item xs={4} >
-                    {`${workflow.resources.nodes} nodes`}
+                    {`${workflow.resources.instanceCount} nodes`}
                   </Grid>
                   <Grid item xs={4} >
                     {workflow.resources.compute}

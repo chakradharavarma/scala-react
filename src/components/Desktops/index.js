@@ -17,16 +17,18 @@ const availableDesktops = [
 class Desktops extends Component {
 
   render() {
-    const { desktops } = this.props;
-    const { fetching } = desktops;
+    const { data, fetching } = this.props.desktops;
 
     return (
       <Grid container spacing={16} className='desktop-root'>
         <Grid item xs={8}>
-          <DesktopCardSection title='Running Desktops' fetching={fetching} desktops={desktops.data.openDesktops && desktops.data.openDesktops.Reservations} runningCard />
+          <DesktopCardSection title='Running Desktops' fetching={fetching} desktops={data} runningCard />
         </Grid>
         <Grid item xs={4}>
-          <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
+          {
+            !fetching &&
+            <DesktopCardSection title='Available Desktops' desktops={availableDesktops} />
+          }
         </Grid>
       </Grid>
     );
@@ -36,7 +38,6 @@ class Desktops extends Component {
 const mapStateToProps = (state) => {
   return {
     desktops: state.desktops,
-    notification: state.desktops.notification,
   }
 }
 

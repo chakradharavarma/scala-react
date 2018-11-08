@@ -1,6 +1,3 @@
-import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js'
-import { COGNITO_CONFIG } from './consts'
-
 export function createNotification(message, type){  
   return {
     message,
@@ -30,7 +27,7 @@ export function getMode(path) {
     case '.java':
       return 'java'
     default:
-      return 'none'
+      return null
   }
 }
 
@@ -54,22 +51,3 @@ export const jsonToFormData = object => Object.keys(object).reduce((formData, ke
   return formData;
 }, new FormData());
 */
-
-export const asCognitoAttribute = (name, value) => {
-  return {
-    Name: name,
-    Value: value
-  };
-}
-
-export const getCognitoUserPool = () => {
-  return new CognitoUserPool(COGNITO_CONFIG)
-}
-
-
-export const getCognitoUser = (username) => {
-  return new CognitoUser({
-    Username : username,
-    Pool : getCognitoUserPool(),
-  });
-}

@@ -82,8 +82,14 @@ class EditWorkflowModal extends Component {
           'contents':values[2],
           'path': `/workflow/${workflow.id}/post.sh`,
         },
+        'id': workflow.id,
+        'resources': {
+          'compute': workflow.resources.compute,
+          'instanceCount': workflow.resources.instanceCount,
+        }
         // 'resources.size': "20GB",  todo visit this
-        ...workflow,
+        //'resources.compute': workflow.resources.compute,
+        //'resources.instanceCount': workflow.resources.instanceCount,
         }))
       dispatch(fetchFolder(`/workflow/${workflow.id}`))
     })

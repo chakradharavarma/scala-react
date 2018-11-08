@@ -6,6 +6,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import WorkflowProps from './WorkflowProps';
@@ -123,7 +124,7 @@ class HorizontalNonLinearStepper extends Component {
   }
 
   render() {
-    const { classes, createWorkflow } = this.props;
+    const { classes, createWorkflow, close } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
 
@@ -143,7 +144,10 @@ class HorizontalNonLinearStepper extends Component {
             );
           })}
         </Stepper>
-        XBUTTON
+        <Button onClick={close} className='close-modal-button' variant="fab" color="secondary" aria-label="Close">
+          <CloseIcon />
+        </Button>
+          
         <Divider />
         {this.allStepsCompleted() ? (
           null
