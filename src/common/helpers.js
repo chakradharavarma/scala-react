@@ -1,4 +1,4 @@
-export function createNotification(message, type){  
+export function createNotification(message, type){
   return {
     message,
     key: new Date().getTime(),
@@ -26,6 +26,14 @@ export function getMode(path) {
       return 'yaml'
     case '.java':
       return 'java'
+    case '.wps':
+      return 'text'
+    case '.input':
+      return 'text'
+    case '.tbl':
+      return 'text'
+    case '.TBL':
+      return 'text'
     default:
       return null
   }
