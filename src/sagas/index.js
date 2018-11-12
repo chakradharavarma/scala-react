@@ -14,7 +14,7 @@ function setAuthConfiguration() {
             if (!config.REACT_APP_COGNITO_REGION ||
                 !config.REACT_APP_COGNITO_USER_POOL_ID ||
                 !config.REACT_APP_COGNITO_CLIENT_ID)
-            // !config.REACT_APP_COGNITO_IDENTITY_POOL_ID || todo one day we'll do SAML 
+            // !config.REACT_APP_COGNITO_IDENTITY_POOL_ID || todo one day we'll do SAML
             {
                 return new Error("Environment is not properly set")
             }
@@ -126,7 +126,7 @@ function getFolder({ path }) {
 
 function getFile({ path }) {
     const url = `/api/file/get?path=${path}`;
-    return axios.get(url) // TODO make this a get 
+    return axios.get(url) // TODO make this a get
         .catch(err => err);
 }
 
@@ -264,7 +264,7 @@ function download(blob, filename) {
         if (typeof blob === "string") {
             a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(blob)
             a.download = filename;
-        } else { 
+        } else {
             const url = window.URL.createObjectURL(blob);
             a.href = url;
             a.download = filename;
@@ -811,7 +811,7 @@ function* callCreateDesktopJob(action) {
             var instance = data.desktop;
             var state = instance.State.Name;
 
-            var serverIp = data.serverIp;
+            var serverIp = window.location.hostname;
 
             var connectionID = data.conn.identifier;
             var base = btoa([connectionID, "c", "postgresql"].join("\x00"));
@@ -954,12 +954,12 @@ function* getDeleteConnectionSaga() {
 }
 
 function* getCreateScheduleSaga() {
-    // todo test    
+    // todo test
     yield takeLatest(actions.CREATE_SCHEDULE, callCreateSchedule)
 }
 
 function* getEditScheduleSaga() {
-    // todo test    
+    // todo test
     yield takeLatest(actions.EDIT_SCHEDULE, callEditSchedule)
 }
 
@@ -1083,4 +1083,3 @@ export default function* root() {
         fork(getConnectionsSaga),
     ])
 }
-
