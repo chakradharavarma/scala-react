@@ -14,22 +14,19 @@ class Usage extends Component {
   render() {
 
     const { jobs } = this.props;
-    const { fetching } = jobs;
-
-    if (!jobs) {
-      return null
-    }
-
-    const { data } = jobs;
+    const { fetching, data } = jobs;
 
     const groups = data.reduce(function (r, o) {
-      var m = o.modified.split(('-'))[1];
+      if (o.modified instanceof Date) {
+        var m = o.modified.getMonth()        
+      } else {
+        m = -1
+      }
       (r[m]) ? r[m].data.push(o) : r[m] = { group: m, data: [o] };
       return r;
     }, {});
 
     const results = Object.keys(groups).map(function (k) { return groups[k]; });
-
     return (
       <Grid container spacing={16}>
         <Grid item xs={12}>

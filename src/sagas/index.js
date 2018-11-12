@@ -67,10 +67,12 @@ function impersonateUser({ username, challenge }) {
 }
 
 function getJobPerformance() {
-    const end = (new Date()).getTime() / 1000; // now in UNIX time
+    const now = (new Date()).getTime()
+    const nearestSecond = 15 * 1000
+    const end = (now - (now % nearestSecond)) / 1000; // now in UNIX time
     const hours = 1;
     const start = end - (hours * 60 * 60)
-    const query = `100 - (avg by (jobId, resourceType) (irate(node_cpu_seconds_total{mode="idle"}[1m]))) * 100`
+    const query = `(100 - (avg by (jobId, resourceType) (irate(node_cpu_seconds_total{mode="idle"}[1m]))) * 100)`
     const url = `/api/v1/query_range?query=${query}&start=${start}&end=${end}&step=${JOB_PERFORMANCE_RESOLUTION}`;
     return axios.get(url)   
         .catch(err => err);
@@ -154,11 +156,13 @@ function deleteFile({ path }) {
         .catch(err => err);
 }
 
+/*
+// TODO
 function getJobsStatus() {
     const url = '/api/job/statusTODO';
     return axios.get(url)
         .catch(err => err);
-}
+}*/
 
 function downloadKeyPair() {
     const url = '/api/connection/keypair';
@@ -487,6 +491,10 @@ function* callJobs() {
             modified: new Date(job.modified),
         }))
         yield put({ type: actions.FETCHED_JOBS_SUCCESS, payload });
+        const hasRunningJobs = payload.data.find(job => job.status === 'RUNNING')
+        if (hasRunningJobs) {
+            yield put({ type: actions.FETCH_JOB_PERFORMANCE, payload });
+        }
     } else {
         yield put({ type: actions.FETCHED_JOBS_FAILED, payload });
     }
@@ -655,20 +663,20 @@ function* callTerminateJob(action) {
     if (payload.status === 200) {
         yield put({ type: actions.TERMINATE_JOB_SUCCESS, payload });
         yield callJobs(action);
-        yield callJobStatus(action);
+        // TODO yield callJobStatus(action);
     } else {
         yield put({ type: actions.TERMINATE_JOB_FAILED, payload });
     }
 }
-
+/* TODO
 function* callJobStatus() {
     const payload = yield call(getJobsStatus);
     if (payload.status === 200) {
         yield put({ type: actions.FETCHED_JOBS_STATUS_SUCCESS, payload });
     } else {
-        yield put({ type: actions.FETCHED_JOBS_STATUS_FAILED, payload });
+        // TODO yield put({ type: actions.FETCHED_JOBS_STATUS_FAILED, payload });
     }
-}
+}*/ 
 
 function* callGetData(action) {
     // first, init the dirs, then do all these async
@@ -879,7 +887,7 @@ function* callRunWorkflow(action) {
     if (payload.status === 200) {
         yield put({ type: actions.RUN_WORKFLOW_SUCCESS, payload });
         yield callJobs(action);
-        yield callJobStatus(action);
+        // TODO yield callJobStatus(action);
     } else {
         yield put({ type: actions.RUN_WORKFLOW_FAILED, payload });
     }
@@ -1041,6 +1049,10 @@ function* getConnectionsSaga() {
     yield takeLatest(actions.FETCH_CONNECTIONS, callConnections)
 }
 
+function* getJobsSaga() {
+    yield takeLatest(actions.FETCH_JOBS, callJobs)
+}
+
 export default function* root() {
     yield all([
         fork(getInitSaga),
@@ -1081,5 +1093,6 @@ export default function* root() {
         fork(impersonateUserSaga),
         fork(jobPerformanceSaga),
         fork(getConnectionsSaga),
+        fork(getJobsSaga),
     ])
 }

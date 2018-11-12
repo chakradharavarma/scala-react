@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import { terminateJob } from '../../actions/jobActions';
+import { terminateJob, getJobs } from '../../actions/jobActions';
 import ConfirmActionModal from '../ConfirmActionModal';
 import JobPerformanceDrawer from './JobPerformanceDrawer';
 
@@ -29,8 +29,10 @@ const formatDate = (date) => new Date(date).toLocaleString();
 
 class JobsRunningTable extends Component {
 
-  openPerformanceDrawer = (job, open) => () => {
-    this.setState({ job, open })
+  openPerformanceDrawer = (job, open) => (e) => {
+    if(['TH', 'TD'].includes(e.target.tagName)) {
+      this.setState({ job, open })
+    }
   }
 
   closePerformanceDrawer = () => {
@@ -42,6 +44,18 @@ class JobsRunningTable extends Component {
   state = {
     open: false,
     job: null,
+  }
+
+
+  async componentDidMount() {
+    setInterval(this.fetchJobs, 2000);
+  }
+
+  fetchJobs = async () => {
+    const { jobs, getJobs } = this.props;
+    if (jobs.find(job => job.status !== "RUNNING")) {
+      getJobs()
+    }
   }
 
   render() {
@@ -69,8 +83,8 @@ class JobsRunningTable extends Component {
             {jobs.map(job => {
               return (
                 <TableRow
-                  hover
-                  onClick={this.openPerformanceDrawer(job, true)}
+                  hover={job.status === "RUNNING"}
+                  onClick={job.status === "RUNNING" ? this.openPerformanceDrawer(job, true) : undefined}
                   key={job.id}
                 >
                   <TableCell component="th" scope="row">
@@ -97,11 +111,11 @@ class JobsRunningTable extends Component {
                   <TableCell>
                     <ConfirmActionModal
                       message='Are you sure you want to terminate this job?'
-                      handleConfirm={handleTerminateClick(job.uuid)}
+                      handleConfirm={handleTerminateClick(job.job_id)}
                     >
                       <IconButton
 
-                        disabled={!job.cancellable}
+                        disabled={job.status !== 'RUNNING'}
                         key="close"
                         aria-label="Close"
                         color="inherit"
@@ -131,6 +145,7 @@ JobsRunningTable.propTypes = {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getJobs: () => dispatch(getJobs()),
     handleTerminateClick: (uuid) => () => dispatch(terminateJob(uuid))
   }
 }

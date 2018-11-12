@@ -258,7 +258,7 @@ body {
 .status-terminated {
     font-weight: 600 !important;
     text-transform: uppercase !important;
-    color: #CECECE !important;
+    color: #A1A1A1 !important;
 }
 
 .status-failed {
@@ -282,6 +282,8 @@ body {
 }
 
 .current-jobs {
+    max-height: 544px;
+    overflow: scroll;
 }
 
 .current-jobs-header {
@@ -290,10 +292,6 @@ body {
     display: flex;
     justify-content: space-between;
     margin: 10px 10px 10px 0;
-}
-
-.tips-title {
-
 }
 
 .current-jobs {

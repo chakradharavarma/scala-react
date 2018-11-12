@@ -2,15 +2,22 @@ import {
     TERMINATE_JOB,
     GET_STD_ERR,
     GET_STD_OUT,
+    FETCH_JOBS,
     FETCH_JOB_PERFORMANCE
 } from './types';
 
-export const terminateJob = (uuid) => {
+export const terminateJob = (id) => {
     return {
         type: TERMINATE_JOB,
         payload: {
-            uuid
+            id
         }
+    }
+}
+
+export const getJobs = () => {
+    return {
+        type: FETCH_JOBS,
     }
 }
 

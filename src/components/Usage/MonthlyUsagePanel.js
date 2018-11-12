@@ -55,7 +55,7 @@ export default class MonthlyUsagePanel extends Component {
                 >
                   {
                     data.map((entry, index) =>
-                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name]} />
+                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name.toUpperCase()]} />
                     )
                   }
                 </Pie>

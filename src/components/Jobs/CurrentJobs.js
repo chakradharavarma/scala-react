@@ -53,7 +53,6 @@ class CurrentJobs extends Component {
                       </Typography>
                     </div>
                   </Fade>
-
                 )
               )
         }

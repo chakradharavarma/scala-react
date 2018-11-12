@@ -10,15 +10,17 @@ export const ACTIVE_STATUS = [
     'DEPLOYING',
     'DEPLOYED',
     'RUNNING',
-    'PENDING'
+    'PENDING',
+    'CREATED'
 ];
 
 export const STATUS_COLORS = {
-    'Pending': '#ADD8E6',
-    'Terminated': '#5e8dbf',
-    'Completed': '#03DAC6',
-    'Deployed': '#93C5D8',
-    'Failed': '#38628f',
+    'PENDING': '#ADD8E6',
+    'TERMINATED': '#5e8dbf',
+    'COMPLETED': '#66CDAA',
+    'DEPLOYED': '#93C5D8',
+    'FAILED': '#38628f',
+    'RUNNING': '#40E0D0',
 }
 
 export const MONTHS = [

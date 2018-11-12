@@ -24,13 +24,14 @@ class JobPerformanceDrawer extends Component {
     const { onClose, open, job, jobs, jobPerformance } = this.props
     const { data } = jobPerformance;
 
-    if (!job) {
+    if (!job ) {
       return null
     }
 
     const jobHeadData = data.find(chart => chart.metric.jobId === job.job_id && chart.metric.resourceType === 'ClusterHead')
     const jobComputeData = data.find(chart => chart.metric.jobId === job.job_id && chart.metric.resourceType === 'ClusterCompute')
-    const jobData = jobs.data.find(job => job.job_id === jobHeadData.metric.jobId)
+    const jobData = jobHeadData && jobs.data.find(job => job.job_id === jobHeadData.metric.jobId)
+
     return (
       <Drawer anchor="bottom"
         open={open}
@@ -47,7 +48,7 @@ class JobPerformanceDrawer extends Component {
         >
           <Grid item xs={12}>
             <Typography style={{ textTransform: 'uppercase', fontWeight: '100', paddingBottom: 16 }} variant='display1' color='secondary'>
-              CPU usage: {jobData.name}
+              CPU usage: {jobData && jobData.name}
             </Typography>
           </Grid>
           <Grid item xs={12}>
