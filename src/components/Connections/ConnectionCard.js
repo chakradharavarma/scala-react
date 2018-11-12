@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteConnectionModal from './DeleteConnectionModal';
-
+import { getConnections } from "../../actions/connectionActions";
 class ConnectionCard extends Component {
 
   state = {
@@ -22,12 +23,22 @@ class ConnectionCard extends Component {
     }
   }
 
+  async componentDidMount() {
+    setInterval(this.getConnections, 2000);
+  }
+
+  getConnections = async () => {
+    const { shell, getConnections } = this.props;
+    if (!shell.state) {
+      getConnections()
+    }
+  }
+
 
   render() {
     const { shell, handleClickDelete } = this.props;
-    const { instanceID, publicIP, state, keyPair } = shell;    
-    const connectionString = `ssh -i ${keyPair}.pem ubuntu@${publicIP}`;
-
+    const { instanceID, publicIP, state, keyPair } = shell;
+    const connectionString = keyPair && publicIP && `ssh -i ${keyPair}.pem ubuntu@${publicIP}`;
     return (
       <Grid item xs={4}>
         <Card className='connection-card' >
@@ -44,27 +55,20 @@ class ConnectionCard extends Component {
             </Grid>
             <Grid item xs={12} className='card-metadata'>
               <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>State: </span>
-              {state}
+              <span style={{ textTransform: 'capitalize' }}>{state || "Initializing"} </span>
+              
             </Grid>
             <Grid item xs={12} className='card-metadata'>
               <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>
                 Connection String:
-                </span>
-                {
-                  connectionString === 'none' ? (
-                    <span style={{marginLeft: 4 }} >
-                      {connectionString}
-                    </span>
-                  ) : (
-                    <Tooltip title={this.state.message}  >
-                      <CopyToClipboard text={connectionString}>
-                        <div className='connection-string' onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
-                          {connectionString}
-                        </div>
-                      </CopyToClipboard>
-                    </Tooltip>
-                  )
-                }
+              </span>
+              <Tooltip title={this.state.message && connectionString}  >
+                <CopyToClipboard text={connectionString}>
+                  <div className='connection-string' onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
+                    {connectionString || '\u00A0'}
+                  </div>
+                </CopyToClipboard>
+              </Tooltip>
             </Grid>
           </Grid>
         </Card>
@@ -73,4 +77,12 @@ class ConnectionCard extends Component {
   }
 }
 
-export default ConnectionCard;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getConnections: () => dispatch(getConnections())
+  }
+}
+
+
+export default connect(null, mapDispatchToProps)(ConnectionCard);

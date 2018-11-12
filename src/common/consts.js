@@ -28,3 +28,5 @@ export const MONTHS = [
 ];
 
 export const DEFAULT_TEMPLATE = 'Basic Workflow';
+
+export const JOB_PERFORMANCE_RESOLUTION = 15;

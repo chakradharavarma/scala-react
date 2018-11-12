@@ -68,5 +68,12 @@
     "postcss-cli": "^6.0.0",
     "postcss-nested": "^3.0.0"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": {
+    "/api/v1": {
+      "target": "http://scala-platform-env.psbwdpurgz.us-east-2.elasticbeanstalk.com:9090"
+    },
+    "/api": {
+      "target": "http://scala-platform-env.psbwdpurgz.us-east-2.elasticbeanstalk.com:8081"
+    }
+  }
 }

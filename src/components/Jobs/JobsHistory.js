@@ -43,7 +43,7 @@ function getSorting(order, orderBy) {
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name', sortable: true },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status', sortable: true },
-  { id: 'updated', numeric: false, disablePadding: false, label: 'Started', sortable: true },
+  { id: 'created', numeric: false, disablePadding: false, label: 'Started', sortable: true },
   { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration', sortable: true },
   { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop', sortable: false },
   { id: 'results', numeric: false, disablePadding: false, label: 'Results', sortable: false },
@@ -128,7 +128,7 @@ class JobsCard extends Component {
   state = {
     filter: '',
     order: 'asc',
-    orderBy: 'name',
+    orderBy: 'created',
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -210,6 +210,8 @@ class JobsCard extends Component {
     } else {
       data = jobs.data
     }
+    data = data.filter(job => !ACTIVE_STATUS.includes(job.status))
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
     // TODO change hardcoded vnc here
     return (
@@ -237,7 +239,6 @@ class JobsCard extends Component {
                     <TableBody>
                       {
                         data
-                          .filter(job => !ACTIVE_STATUS.includes(job.status))
                           .sort(getSorting(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {

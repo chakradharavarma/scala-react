@@ -2,6 +2,7 @@ import {
     TERMINATE_JOB,
     GET_STD_ERR,
     GET_STD_OUT,
+    FETCH_JOB_PERFORMANCE
 } from './types';
 
 export const terminateJob = (uuid) => {
@@ -31,3 +32,8 @@ export const getStandardError = (id) => {
     }
 }
 
+export const getPerformance = () => {
+    return {
+        type: FETCH_JOB_PERFORMANCE,
+    }
+}

@@ -10,6 +10,7 @@ import SnackbarReducer from './snackbarReducer';
 import FolderReducer from './folderReducer';
 import FileReducer from './fileReducer';
 import ImpersonationReducer from './impersonationReducer';
+import JobPerformanceReducer from './jobPerformanceReducer';
 import ComputesReducer from './computesReducer';
 import { reducer as FormReducer } from 'redux-form'
 
@@ -27,6 +28,7 @@ const reducers = combineReducers({
 	folder:					FolderReducer,
 	impersonation:			ImpersonationReducer,
 	computes:				ComputesReducer,
+	jobPerformance:			JobPerformanceReducer,
 });
 
 export default reducers;

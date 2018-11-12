@@ -15,6 +15,7 @@ import Login from '../Login';
 import Register from '../Register';
 import Verify from '../Verify';
 import ChangeUser from '../ChangeUser';
+import Test from '../Test';
 
 // we need to map the `scale` prop we define below
 // to the transform style property
@@ -83,6 +84,7 @@ class DashRight extends Component {
           <PrivateRoute exact path='/desktops' component={Desktops} />
           <PrivateRoute exact path='/connections' component={Connections} />
           <PrivateRoute exact path='/tomato' component={ChangeUser} />
+          <PrivateRoute exact path='/test' component={Test} />
         </AnimatedSwitch>
         <Snackbar
           variant={notification ? notification.type : 'default'}

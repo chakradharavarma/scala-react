@@ -27,6 +27,12 @@ const theme = createMuiTheme({
         maxHeight: '50vh'
       }
     },
+    MuiModal: {
+      // see https://github.com/mui-org/material-ui/issues/9826
+      root: {
+        fontFamily: `"Roboto", "Helvetica", "Arial", sans-serif`
+      }
+    },
     MuiFormControlLabel: {
       root: {
         marginLeft: 0,

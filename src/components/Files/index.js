@@ -110,9 +110,9 @@ class Files extends Component {
     })
   }
 
-  toggleRenameModal = (open) => {
-    this.setState({
-      renameModal: open,
+  toggleRenameModal = () => {
+    this.setState(prevState => {
+      return { renameModal: !prevState.renameModal }
     })
   }
 

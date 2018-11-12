@@ -52,7 +52,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification)
       break;
     case actions.CREATE_CONNECTION:
-      notification = createNotification('Creating a connection, this may take a while . . .', INFO);
+      notification = createNotification('Creating a connection', INFO);
       state = processQueue(state, notification);
       break;
     case actions.CREATE_CONNECTION_SUCCESS:
@@ -120,7 +120,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.DELETE_DESKTOP_SUCCESS:
-      notification = createNotification('Successfully started deleting desktop', SUCCESS);
+      notification = createNotification('Successfully deleted desktop', SUCCESS);
       state = processQueue(state, notification);
       break;
     case actions.DELETE_DESKTOP:

@@ -51,7 +51,7 @@ class Connections extends Component {
                       {
                         fetched && (
                           data
-                          .filter(shell => shell.publicIP)  
+                          // TODO .filter(shell => shell.publicIP)  
                           .map((shell, i) => 
                             <ConnectionCard handleClickDelete={handleClickDelete} key={`connection-card-${i}`} shell={shell} />
                           )

@@ -2,6 +2,7 @@ import * as actions from '../actions/types';
 import axios from 'axios';
 import moment from 'moment';
 import { getMode } from '../common/helpers'
+import { JOB_PERFORMANCE_RESOLUTION } from '../common/consts'
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import Amplify, { Auth } from 'aws-amplify';
 
@@ -55,7 +56,6 @@ function resendCode({ username }) {
         .catch(err => err)
 }
 
-
 function impersonateUser({ username, challenge }) {
     const url = '/api/config/tomato';
     const headers = {
@@ -63,6 +63,16 @@ function impersonateUser({ username, challenge }) {
         'Tomato-Challenge': challenge,
     }
     return axios.post(url, null, { headers })
+        .catch(err => err);
+}
+
+function getJobPerformance() {
+    const end = (new Date()).getTime() / 1000; // now in UNIX time
+    const hours = 1;
+    const start = end - (hours * 60 * 60)
+    const query = `100 - (avg by (jobId, resourceType) (irate(node_cpu_seconds_total{mode="idle"}[1m]))) * 100`
+    const url = `/api/v1/query_range?query=${query}&start=${start}&end=${end}&step=${JOB_PERFORMANCE_RESOLUTION}`;
+    return axios.get(url)   
         .catch(err => err);
 }
 
@@ -469,8 +479,13 @@ function* callConnections() {
 }
 
 function* callJobs() {
-    const payload = yield call(getJobs);
+    let payload = yield call(getJobs);
     if (payload.status === 200) {
+        payload.data = payload.data.map(job => ({
+            ...job,
+            created: new Date(job.created),
+            modified: new Date(job.modified),
+        }))
         yield put({ type: actions.FETCHED_JOBS_SUCCESS, payload });
     } else {
         yield put({ type: actions.FETCHED_JOBS_FAILED, payload });
@@ -545,6 +560,15 @@ function* callImpersonateUser(action) {
         yield callGetData();
     } else {
         yield put({ type: actions.IMPERSONATE_USER_FAILED, payload });
+    }
+}
+
+function* callJobPerformance(action) {
+    const payload = yield call(getJobPerformance, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.FETCH_JOB_PERFORMANCE_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.FETCH_JOB_PERFORMANCE_FAILED, payload });
     }
 }
 
@@ -653,11 +677,13 @@ function* callGetData(action) {
         callWorkflowsAvailable(action),
         callComputes(action),
         callJobs(action),
-        callJobStatus(action),
+        callJobPerformance(action),
+        // TODO callJobStatus(action),
         callSchedules(action),
         callWorkflowTemplates(action),
         callConnections(action),
-        callDesktops(action)
+        callDesktops(action),
+        callJobPerformance(action),
     ])
 
 }
@@ -810,7 +836,7 @@ function* callCreateDesktopJob(action) {
 
 function* callDeleteDesktop(action) {
     const payload = yield call(deleteDesktop, action.payload);
-    if (payload.data) {
+    if (payload.status === 200) {
         yield put({ type: actions.DELETE_DESKTOP_SUCCESS, payload });
         yield callDesktops();
     } else {
@@ -818,7 +844,7 @@ function* callDeleteDesktop(action) {
     }
 }
 
-function* callResumeDesktop(action) {
+function* callResumeDesktop(action) { // TODO delete?
     const payload = yield call(resumeDesktop, action.payload);
     if (payload.data) { // TODO check data len?
         yield put({ type: actions.RESUME_DESKTOP_SUCCESS, payload });
@@ -828,7 +854,7 @@ function* callResumeDesktop(action) {
     }
 }
 
-function* callPauseDesktop(action) {
+function* callPauseDesktop(action) { // TODO delete?
     const payload = yield call(pauseDesktop, action.payload);
     if (payload.data) { // TODO check data len?
         yield put({ type: actions.PAUSE_DESKTOP_SUCCESS, payload });
@@ -1007,6 +1033,14 @@ function* impersonateUserSaga() {
     yield takeLatest(actions.IMPERSONATE_USER, callImpersonateUser)
 }
 
+function* jobPerformanceSaga() {
+    yield takeLatest(actions.FETCH_JOB_PERFORMANCE, callJobPerformance)
+}
+
+function* getConnectionsSaga() {
+    yield takeLatest(actions.FETCH_CONNECTIONS, callConnections)
+}
+
 export default function* root() {
     yield all([
         fork(getInitSaga),
@@ -1045,6 +1079,8 @@ export default function* root() {
         fork(resendCodeSaga),
         fork(verifySaga),
         fork(impersonateUserSaga),
+        fork(jobPerformanceSaga),
+        fork(getConnectionsSaga),
     ])
 }
 
