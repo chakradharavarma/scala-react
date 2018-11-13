@@ -1,5 +1,6 @@
 # VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null || cat $(CURDIR)/.version 2> /dev/null || echo v0)
 VERSION = latest
+INTEGRATION_VERSION = integration
 PROD_VERSION = prod
 PROD_DOCKERFILE = Dockerfile.prod
 BLDVER = module:$(MODULE),version:$(VERSION),build:$(shell date +"%Y%m%d.%H%M%S.%N.%z")
@@ -34,6 +35,16 @@ ifdef DOCKER_PREFIX
 	$(aws ecr get-login --no-include-email --region us-east-1)
 	docker tag $(DOCKER_NAME):$(VERSION) $(DOCKER_PREFIX)/$(DOCKER_NAME):$(VERSION)
 	docker push $(DOCKER_PREFIX)/$(DOCKER_NAME):$(VERSION)
+endif
+
+
+docker-integration:
+	docker build --rm -t $(DOCKER_NAME):$(INTEGRATION_VERSION) --build-arg version="$(INTEGRATION_VERSION)" .
+ifdef DOCKER_PREFIX
+	echo "Docker registry is $(DOCKER_PREFIX)"
+	$(aws ecr get-login --no-include-email --region us-east-1)
+	docker tag $(DOCKER_NAME):$(INTEGRATION_VERSION) $(DOCKER_PREFIX)/$(DOCKER_NAME):$(INTEGRATION_VERSION)
+	docker push $(DOCKER_PREFIX)/$(DOCKER_NAME):$(INTEGRATION_VERSION)
 endif
 
 .PHONY: clean version list
