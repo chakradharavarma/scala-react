@@ -9,9 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { Field, reduxForm } from 'redux-form';
-import {
-  searchField
-} from '../TextField/fields';
+import { searchField } from '../TextField/fields';
 
 const toolbarStyles = theme => ({
   root: {

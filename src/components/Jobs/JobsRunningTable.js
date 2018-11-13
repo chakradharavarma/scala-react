@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import FolderIcon from '@material-ui/icons/FolderOpen';
 import { terminateJob, getJobs } from '../../actions/jobActions';
 import ConfirmActionModal from '../ConfirmActionModal';
 import JobPerformanceDrawer from './JobPerformanceDrawer';
@@ -30,7 +32,7 @@ const formatDate = (date) => new Date(date).toLocaleString();
 class JobsRunningTable extends Component {
 
   openPerformanceDrawer = (job, open) => (e) => {
-    if(['TH', 'TD'].includes(e.target.tagName)) {
+    if (['TH', 'TD'].includes(e.target.tagName)) {
       this.setState({ job, open })
     }
   }
@@ -48,7 +50,7 @@ class JobsRunningTable extends Component {
 
 
   async componentDidMount() {
-    setInterval(this.fetchJobs, 2000);
+    setInterval(this.fetchJobs, 10000);
   }
 
   fetchJobs = async () => {
@@ -59,7 +61,7 @@ class JobsRunningTable extends Component {
   }
 
   render() {
-    const { jobs, classes, handleTerminateClick } = this.props;
+    const { jobs, classes, handleTerminateClick, history } = this.props;
     const { job, open } = this.state
     return (
       <Fragment>
@@ -75,7 +77,7 @@ class JobsRunningTable extends Component {
               <TableCell>Status</TableCell>
               <TableCell>Created date</TableCell>
               <TableCell>Modified date</TableCell>
-              <TableCell numeric>Job ID</TableCell>
+              <TableCell>Files</TableCell>
               <TableCell>Terminate job</TableCell>
             </TableRow>
           </TableHead>
@@ -105,16 +107,23 @@ class JobsRunningTable extends Component {
                   <TableCell>
                     {formatDate(job.modified)}
                   </TableCell>
-                  <TableCell numeric>
-                    {job.id}
+                  <TableCell>
+                    <IconButton
+                      disabled={job.status !== 'RUNNING'}
+                      onClick={() => { history.push(`/files#/jobs/${job.job_id}`) }}
+                      key="close"
+                      aria-label="Close"
+                      color="inherit"
+                    >
+                      <FolderIcon />
+                    </IconButton>
                   </TableCell>
                   <TableCell>
                     <ConfirmActionModal
                       message='Are you sure you want to terminate this job?'
                       handleConfirm={handleTerminateClick(job.job_id)}
-                    >
+                      >
                       <IconButton
-
                         disabled={job.status !== 'RUNNING'}
                         key="close"
                         aria-label="Close"
@@ -150,4 +159,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(withStyles(styles)(JobsRunningTable));
+export default connect(undefined, mapDispatchToProps)(withRouter(withStyles(styles)(JobsRunningTable)));

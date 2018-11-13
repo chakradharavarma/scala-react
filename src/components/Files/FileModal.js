@@ -38,7 +38,6 @@ class FileModal extends Component {
         }
 
         const mode = getMode(path)
-
         if(!mode) {
             return null
         }

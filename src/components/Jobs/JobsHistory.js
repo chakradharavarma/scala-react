@@ -206,7 +206,8 @@ class JobsCard extends Component {
     let data;
     if (filterForm) {
       data = jobs.data
-        .filter(job => job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || ''))
+        .filter(job => (job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')) ||
+                (job.job_id.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')))
     } else {
       data = jobs.data
     }
@@ -242,9 +243,19 @@ class JobsCard extends Component {
                           .sort(getSorting(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map(n => {
+                            // todo move to a fxn in consts
                             const isSelected = this.isSelected(n.id);
-                            const createdDate = new Date(n.created)
-                            const duration = moment(createdDate).fromNow().replace(" ago", "")
+                            const createdDate = moment(n.created)
+                            const modifiedDate = moment(n.modified)
+                            const days = modifiedDate.diff(createdDate, "days") 
+                            const hours = modifiedDate.diff(createdDate, "hours") - (days * 24)
+                            const minutes = modifiedDate.diff(createdDate, "minutes") - ((days * 24 * 60) + hours * 60)
+                            const seconds = modifiedDate.diff(createdDate, "seconds") % 60
+                                                     const duration = `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : '' } \
+                                              ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : '' } \
+                                              ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : '' } \
+                                              ${seconds && !(hours || days) ? `${seconds} seconds` : '' } \
+                                              `
                             return (
                               <TableRow
                                 hover
@@ -254,18 +265,13 @@ class JobsCard extends Component {
                                 onClick={this.setJobDrawer(n)}
                                 selected={isSelected}
                               >
-                                {
-                                  false && (
-                                    <TableCell padding="checkbox" />
-                                  )
-                                }
                                 <TableCell component="th" scope="row" padding="none">
                                   {n.name}
                                 </TableCell>
                                 <TableCell className={classnames(
                                   `status-${n.status.toLowerCase()}`
                                 )}>{n.status}</TableCell>
-                                <TableCell>{`${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`}</TableCell>
+                                <TableCell>{n.created.toLocaleString()}</TableCell>
                                 <TableCell>{duration}</TableCell>
                                 <TableCell>
                                   <IconButton

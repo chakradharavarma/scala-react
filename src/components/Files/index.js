@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import RootRef from '@material-ui/core/RootRef';
 import { connect } from 'react-redux';
 import classnames from 'classnames'
 import FileModal from './FileModal';
@@ -50,9 +51,15 @@ function getSorting(order, orderBy) {
 
 class Files extends Component {
 
+  constructor(props) {
+    super(props);
+    this.tableBody = React.createRef();
+  }
+
   componentDidMount() {
     window.addEventListener("hashchange", this.onHashChange, false);
-    const { fetchFolder, folder, modal } = this.props;
+    const { fetchFolder, folder, modal, filter } = this.props;
+    let { data } = folder;
     const hash = window.location.hash;
     if (!modal) {
       if (hash) {
@@ -66,8 +73,15 @@ class Files extends Component {
     } else {
       // this is bad news? // todo
     }
-  }
+    console.log(this.tableBody)
 
+    if (this.tableBody.current) {
+      const size = data.filter(row => row.name.toLowerCase()
+                    .includes((filter || '').toLowerCase())).length * 61
+        this.tableBody.current.style.maxHeight = `${size}px`
+        console.log("changed maxheight to " + size)
+    }
+  }
   componentWillUnmount() {
     window.removeEventListener("hashchange", this.onHashChange, false);
   }
@@ -141,7 +155,7 @@ class Files extends Component {
     const rows = data
       .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
       .sort(getSorting(order, orderBy))
-      //.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    //.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 
     return (
       <Fragment>
@@ -211,20 +225,21 @@ class Files extends Component {
                           }, this)}
                         </TableRow>
                       </TableHead>
-                      <TableBody>
-                        {
-                          rows
-                            .map((row, i) =>
-                              <FileExplorerRow
-                                i={i}
-                                toggleRenameModal={this.toggleRenameModal}
-                                row={row}
-                                key={`file-row-${i}`}
-                              />
-                            )
-                        }
-                      </TableBody>
-
+                      <RootRef rootRef={this.tableBody}>
+                        <TableBody classes={{ root: 'file-explorer-table-body' }}>
+                          {
+                            rows
+                              .map((row, i) =>
+                                <FileExplorerRow
+                                  i={i}
+                                  toggleRenameModal={this.toggleRenameModal}
+                                  row={row}
+                                  key={`file-row-${i}`}
+                                />
+                              )
+                          }
+                        </TableBody>
+                      </RootRef>
                     </Table>
                   </div>
                 </Fade>

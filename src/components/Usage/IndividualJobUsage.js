@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { STATUS_COLORS } from '../../common/consts'
 
 export default class IndividualJobUsage extends Component {
 

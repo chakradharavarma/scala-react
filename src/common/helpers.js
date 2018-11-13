@@ -12,7 +12,8 @@ export function formatErrorMessage(message) {
 
 
 export function getMode(path) {
-  const ext = path.substring(path.lastIndexOf('.'));
+  const file = path.substring(path.lastIndexOf('/'))
+  const ext = file.substring(file.lastIndexOf('.'));
   switch(ext){
     case '.js' || '.jsx' :
       return 'javascript'
@@ -32,7 +33,9 @@ export function getMode(path) {
       return 'text'
     case '.tbl':
       return 'text'
-    case '.TBL':
+    case '/appout':
+      return 'text'
+    case '/apperr':
       return 'text'
     default:
       return null
@@ -52,6 +55,11 @@ export const download = function () {
       window.URL.revokeObjectURL(url);
   };
 }();
+
+
+export const diffMoment = function(start, end) {
+
+}
 
 /*
 export const jsonToFormData = object => Object.keys(object).reduce((formData, key) => {

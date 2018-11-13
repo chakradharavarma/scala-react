@@ -23,9 +23,18 @@ const styles = theme => ({
     width: '38vw',
     padding: 24,
     position: 'absolute',
+    minHeight: 200,
+    lineHeight: 3,
+  },
+  modalTitle: {
+    paddingBottom: 12,
+    textTransform: 'uppercase',
+    fontWeight: 100
   },
   outputText: {
-    fontFamily: `'Ubuntu Mono', monospace`
+    fontFamily: `'Ubuntu Mono', monospace`,
+    padding: 8,
+    border: '1px solid black'
   },
 });
 
@@ -34,15 +43,16 @@ class JobInfoDrawer extends Component {
   componentDidUpdate(prevProps) {
     const { getStandardOut, getStandardError, job } = this.props;
     if (job && job !== prevProps.job) {
-      getStandardError(job.uuid);
-      getStandardOut(job.uuid)  
+      getStandardError(job.job_id);
+      getStandardOut(job.job_id)  
     }
   }
 
-  toggleModal = (open, text) => () => {
+  toggleModal = (open, text, mode) => () => {
     this.setState({
       open,
-      text
+      text: (text || '').replace(/\n/g,"<br />"),
+      mode,
     })
   }
 
@@ -100,12 +110,12 @@ class JobInfoDrawer extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
-                <Typography variant='body2' onClick={this.toggleModal(true, standardOut)}>
+                <Typography variant='body2' onClick={this.toggleModal(true, standardOut, 'out')}>
                   <span className='job-details-row-item-title link standard-out'>Standard Out</span>
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
-                <Typography variant='body2' onClick={this.toggleModal(true, standardError)}>
+                <Typography variant='body2' onClick={this.toggleModal(true, standardError, 'err')}>
                   <span className='job-details-row-item-title link standard-error'>Standard Error</span>
                 </Typography>
               </Grid>
@@ -117,6 +127,9 @@ class JobInfoDrawer extends Component {
           onClose={this.toggleModal(false)}
         >
           <Card className={classes.modal}>
+            <Typography variant='headline' className={classes.modalTitle}>
+              {`Standard ${this.state.mode === 'err' ? 'Error' : 'Out' } for ${job.name}`}
+            </Typography>
             <div className={classes.outputText} dangerouslySetInnerHTML={ {__html: this.state.text} } />
           </Card>
         </Modal>

@@ -38,13 +38,13 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: false, fetched: false, error: action.payload};
       break;
     case GET_STD_ERR_SUCCESS:
-      state = { ...state, standardOut: action.payload.data};
+      state = { ...state, standardError: action.payload.data.contents || 'No data'};
       break;
     case GET_STD_ERR_FAILED:
       state = { ...state, standardError: 'No data'};
       break;
     case GET_STD_OUT_SUCCESS:
-      state = { ...state, standardOut: action.payload.data};
+      state = { ...state, standardOut: action.payload.data.contents || 'No data'};
       break;
     case GET_STD_OUT_FAILED:
       state = { ...state, standardOut: 'No data'};

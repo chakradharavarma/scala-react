@@ -128,7 +128,7 @@ function getFolder({ path }) {
 
 function getFile({ path }) {
     const url = `/api/file/get?path=${path}`;
-    return axios.get(url) // TODO make this a get
+    return axios.get(url)
         .catch(err => err);
 }
 
@@ -290,20 +290,6 @@ function downloadFile({ path }) {
         .catch(err => err);
 }
 
-
-function standardError({ id }) {
-    const url = `/getstderror/${id}`;
-    return axios.get(url)
-        .catch(err => err);
-}
-
-
-function standardOut({ id }) {
-    const url = `/getstdout/${id}`;
-    return axios.get(url)
-        .catch(err => err);
-}
-
 function createConnection() {
     const url = `/api/connection/create`;
     return axios.post(url)
@@ -412,7 +398,7 @@ function* callDownloadFile(action) {
 }
 
 function* callStandardError(action) {
-    let payload = yield call(standardError, action.payload);
+    let payload = yield call(getFile, {path: `/jobs/${action.payload.id}/apperr`});
     if (payload.data) {
         yield put({ type: actions.GET_STD_ERR_SUCCESS, payload });
     } else {
@@ -421,7 +407,7 @@ function* callStandardError(action) {
 }
 
 function* callStandardOut(action) {
-    let payload = yield call(standardOut, action.payload);
+    let payload = yield call(getFile, {path: `/jobs/${action.payload.id}/appout`});
     if (payload.status === 200) {
         yield put({ type: actions.GET_STD_OUT_SUCCESS, payload });
     } else {
