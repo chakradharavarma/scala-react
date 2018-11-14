@@ -133,7 +133,7 @@ class JobsCard extends Component {
     page: 0,
     rowsPerPage: 5,
     drawerOpen: false,
-    job: null,
+    job: {},
   };
 
   handleRequestSort = (event, property) => {
@@ -275,10 +275,11 @@ class JobsCard extends Component {
                                 <TableCell>{duration}</TableCell>
                                 <TableCell>
                                   <IconButton
+                                    disabled
                                     aria-label="Desktop"
-                                    onClick={onClickDesktop(n.uuid, 'vnc')}
+                                    onClick={onClickDesktop(n.job_id, 'vnc')}
                                   >
-                                    <DesktopIcon />
+                                    <DesktopIcon  />
                                   </IconButton>
                                 </TableCell>
                                 <Tooltip

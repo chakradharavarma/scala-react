@@ -10,8 +10,6 @@ import { fetchFolder, fetchFile, downloadFile, deleteFile } from '../../actions/
 import ConfirmActionModal from '../ConfirmActionModal';
 import 'react-contexify/dist/ReactContexify.min.css';
 
-const formatModifiedDate = (modifiedDate) => new Date(modifiedDate).toLocaleString();
-
 class FileExplorerRow extends Component {
 
   confirmActionModalTrigger = React.createRef();
@@ -77,7 +75,7 @@ class FileExplorerRow extends Component {
         ><tr className='file-explorer-confirm-delete-menu-handler' ref={this.confirmActionModalTrigger} />
         </ConfirmActionModal>
 
-        <ContextMenuProvider component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
+        <ContextMenuProvider hover component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
           <TableCell>
             <Typography
               color={row.isdir ? 'secondary' : 'default'}
@@ -94,7 +92,7 @@ class FileExplorerRow extends Component {
             {row.isdir ? 'Directory' : 'File'}
           </TableCell>
           <TableCell>
-            {formatModifiedDate(row.modified)}
+            {row.modified.toLocaleString()}
           </TableCell>
           <TableCell numeric>
             { this.formatSize(row.size)}

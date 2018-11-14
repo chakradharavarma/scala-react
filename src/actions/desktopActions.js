@@ -32,20 +32,20 @@ export const createDesktopJob = (jobid, desktopType) => {
     }
 }
 
-export const pauseDesktop = (iid) => {
+export const pauseDesktop = (id) => {
     return {
         type: PAUSE_DESKTOP,
         payload: {
-            iid
+            id
         }
     }
 }
 
-export const resumeDesktop = (iid) => {
+export const resumeDesktop = (id) => {
     return {
         type: RESUME_DESKTOP,
         payload: {
-            iid
+            id
         }
     }
 }

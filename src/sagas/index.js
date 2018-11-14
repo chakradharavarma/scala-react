@@ -593,6 +593,10 @@ function* callFolder(action) {
     if (payload.status === 200) {
         payload.path = action.payload.path
         window.location.hash = action.payload.path;
+        payload.data = payload.data.map(file => ({
+            ...file,
+            modified: new Date(file.modified),
+        }))
         yield put({ type: actions.FETCHED_FOLDER_SUCCESS, payload });
     } else {
         yield put({ type: actions.FETCHED_FOLDER_FAILED, payload });

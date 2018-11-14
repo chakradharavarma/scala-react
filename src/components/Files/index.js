@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import RootRef from '@material-ui/core/RootRef';
 import { connect } from 'react-redux';
 import classnames from 'classnames'
 import FileModal from './FileModal';
@@ -51,46 +50,29 @@ function getSorting(order, orderBy) {
 
 class Files extends Component {
 
-  constructor(props) {
-    super(props);
-    this.tableBody = React.createRef();
-  }
-
   componentDidMount() {
     window.addEventListener("hashchange", this.onHashChange, false);
-    const { fetchFolder, folder, modal, filter } = this.props;
-    let { data } = folder;
+    const { fetchFolder, folder } = this.props;
     const hash = window.location.hash;
-    if (!modal) {
-      if (hash) {
-        fetchFolder(hash.substring(1))()
-      } else {
-        fetchFolder('/')();
-      }
-    }
-    else if (folder) { // only for modals
-      fetchFolder(folder.path)();
+    if (hash) {
+      fetchFolder(hash.substring(1))()
     } else {
-      // this is bad news? // todo
-    }
-    console.log(this.tableBody)
-
-    if (this.tableBody.current) {
-      const size = data.filter(row => row.name.toLowerCase()
-                    .includes((filter || '').toLowerCase())).length * 61
-        this.tableBody.current.style.maxHeight = `${size}px`
-        console.log("changed maxheight to " + size)
+      fetchFolder(folder.path)();
     }
   }
+
+
   componentWillUnmount() {
+    const { fetchFolder } = this.props;
     window.removeEventListener("hashchange", this.onHashChange, false);
+    fetchFolder('/')();
   }
 
   onHashChange = () => {
     const { fetchFolder, modal } = this.props;
     const hash = window.location.hash;
     if (!modal && hash) {
-      fetchFolder(hash.substring(1))()
+      fetchFolder(decodeURI(hash.substring(1)))()
     }
   }
 
@@ -136,9 +118,6 @@ class Files extends Component {
     let { data, path, fetching } = folder;
 
     data = data || [];
-    if (!folder) {
-      return null;
-    }
 
     const uploadFileTrigger = (
       <Button color='secondary'>
@@ -146,6 +125,8 @@ class Files extends Component {
         Upload
       </Button>
     )
+
+
 
     let parts = path.split('/')
     if (modal) {
@@ -195,53 +176,49 @@ class Files extends Component {
               <ScalaLoader centered active />
             ) : (
                 <Fade in timeout={400}>
-                  <div className='file-explorer-table-container' >
-                    <Table className="file-explorer-table">
-                      <TableHead>
-                        <TableRow>
-                          {columnData.map(column => {
-                            return (
-                              <TableCell
-                                key={column.id}
-                                numeric={column.numeric}
-                                padding={column.disablePadding ? 'none' : 'default'}
-                                sortDirection={orderBy === column.id ? order : false}
+                  <Table className="file-explorer-table">
+                    <TableHead>
+                      <TableRow>
+                        {columnData.map(column => {
+                          return (
+                            <TableCell
+                              key={column.id}
+                              numeric={column.numeric}
+                              padding={column.disablePadding ? 'none' : 'default'}
+                              sortDirection={orderBy === column.id ? order : false}
+                            >
+                              <Tooltip
+                                title="Sort"
+                                placement={column.numeric ? 'bottom-end' : 'bottom-start'}
+                                enterDelay={300}
                               >
-                                <Tooltip
-                                  title="Sort"
-                                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                                  enterDelay={300}
+                                <TableSortLabel
+                                  active={orderBy === column.id}
+                                  direction={order}
+                                  onClick={this.createSortHandler(column.id)}
                                 >
-                                  <TableSortLabel
-                                    active={orderBy === column.id}
-                                    direction={order}
-                                    onClick={this.createSortHandler(column.id)}
-                                  >
-                                    {column.label}
-                                  </TableSortLabel>
-                                </Tooltip>
-                              </TableCell>
-                            );
-                          }, this)}
-                        </TableRow>
-                      </TableHead>
-                      <RootRef rootRef={this.tableBody}>
-                        <TableBody classes={{ root: 'file-explorer-table-body' }}>
-                          {
-                            rows
-                              .map((row, i) =>
-                                <FileExplorerRow
-                                  i={i}
-                                  toggleRenameModal={this.toggleRenameModal}
-                                  row={row}
-                                  key={`file-row-${i}`}
-                                />
-                              )
-                          }
-                        </TableBody>
-                      </RootRef>
-                    </Table>
-                  </div>
+                                  {column.label}
+                                </TableSortLabel>
+                              </Tooltip>
+                            </TableCell>
+                          );
+                        }, this)}
+                      </TableRow>
+                    </TableHead>
+                      <TableBody classes={{ root: 'file-explorer-table-body' }}>
+                        {
+                          rows
+                            .map((row, i) =>
+                              <FileExplorerRow
+                                i={i}
+                                toggleRenameModal={this.toggleRenameModal}
+                                row={row}
+                                key={`file-row-${i}`}
+                              />
+                            )
+                        }
+                      </TableBody>
+                  </Table>
                 </Fade>
               )
 

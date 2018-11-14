@@ -15,9 +15,6 @@ export default class IndividualJobUsage extends Component {
       return null
     }
 
-    const createdDate = new Date(job.created)
-    const updatedDate = new Date(job.modified)
-
     return (
       <ExpansionPanel >
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon style={{ color: 'white'}} />}>
@@ -39,22 +36,12 @@ export default class IndividualJobUsage extends Component {
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Created on: </span> {`${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}`}
+                  <span className='job-details-row-item-title'>Created on: </span> {`${job.created.toLocaleDateString()} ${job.created.toLocaleTimeString()}`}
                 </Typography>
               </Grid>
               <Grid item xs={12} className='job-details-row'>
                 <Typography variant='body2'>
-                  <span className='job-details-row-item-title'>Updated on: </span> {`${updatedDate.toLocaleDateString()} ${updatedDate.toLocaleTimeString()}`}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} className='job-details-row'>
-                <Typography variant='body2'>
-                  <span className='job-details-row-item-title link standard-out'>Standard Out</span>
-                </Typography>
-              </Grid>
-              <Grid item xs={12} className='job-details-row'>
-                <Typography variant='body2'>
-                  <span className='job-details-row-item-title link standard-error'>Standard Error</span>
+                  <span className='job-details-row-item-title'>Updated on: </span> {`${job.modified.toLocaleDateString()} ${job.modified.toLocaleTimeString()}`}
                 </Typography>
               </Grid>
             </Grid>

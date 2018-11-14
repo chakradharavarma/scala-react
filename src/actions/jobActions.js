@@ -3,7 +3,10 @@ import {
     GET_STD_ERR,
     GET_STD_OUT,
     FETCH_JOBS,
-    FETCH_JOB_PERFORMANCE
+    FETCH_JOB_PERFORMANCE,
+    SHOW_STANDARD_ERR,
+    SHOW_STANDARD_OUT,
+    CLOSE_STANDARD_MODAL,
 } from './types';
 
 export const terminateJob = (id) => {
@@ -42,5 +45,23 @@ export const getStandardError = (id) => {
 export const getPerformance = () => {
     return {
         type: FETCH_JOB_PERFORMANCE,
+    }
+}
+
+export const showStandardOut = () => {
+    return {
+        type: SHOW_STANDARD_OUT,
+    }
+}
+
+export const showStandardError = () => {
+    return {
+        type: SHOW_STANDARD_ERR,
+    }
+}
+
+export const closeStandardModal = () => {
+    return {
+        type: CLOSE_STANDARD_MODAL,
     }
 }

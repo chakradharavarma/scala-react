@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,11 +7,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import FolderIcon from '@material-ui/icons/FolderOpen';
-import { terminateJob, getJobs } from '../../actions/jobActions';
-import ConfirmActionModal from '../ConfirmActionModal';
+import { getJobs } from '../../actions/jobActions';
+import JobsRunningTableRow from './JobsRunningTableRow';
 import JobPerformanceDrawer from './JobPerformanceDrawer';
 
 const styles = theme => ({
@@ -26,7 +22,6 @@ const styles = theme => ({
   },
 });
 
-const formatDate = (date) => new Date(date).toLocaleString();
 
 
 class JobsRunningTable extends Component {
@@ -61,7 +56,7 @@ class JobsRunningTable extends Component {
   }
 
   render() {
-    const { jobs, classes, handleTerminateClick, history } = this.props;
+    const { jobs, classes } = this.props;
     const { job, open } = this.state
     return (
       <Fragment>
@@ -77,64 +72,13 @@ class JobsRunningTable extends Component {
               <TableCell>Status</TableCell>
               <TableCell>Created date</TableCell>
               <TableCell>Modified date</TableCell>
-              <TableCell>Files</TableCell>
               <TableCell>Terminate job</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {jobs.map(job => {
-              return (
-                <TableRow
-                  hover={job.status === "RUNNING"}
-                  onClick={job.status === "RUNNING" ? this.openPerformanceDrawer(job, true) : undefined}
-                  key={job.id}
-                >
-                  <TableCell component="th" scope="row">
-                    {job.name}
-                  </TableCell>
-                  <TableCell>
-                    {job.user_id}
-                  </TableCell>
-                  <TableCell>
-                    {job.hasResults ? 'Yes' : 'No'}
-                  </TableCell>
-                  <TableCell>
-                    {job.status}
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(job.created)}
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(job.modified)}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      disabled={job.status !== 'RUNNING'}
-                      onClick={() => { history.push(`/files#/jobs/${job.job_id}`) }}
-                      key="close"
-                      aria-label="Close"
-                      color="inherit"
-                    >
-                      <FolderIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
-                    <ConfirmActionModal
-                      message='Are you sure you want to terminate this job?'
-                      handleConfirm={handleTerminateClick(job.job_id)}
-                      >
-                      <IconButton
-                        disabled={job.status !== 'RUNNING'}
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </ConfirmActionModal>
-                  </TableCell>
-                </TableRow>
-              );
+              return (<JobsRunningTableRow job={job} />);
             })}
           </TableBody>
         </Table>
@@ -155,8 +99,7 @@ JobsRunningTable.propTypes = {
 const mapDispatchToProps = (dispatch) => {
   return {
     getJobs: () => dispatch(getJobs()),
-    handleTerminateClick: (uuid) => () => dispatch(terminateJob(uuid))
   }
 }
 
-export default connect(undefined, mapDispatchToProps)(withRouter(withStyles(styles)(JobsRunningTable)));
+export default connect(undefined, mapDispatchToProps)(withStyles(styles)(JobsRunningTable));

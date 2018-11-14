@@ -18,7 +18,7 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: true, fetched: false};
       break;
       case FETCHED_FOLDER_SUCCESS:
-      const path = action.payload.path;
+      const path = decodeURI(action.payload.path);
       state = { ...state, fetching: false, fetched: false, path, data: action.payload.data};
       break;
     case FETCHED_FOLDER_FAILED:

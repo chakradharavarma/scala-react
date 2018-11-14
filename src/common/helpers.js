@@ -35,6 +35,8 @@ export function getMode(path) {
       return 'text'
     case '/appout':
       return 'text'
+    case '/slurm':
+      return 'text'
     case '/apperr':
       return 'text'
     default:

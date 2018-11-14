@@ -5,6 +5,7 @@ import JobsHistory from './JobsHistory';
 import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
+import OutputModal from './OutputModal';
 
 export default class Jobs extends Component {
 
@@ -22,6 +23,7 @@ export default class Jobs extends Component {
         />
         <CurrentJobs />
         <JobsHistory />
+        <OutputModal />
       </div>
     );
   }
