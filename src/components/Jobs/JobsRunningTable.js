@@ -43,7 +43,6 @@ class JobsRunningTable extends Component {
     job: null,
   }
 
-
   async componentDidMount() {
     setInterval(this.fetchJobs, 10000);
   }
@@ -58,6 +57,8 @@ class JobsRunningTable extends Component {
   render() {
     const { jobs, classes } = this.props;
     const { job, open } = this.state
+    debugger;
+
     return (
       <Fragment>
 
@@ -78,7 +79,11 @@ class JobsRunningTable extends Component {
           </TableHead>
           <TableBody>
             {jobs.map(job => {
-              return (<JobsRunningTableRow job={job} />);
+              return (<JobsRunningTableRow
+                job={job}
+                closePerformanceDrawer={this.closePerformanceDrawer}
+                openPerformanceDrawer={this.openPerformanceDrawer}
+              />);
             })}
           </TableBody>
         </Table>

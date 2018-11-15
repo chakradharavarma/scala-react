@@ -43,6 +43,7 @@ class RenameFile extends Component {
         );
     }
 }
+
 const mapStateToProps = (state) => {
     return {
         folder: state.folder,

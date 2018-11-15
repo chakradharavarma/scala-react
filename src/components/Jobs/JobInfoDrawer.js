@@ -61,7 +61,6 @@ class JobInfoDrawer extends Component {
     const { classes, job, onClose, showStandardOut, showStandardError, open } = this.props;
     const createdDate = new Date(job.created)
     const updatedDate = new Date(job.modified)
-    debugger;
     return (
       <Drawer anchor="bottom"
         open={open}

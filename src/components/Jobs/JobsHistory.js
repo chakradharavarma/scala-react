@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -149,7 +150,7 @@ class JobsCard extends Component {
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState(state => ({ selected: state.data.map(n => n.id) }));
+      this.setState(state => ({ selected: state.data.map(job => job.id) }));
       return;
     }
     this.setState({ selected: [] });
@@ -200,14 +201,14 @@ class JobsCard extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, filterForm, jobs, onClickDesktop } = this.props;
+    const { classes, filterForm, jobs, onClickDesktop, history } = this.props;
     const { fetching } = jobs;
     const { order, orderBy, selected, rowsPerPage, page, drawerOpen, job } = this.state;
     let data;
     if (filterForm) {
       data = jobs.data
         .filter(job => (job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')) ||
-                (job.job_id.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')))
+          (job.job_id.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')))
     } else {
       data = jobs.data
     }
@@ -242,60 +243,59 @@ class JobsCard extends Component {
                         data
                           .sort(getSorting(order, orderBy))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                          .map(n => {
+                          .map(job => {
                             // todo move to a fxn in consts
-                            const isSelected = this.isSelected(n.id);
-                            const createdDate = moment(n.created)
-                            const modifiedDate = moment(n.modified)
-                            const days = modifiedDate.diff(createdDate, "days") 
+                            const isSelected = this.isSelected(job.id);
+                            const createdDate = moment(job.created)
+                            const modifiedDate = moment(job.modified)
+                            const days = modifiedDate.diff(createdDate, "days")
                             const hours = modifiedDate.diff(createdDate, "hours") - (days * 24)
                             const minutes = modifiedDate.diff(createdDate, "minutes") - ((days * 24 * 60) + hours * 60)
                             const seconds = modifiedDate.diff(createdDate, "seconds") % 60
-                                                     const duration = `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : '' } \
-                                              ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : '' } \
-                                              ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : '' } \
-                                              ${seconds && !(hours || days) ? `${seconds} seconds` : '' } \
+                            const duration = `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : ''} \
+                                              ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : ''} \
+                                              ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : ''} \
+                                              ${seconds && !(hours || days) ? `${seconds} seconds` : ''} \
                                               `
                             return (
                               <TableRow
                                 hover
                                 role="checkbox"
                                 aria-checked={isSelected}
-                                key={n.id}
-                                onClick={this.setJobDrawer(n)}
+                                key={job.id}
+                                onClick={this.setJobDrawer(job)}
                                 selected={isSelected}
                               >
                                 <TableCell component="th" scope="row" padding="none">
-                                  {n.name}
+                                  {job.name}
                                 </TableCell>
                                 <TableCell className={classnames(
-                                  `status-${n.status.toLowerCase()}`
-                                )}>{n.status}</TableCell>
-                                <TableCell>{n.created.toLocaleString()}</TableCell>
+                                  `status-${job.status.toLowerCase()}`
+                                )}>{job.status}</TableCell>
+                                <TableCell>{job.created.toLocaleString()}</TableCell>
                                 <TableCell>{duration}</TableCell>
                                 <TableCell>
                                   <IconButton
                                     disabled
                                     aria-label="Desktop"
-                                    onClick={onClickDesktop(n.job_id, 'vnc')}
+                                    onClick={onClickDesktop(job.job_id, 'vnc')}
                                   >
-                                    <DesktopIcon  />
+                                    <DesktopIcon />
                                   </IconButton>
                                 </TableCell>
-                                <Tooltip
-                                  title={n.hasResult ? 'Click to download results' : 'No results'}
-                                  placement='bottom'
-                                  enterDelay={200}
-                                  disableFocusListener={n.hasResult}
-                                  disableHoverListener={n.hasResult}
-                                  disableTouchListener={n.hasResult}
-                                >
-                                  <TableCell >
-                                    <IconButton disabled={!n.hasResult} >
+                                <TableCell >
+                                  <Tooltip
+                                    title='Click to view results'
+                                    placement='bottom'
+                                    enterDelay={200}
+                                  >
+                                    <IconButton
+                                      onClick={() => history.push(`/files#/jobs/${job.job_id}`)}
+                                    >
                                       <ArchiveIcon />
                                     </IconButton>
-                                  </TableCell>
-                                </Tooltip>
+                                  </Tooltip>
+                                </TableCell>
                               </TableRow>
                             );
                           })
@@ -355,4 +355,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(JobsCard));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(JobsCard)));

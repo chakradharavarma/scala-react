@@ -28,7 +28,7 @@ export default class JobStatusPieChart extends Component {
             isAnimationActive
             cx="50%"
             cy="50%"
-            innerRadius={50}
+            innerRadius={55}
             outerRadius={80}
             label
             paddingAngle={Math.min(5, (data.length - 1) * 3)}
@@ -44,7 +44,6 @@ export default class JobStatusPieChart extends Component {
           <Tooltip content={<CustomTooltip />} />
         </PieChart>
       </div>
-
     );
   }
 }

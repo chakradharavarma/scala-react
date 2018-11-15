@@ -15,22 +15,8 @@ import { getStandardOut, getStandardError, showStandardError, showStandardOut } 
 
 class JobsRunningTableRow extends Component {
 
-  openPerformanceDrawer = (job, open) => (e) => {
-    if (['TH', 'TD'].includes(e.target.tagName)) {
-      this.setState({ job, open })
-    }
-  }
-
-  closePerformanceDrawer = () => {
-    this.setState({
-      open: false
-    })
-  }
-
-
   handlePopoverOpen = event => {
     const { getStandardOut, getStandardError, job } = this.props;
-    debugger;
     getStandardError(job.job_id);
     getStandardOut(job.job_id);
     this.setState({ anchorEl: event.currentTarget });
@@ -47,7 +33,7 @@ class JobsRunningTableRow extends Component {
   }
 
   render() {
-    const {  handleTerminateClick, history, job, showStandardOut, showStandardError } = this.props;
+    const { openPerformanceDrawer, handleTerminateClick, history, job, showStandardOut, showStandardError } = this.props;
     const { anchorEl } = this.state
     const open = Boolean(anchorEl);
 
@@ -55,7 +41,7 @@ class JobsRunningTableRow extends Component {
 
       <TableRow
         hover={job.status === "RUNNING"}
-        onClick={job.status === "RUNNING" ? this.openPerformanceDrawer(job, true) : undefined}
+        onClick={job.status === "RUNNING" ? openPerformanceDrawer(job, true) : undefined}
         key={job.id}
       >
         <TableCell component="th" scope="row">

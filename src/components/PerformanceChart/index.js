@@ -7,9 +7,11 @@ export default class PerformanceChart extends Component {
 
   render() {
     const { chart, key } = this.props
+
     if(!chart) {
       return null
-    } 
+    }
+
     const data = chart.values.map(el => {
       const date = new Date(el[0] * 1000);
       const hours = date.getHours();
@@ -22,12 +24,14 @@ export default class PerformanceChart extends Component {
         percent: parseFloat(el[1])
       }
     })
+
     const start = chart.values[0][0]
     const end = chart.values[chart.values.length-1][0]
     let seconds = false;
-    if ((end - start) < (60 * 12)) {
+    if ((end - start) < (60 * 12)) { // If 12 mins
       seconds = true;
     }
+
     return (
       <AreaChart style={{ margin: 'auto'}} width={730} height={200} data={data}
         margin={{ top: 10, right: 30, left: 0, bottom: 50 }}>

@@ -21,6 +21,7 @@ export const STATUS_COLORS = {
     'DEPLOYED': '#93C5D8',
     'FAILED': '#38628f',
     'RUNNING': '#40E0D0',
+    'CREATED': '#8FE6FF',
 }
 
 export const MONTHS = [
