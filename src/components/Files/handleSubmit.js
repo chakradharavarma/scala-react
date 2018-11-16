@@ -1,7 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import store from '../../store';
 import { renameFile } from '../../actions/fileActions';
-import urljoin from 'url-join';
 
 export default function submit(path, values) {
     const { oldName, newName } = values;
@@ -24,6 +23,6 @@ export default function submit(path, values) {
             _error: 'submit failed!',
         });
     } else {
-        store.dispatch(renameFile(urljoin(path, oldName), urljoin(path, newName), path))
+        store.dispatch(renameFile(oldName, newName, path))
     }
 };

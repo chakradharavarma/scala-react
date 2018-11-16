@@ -57,7 +57,6 @@ class JobsRunningTable extends Component {
   render() {
     const { jobs, classes } = this.props;
     const { job, open } = this.state
-    debugger;
 
     return (
       <Fragment>
@@ -81,7 +80,6 @@ class JobsRunningTable extends Component {
             {jobs.map(job => {
               return (<JobsRunningTableRow
                 job={job}
-                closePerformanceDrawer={this.closePerformanceDrawer}
                 openPerformanceDrawer={this.openPerformanceDrawer}
               />);
             })}

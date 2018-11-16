@@ -13,7 +13,7 @@ import Fade from '@material-ui/core/Fade';
 const classes = {
   paper: {
     root: 'current-jobs'
-  }
+  },
 }
 
 class CurrentJobs extends Component {
@@ -48,7 +48,7 @@ class CurrentJobs extends Component {
                 ) : (
                   <Fade in={!fetching} timeout={400} >
                     <div className='centered with-height'>
-                      <Typography variant='title'>
+                      <Typography variant='title' className='current-jobs-error'>
                         Unable to fetch jobs
                       </Typography>
                     </div>

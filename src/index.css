@@ -819,8 +819,11 @@ div:focus {
 }
 
 .jobs-drawer-card-media {
-    height: 3em;
-    width: 3em;
+    background-size: contain !important;
+    background-position: left !important;
+    height: 2.5em;
+    width: 8.8em;
+    margin: 8px 0 0 8px;
 }
 
 .job-details-row {
