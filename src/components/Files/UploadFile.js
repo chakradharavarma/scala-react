@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { uploadFiles } from '../../actions/fileActions'
+import { uploadFiles, dropFailed } from '../../actions/fileActions'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone'
@@ -15,9 +15,15 @@ class UploadFiles extends Component {
         this.setState({ value: e.target.value })
     }
 
-    handleDrop = (accepted, rejected ) => { // todo add rejected code
+
+    handleDrop = (accepted, rejected) => { // todo add rejected code
+        const { dropFailed } = this.props
+        if (rejected.length) {
+            dropFailed(rejected)
+        }
         this.setState({ files: accepted.concat(this.state.files) });
     }
+
 
     uploadFiles = () => {
         const { onClose, uploadFiles, path } = this.props;
@@ -37,18 +43,18 @@ class UploadFiles extends Component {
                     {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
                         return (
                             <Fragment>
-                            <Button
-                            disableRipple
-                            variant='outlined'
-                            style={{ width: '100%', height: '50%', border: '1px solid #5e8dbf', backgroundColor: isDragActive ? '#78A7D9' : '#5e8dbf', color: 'white' }}
-                            >
-                                Click or drop files here
+                                <Button
+                                    disableRipple
+                                    variant='outlined'
+                                    style={{ width: '100%', height: '50%', border: '1px solid #5e8dbf', backgroundColor: isDragActive ? '#78A7D9' : '#5e8dbf', color: 'white' }}
+                                >
+                                    Click or drop files here
                             </Button>
-                            <div className='pending-uploads-container'>
-                                {
-                                     this.state.files.map(file => <Typography>{file.name}</Typography>)
-                                }
-                            </div>
+                                <div className='pending-uploads-container'>
+                                    {
+                                        this.state.files.map(file => <Typography>{file.name}</Typography>)
+                                    }
+                                </div>
                             </Fragment>
 
                         )
@@ -59,7 +65,7 @@ class UploadFiles extends Component {
                     <Button onClick={onClose} variant="contained">
                         Cancel
                         </Button>
-                    <Button onClick={this.uploadFiles } variant="contained" color="secondary">
+                    <Button onClick={this.uploadFiles} variant="contained" color="secondary">
                         Upload
                     </Button>
                 </div>
@@ -76,7 +82,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        uploadFiles: (files, path) => dispatch(uploadFiles(files, path))
+        uploadFiles: (files, path) => dispatch(uploadFiles(files, path)),
+        dropFailed: (file) => dispatch(dropFailed(file)),
     }
 }
 

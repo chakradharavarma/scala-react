@@ -6,16 +6,16 @@ const textField = (props, children) => ({
   label,
   meta: { touched, error },
   ...custom
-}) => (
-    <TextField
-      error={error}
-      helperText={touched && error !== undefined && `* ${error}`}    
-      {...input}
-      {...custom}
-      {...props}
-    >
-      {children}
-    </TextField>
-  );
+}) =>  (
+  <TextField
+    error={!!error}
+    helperText={touched && error !== undefined && `* ${error}`}    
+    {...input}
+    {...custom}
+    {...props}
+  >
+    {children}
+  </TextField>
+);
 
   export default textField;

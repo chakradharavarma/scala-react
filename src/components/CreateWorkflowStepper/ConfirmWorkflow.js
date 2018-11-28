@@ -8,39 +8,59 @@ import { formValueSelector } from 'redux-form';
 class ConfirmWorkflow extends Component {
 
   render() {
-    const { name, instanceCount, compute } = this.props;
+    const { name, instanceCount, compute, files } = this.props;
     return (
       <div className='step-content-container'>
         <Typography variant='display1' color='secondary' component='div' className='step-title'>
           Confirm Workflow
         </Typography>
-        <Fade in timeout={{enter: 200, exit: 300}}>
-        <Card className='confirm-workflow-card'>
-          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Name:
+        <Fade in timeout={{ enter: 200, exit: 300 }}>
+          <Card className='confirm-workflow-card'>
+            <div>
+              <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+                Name:
             </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              {name}
+              <Typography className='confirm-workflow-value' variant='title'>
+                {name}
+              </Typography>
+            </div>
+            <div>
+              <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+                Number of nodes:
             </Typography>
-          </div>
-          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Number of nodes:
+              <Typography className='confirm-workflow-value' variant='title'>
+                {instanceCount}
+              </Typography>
+            </div>
+            <div>
+              <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+                Cluster Type:
             </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              { instanceCount }
-            </Typography>
-          </div>
-          <div>
-            <Typography className='confirm-workflow-field' color='secondary' variant='title'>
-              Cluster Type:
-            </Typography>
-            <Typography className='confirm-workflow-value' variant='title'>
-              { compute }
-            </Typography>
-          </div>
-        </Card>
+              <Typography className='confirm-workflow-value' variant='title'>
+                {compute}
+              </Typography>
+            </div>
+            {
+              files.length ?
+              (
+                <div>
+                  <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+                    Files:
+              </Typography>
+                  <div className='confirm-workflow-files-field'>
+                    {
+                      files.map(file => (
+                        <Typography className='confirm-workflow-value confirm-workflow-file' variant='title'>
+                          {file.name}
+                        </Typography>
+                      ))
+                    }
+                  </div>
+                </div>
+              ) : null
+            }
+
+          </Card>
         </Fade>
       </div>
     )
@@ -54,6 +74,7 @@ const mapStateToProps = (state) => {
     name: selector(state, 'name'),
     compute: selector(state, 'resources.compute'),
     instanceCount: selector(state, 'resources.instanceCount'),
+    files: selector(state, 'files'),
     //tasksPerNode: selector(state, 'resources.tasksPerNode'), // TODO delete
     //cpusPerNode: selector(state, 'resources.cpusPerNode'),
   }

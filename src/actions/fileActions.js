@@ -9,6 +9,7 @@ import {
     DELETE_FILE,
     UPLOAD_FILES,
     RENAME_FILE,
+    DROP_FAILED
 } from './types';
 
 export const fetchFolder = (path) => {
@@ -31,7 +32,7 @@ export const fetchFile = (path) => {
 
 export const createFile = (name, type, path) => {
     return {
-        type: 'create file ' , //CREATE_FILE, todo
+        type: 'create file' , //CREATE_FILE, todo
         payload: {
             name,
             type,
@@ -106,6 +107,16 @@ export const uploadFiles = (files, path) => {
         payload: {
             files,
             path,
+        }
+    }
+}
+
+
+export const dropFailed = (file) => {
+    return {
+        type: DROP_FAILED,
+        payload: {
+            file,
         }
     }
 }

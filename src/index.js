@@ -6,6 +6,7 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './store'
 
 import './index.css';
+import 'react-dates/lib/css/_datepicker.css';
 
 ReactDOM.render(<Provider store={store}>
     <Dashboard />

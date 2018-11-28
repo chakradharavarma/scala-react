@@ -1,4 +1,6 @@
-export function createNotification(message, type){
+import moment from 'moment'
+
+export function createNotification(message, type) {
   return {
     message,
     key: new Date().getTime(),
@@ -10,12 +12,11 @@ export function formatErrorMessage(message) {
   return message.replace("ERROR: ", "")
 }
 
-
 export function getMode(path) {
   const file = path.substring(path.lastIndexOf('/'))
   const ext = file.substring(file.lastIndexOf('.'));
-  switch(ext){
-    case '.js' || '.jsx' :
+  switch (ext) {
+    case '.js' || '.jsx':
       return 'javascript'
     case '.sh':
       return 'shell'
@@ -27,20 +28,10 @@ export function getMode(path) {
       return 'yaml'
     case '.java':
       return 'java'
-    case '.wps':
-      return 'text'
-    case '.input':
-      return 'text'
-    case '.tbl':
-      return 'text'
-    case '/appout':
-      return 'text'
-    case '/slurm':
-      return 'text'
-    case '/apperr':
+    case '.wps' || '.input' || '.tbl' || '/appout' || '/slurm' || '/apperr' || '.txt':
       return 'text'
     default:
-      return null
+      return 'text'
   }
 }
 
@@ -49,18 +40,28 @@ export const download = function () {
   document.body.appendChild(a);
   a.style = "display: none";
   return function (data, fileName) {
-      const blob = new Blob([data], {type: "application/octet-stream"})
-      const url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    const blob = new Blob([data], { type: "application/octet-stream" })
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
 }();
 
 
-export const diffMoment = function(start, end) {
-
+export const getDuration = function (start, end) {
+  const createdDate = moment(start)
+  const modifiedDate = moment(end)
+  const days = modifiedDate.diff(createdDate, "days")
+  const hours = modifiedDate.diff(createdDate, "hours") - (days * 24)
+  const minutes = modifiedDate.diff(createdDate, "minutes") - ((days * 24 * 60) + hours * 60)
+  const seconds = modifiedDate.diff(createdDate, "seconds") % 60
+  return `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : ''} \
+                    ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : ''} \
+                    ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : ''} \
+                    ${seconds && !(hours || days) ? `${seconds} seconds` : ''} \
+                    `
 }
 
 /*

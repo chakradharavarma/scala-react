@@ -37,7 +37,14 @@ class FileExplorerRow extends Component {
     })
   };
 
-  formatSize = (a, b) => { if (0 === a) return "0 B"; var c = 1024, d = b || 0, e = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"], f = Math.floor(Math.log(a) / Math.log(c)); return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f] }
+  formatSize = (size, percision) => { 
+    if (0 === size) return "0 B";
+    if (-1 === size) return "unknown"
+    const base = 1024;
+    const types = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    const idx = Math.floor(Math.log(size) / Math.log(base));
+    return parseFloat((size / Math.pow(base, idx)).toFixed(percision || 0)) + " " + types[idx] 
+  }
 
 
   render() {
@@ -75,8 +82,8 @@ class FileExplorerRow extends Component {
         ><tr className='file-explorer-confirm-delete-menu-handler' ref={this.confirmActionModalTrigger} />
         </ConfirmActionModal>
 
-        <ContextMenuProvider hover component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
-          <TableCell>
+        <ContextMenuProvider className='flex' component={TableRow} data={{ file: { ...row, path: `${folder.path.trimRight('/')}/${row.name}` } }} id={`row-${i}`}>
+          <TableCell className='flex'>
             <Typography
               color={row.isdir ? 'secondary' : 'default'}
               className='file-explorer-item'
@@ -88,13 +95,13 @@ class FileExplorerRow extends Component {
               {row.name}
             </Typography>
           </TableCell>
-          <TableCell>
+          <TableCell className='flex'>
             {row.isdir ? 'Directory' : 'File'}
           </TableCell>
-          <TableCell>
+          <TableCell className='flex'>
             {row.modified.toLocaleString()}
           </TableCell>
-          <TableCell numeric>
+          <TableCell className='flex'>
             { this.formatSize(row.size)}
           </TableCell>
         </ContextMenuProvider>

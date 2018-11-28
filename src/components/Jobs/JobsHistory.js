@@ -20,10 +20,12 @@ import JobsCardHeader from './JobsCardHeader'
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
-import DesktopIcon from '@material-ui/icons/DesktopWindows';
+import RepeatIcon from '@material-ui/icons/Loop';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import { createDesktopJob } from '../../actions/desktopActions';
+import { restartJob } from '../../actions/jobActions';
 import { ACTIVE_STATUS } from '../../common/consts';
+import { getDuration } from '../../common/helpers';
 
 function getSorting(order, orderBy) {
   return (a, b) => {
@@ -46,8 +48,8 @@ const columnData = [
   { id: 'status', numeric: false, disablePadding: false, label: 'Status', sortable: true },
   { id: 'created', numeric: false, disablePadding: false, label: 'Started', sortable: true },
   { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration', sortable: true },
-  { id: 'desktop', numeric: false, disablePadding: false, label: 'Desktop', sortable: false },
   { id: 'results', numeric: false, disablePadding: false, label: 'Results', sortable: false },
+  { id: 'restart', numeric: false, disablePadding: false, label: 'Restart', sortable: false },
 ];
 
 class JobsCardHead extends Component {
@@ -59,8 +61,8 @@ class JobsCardHead extends Component {
     const { order, orderBy } = this.props;
 
     return (
-      <TableHead>
-        <TableRow>
+      <TableHead className='flex'>
+        <TableRow className='flex'>
           {
             false && (
               <TableCell padding="checkbox" />
@@ -69,6 +71,7 @@ class JobsCardHead extends Component {
           {columnData.map(column => {
             return (
               <TableCell
+                className='flex'
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
@@ -185,11 +188,13 @@ class JobsCard extends Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  setJobDrawer = (job) => () => {
-    this.setState({
-      drawerOpen: true,
-      job
-    })
+  setJobDrawer = (job) => (e) => {
+    if (['TH', 'TD'].includes(e.target.tagName)) {
+      this.setState({
+        drawerOpen: true,
+        job
+      })
+    }
   }
 
   closeJobDrawer = () => {
@@ -201,7 +206,7 @@ class JobsCard extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, filterForm, jobs, onClickDesktop, history } = this.props;
+    const { classes, filterForm, jobs, onClickRestartJob, history } = this.props;
     const { fetching } = jobs;
     const { order, orderBy, selected, rowsPerPage, page, drawerOpen, job } = this.state;
     let data;
@@ -229,7 +234,7 @@ class JobsCard extends Component {
               (
                 <Fade in={!fetching} timeout={400} >
 
-                  <Table className={classes.table} aria-labelledby="tableTitle">
+                  <Table className={`${classes.table} flex`} aria-labelledby="tableTitle">
                     <JobsCardHead
                       numSelected={selected.length}
                       order={order}
@@ -238,7 +243,7 @@ class JobsCard extends Component {
                       onRequestSort={this.handleRequestSort}
                       rowCount={data.length}
                     />
-                    <TableBody>
+                    <TableBody className='flex'>
                       {
                         data
                           .sort(getSorting(order, orderBy))
@@ -246,46 +251,29 @@ class JobsCard extends Component {
                           .map(job => {
                             // todo move to a fxn in consts
                             const isSelected = this.isSelected(job.id);
-                            const createdDate = moment(job.created)
-                            const modifiedDate = moment(job.modified)
-                            const days = modifiedDate.diff(createdDate, "days")
-                            const hours = modifiedDate.diff(createdDate, "hours") - (days * 24)
-                            const minutes = modifiedDate.diff(createdDate, "minutes") - ((days * 24 * 60) + hours * 60)
-                            const seconds = modifiedDate.diff(createdDate, "seconds") % 60
-                            const duration = `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : ''} \
-                                              ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : ''} \
-                                              ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : ''} \
-                                              ${seconds && !(hours || days) ? `${seconds} seconds` : ''} \
-                                              `
+                            const duration = getDuration(job.created, job.modified)
                             return (
                               <TableRow
                                 hover
+                                className='flex'
                                 role="checkbox"
                                 aria-checked={isSelected}
                                 key={job.id}
                                 onClick={this.setJobDrawer(job)}
                                 selected={isSelected}
                               >
-                                <TableCell component="th" scope="row" padding="none">
+                                <TableCell className='flex' component="th" scope="row" padding="none">
                                   {job.name}
                                 </TableCell>
                                 <TableCell className={classnames(
+                                  'flex',
                                   `status-${job.status.toLowerCase()}`
                                 )}>{job.status}</TableCell>
-                                <TableCell>{job.created.toLocaleString()}</TableCell>
-                                <TableCell>{duration}</TableCell>
-                                <TableCell>
-                                  <IconButton
-                                    disabled
-                                    aria-label="Desktop"
-                                    onClick={onClickDesktop(job.job_id, 'vnc')}
-                                  >
-                                    <DesktopIcon />
-                                  </IconButton>
-                                </TableCell>
-                                <TableCell >
+                                <TableCell className='flex'>{job.created.toLocaleString()}</TableCell>
+                                <TableCell className='flex'>{duration}</TableCell>
+                                <TableCell className='flex'>
                                   <Tooltip
-                                    title='Click to view results'
+                                    title='View results'
                                     placement='bottom'
                                     enterDelay={200}
                                   >
@@ -296,12 +284,20 @@ class JobsCard extends Component {
                                     </IconButton>
                                   </Tooltip>
                                 </TableCell>
+                                <TableCell className='flex'>
+                                  <IconButton
+                                    aria-label="Desktop"
+                                    onClick={onClickRestartJob(job.job_id)}
+                                  >
+                                    <RepeatIcon />
+                                  </IconButton>
+                                </TableCell>
                               </TableRow>
                             );
                           })
                       }
                       {emptyRows > 0 && (
-                        <TableRow style={{ height: 49 * emptyRows }}>
+                        <TableRow className='flex' style={{ height: 49 * emptyRows }}>
                           <TableCell colSpan={6} />
                         </TableRow>
                       )}
@@ -349,9 +345,11 @@ const mapStateToProps = (state) => {
   }
 }
 
+// TODO wire this back in
 const mapDispatchToProps = (dispatch) => {
   return {
-    onClickDesktop: (id, desktopType) => () => dispatch(createDesktopJob(id, desktopType))
+    onClickDesktop: (jobID, desktopType) => () => dispatch(createDesktopJob(jobID, desktopType)),
+    onClickRestartJob: (jobID) => () => dispatch(restartJob(jobID))
   }
 }
 

@@ -12,15 +12,20 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PlayArrowOutlined from '@material-ui/icons/PlayArrowOutlined';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
-import { deleteWorkflow, runWorkflow } from '../../actions/workflowActions'
+import FileCopy from '@material-ui/icons/FileCopyOutlined';
+import { deleteWorkflow, runWorkflow, cloneWorkflow } from '../../actions/workflowActions'
 
 import EditWorkflowModal from '../EditWorkflowModal';
 import ConfirmActionModal from '../ConfirmActionModal';
+
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Tooltip from '@material-ui/core/Tooltip';
 
 class AvailableWorkflows extends Component {
 
   state = {
     anchorEl: null,
+    message: 'Click to copy',
   };
 
   handleClick = event => {
@@ -30,21 +35,35 @@ class AvailableWorkflows extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
-  
+
   _handleClose = (beforeClosing) => () => {
     beforeClosing();
     this.setState({ anchorEl: null });
   };
 
 
+  handleCopyTextClick = () => {
+    this.setState({ message: 'Copied!' })
+  }
+
+  handleCopyTextMouseOut = () => {
+    const { message } = this.state;
+    if (message !== 'Click to copy') {
+      setTimeout(() => this.setState({ message: 'Click to copy' }), 700)  // TODO
+    }
+  }
 
   render() {
-    const { onClickDelete, onClickRun, workflow } = this.props;
+    const { onClickDelete, onClickRun, workflow, onClickCloneWorkflow, computes } = this.props;
+    const { data, fetched } = computes;
     const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);  
+    const open = Boolean(anchorEl);
+    const compute = fetched && data.find(compute => compute.instanceType === workflow.resources.compute)
+    const instanceType = compute && compute.name
+
     return (
       <Grid item lg={6} xl={4} sm={12}>
-        <Card  className='available-workflow-card' >
+        <Card className='available-workflow-card' >
           <CardContent>
             <div className='workflow-title-container'>
               <Typography color='secondary' variant="title">
@@ -73,7 +92,7 @@ class AvailableWorkflows extends Component {
                   <MenuItem onClick={this._handleClose(onClickRun(workflow.id))}>
                     <PlayArrowOutlined className='menu-option-icon' />
                     Run
-                        </MenuItem>
+                  </MenuItem>
                   <EditWorkflowModal handleCloseCallback={this.handleClose} workflow={workflow} trigger={
                     <MenuItem onClick={this.handleClose}>
                       <EditOutlined className='menu-option-icon' />
@@ -89,25 +108,41 @@ class AvailableWorkflows extends Component {
                       Delete
                     </MenuItem>
                   </ConfirmActionModal>
+                  <MenuItem onClick={this._handleClose(onClickCloneWorkflow(workflow.id))}>
+                    <FileCopy className='menu-option-icon' />
+                    Clone
+                  </MenuItem>
                 </Menu>
               </div>
             </div>
             <Divider />
 
             <Grid className='card-metadata' container spacing={0} >
-              <Grid item xs={4} >
+              <Grid item xs={3} >
                 {`v${workflow.version}`}
               </Grid>
-              <Grid item xs={4} >
+              <Grid item xs={3} >
                 {`${workflow.resources.instanceCount} nodes`}
               </Grid>
-              <Grid item xs={4} >
-                {workflow.resources.compute}
+              <Grid item xs={6} >
+                {instanceType}
               </Grid>
             </Grid>
             <Grid className='card-metadata' container spacing={8} >
-            <Grid item xs={4} >
+              <Grid item xs={8} >
+                WORKFLOW ID:
+              </Grid>
+              <Grid item xs={4} >
                 {`STATUS: ${workflow.status}`}
+              </Grid>
+              <Grid item xs={12} >
+              <Tooltip title={ this.state.message } >
+                <CopyToClipboard text={workflow.id}>
+                <span className='connection-string' onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
+                  {workflow.id}                  
+                </span>
+                </CopyToClipboard>
+              </Tooltip>
               </Grid>
             </Grid>
           </CardContent>
@@ -117,12 +152,18 @@ class AvailableWorkflows extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    computes: state.computes,
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onClickRun: (id) => () => dispatch(runWorkflow(id)),
     onClickDelete: (id) => () => dispatch(deleteWorkflow(id)),
+    onClickCloneWorkflow: (id) => () => dispatch(cloneWorkflow(id)),
   }
 };
 
-export default connect(undefined, mapDispatchToProps)(AvailableWorkflows);
+export default connect(mapStateToProps, mapDispatchToProps)(AvailableWorkflows);

@@ -8,6 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import ScalaLoader from '../ScalaLoader';
 import Fade from '@material-ui/core/Fade';
+import DailyBillingChart from '../DailyBillingChart';
 
 class Usage extends Component {
 
@@ -37,10 +38,12 @@ class Usage extends Component {
               </Typography>
               <Divider />
             </div>
+            <div className='chart-container' >
+              <DailyBillingChart />
+            </div>
+
             {
-              fetching ? (
-                <ScalaLoader centered active />
-              ) :
+              fetching ? <ScalaLoader centered active /> :
               <Fade in animation={400}>
                 <div className={classnames('summary-container', { 'centered with-height': !results.length })} >
                     {

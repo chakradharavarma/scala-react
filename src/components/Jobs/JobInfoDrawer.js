@@ -6,8 +6,11 @@ import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close';
 import { connect } from 'react-redux';
 import { getStandardOut, getStandardError, showStandardError, showStandardOut } from '../../actions/jobActions';
+import { getDuration } from '../../common/helpers';
 
 const styles = theme => ({
   paper: {
@@ -61,6 +64,9 @@ class JobInfoDrawer extends Component {
     const { classes, job, onClose, showStandardOut, showStandardError, open } = this.props;
     const createdDate = new Date(job.created)
     const updatedDate = new Date(job.modified)
+
+    const duration = getDuration(job.created, job.modified)
+    
     return (
       <Drawer anchor="bottom"
         open={open}
@@ -72,6 +78,15 @@ class JobInfoDrawer extends Component {
               <Typography className={classes.chartTitle} variant='title' color='secondary'>
                 Job Details
               </Typography>
+              <IconButton
+              key="close"
+              aria-label="Close"
+              color="secondary"
+              onClick={onClose}
+              className='delete-session-close-button'
+            >
+             <CloseIcon />
+            </IconButton>
             </Grid>
             <Divider />
             <Grid item xs={12} className='job-details-row'>
@@ -87,7 +102,7 @@ class JobInfoDrawer extends Component {
             </Grid>
             <Grid item xs={12} className='job-details-row'>
               <Typography variant='body2'>
-                <span className='job-details-row-item-title'>Duration: </span> {job.running_time}
+                <span className='job-details-row-item-title'>Duration: </span> { duration }
               </Typography>
             </Grid>
             <Grid item xs={12} className='job-details-row'>

@@ -86,7 +86,8 @@ class EditWorkflowModal extends Component {
         'resources': {
           'compute': workflow.resources.compute,
           'instanceCount': workflow.resources.instanceCount,
-        }
+        },
+        'files': [],
         // 'resources.size': "20GB",  todo visit this
         //'resources.compute': workflow.resources.compute,
         //'resources.instanceCount': workflow.resources.instanceCount,

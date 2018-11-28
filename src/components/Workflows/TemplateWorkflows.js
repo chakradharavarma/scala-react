@@ -7,16 +7,15 @@ import TemplateWorkflowCard from './TemplateWorkflowsCard';
 class TemplateWorkflows extends Component {
 
   render() {
-    const { workflows } = this.props;
-    if(workflows.fetching) {
+    const { workflows, computes } = this.props;
+    if(workflows.fetching || computes.fetching) {
       return null;
     }
-
     return (
         <Grid container spacing={16} className='workflow-templates section sibling-fade'>
           {
             workflows.data.map((workflow, i) =>
-              <TemplateWorkflowCard key={`workflow-template-${i}`} workflow={workflow} />
+              <TemplateWorkflowCard key={`workflow-template-${i}`} computes={computes} workflow={workflow} />
             )
           }
         </Grid>
@@ -32,6 +31,7 @@ TemplateWorkflows.propTypes = {
 const mapStateToProps = (state) => {
   return {
     workflows: state.templateWorkflows,
+    computes: state.computes,
   }
 }
 

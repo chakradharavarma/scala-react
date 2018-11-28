@@ -17,7 +17,7 @@ class AvailableWorkflows extends Component {
           fetching ? (
             <ScalaLoader centered active />
           ) : (
-              <Grid container spacing={16} className='section sibling-fade' >
+              <Grid container spacing={16} className='section sibling -fade' >
                 {
                   workflows.data
                     .sort((a, b) => a.name.localeCompare(b.name))

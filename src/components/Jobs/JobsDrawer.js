@@ -23,7 +23,7 @@ class JobsDrawer extends Component {
   };
 
   render() {
-    const { availableWorkflows, templateWorkflows } = this.props;
+    const { availableWorkflows, templateWorkflows, computes } = this.props;
 
     return (
       <React.Fragment>
@@ -63,7 +63,7 @@ class JobsDrawer extends Component {
                     {
                       templateWorkflows.data
                         .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((workflow, i) => <TemplateWorkflowsCard large workflow={workflow} key={`jobs-drawer-card-${i}`} />)
+                        .map((workflow, i) => <TemplateWorkflowsCard large computes={computes} workflow={workflow} key={`jobs-drawer-card-${i}`} />)
                     }
                   </Grid>
                 </div>
@@ -85,6 +85,7 @@ const mapStateToProps = (state) => {
     {
       availableWorkflows: state.availableWorkflows,
       templateWorkflows: state.templateWorkflows,
+      computes: state.computes,
     }
   )
 };

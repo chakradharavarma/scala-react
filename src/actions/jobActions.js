@@ -7,6 +7,7 @@ import {
     SHOW_STANDARD_ERR,
     SHOW_STANDARD_OUT,
     CLOSE_STANDARD_MODAL,
+    RESTART_JOB,
 } from './types';
 
 export const terminateJob = (id) => {
@@ -38,6 +39,14 @@ export const getStandardError = (id) => {
         type: GET_STD_ERR,
         payload: {
             id
+        }
+    }
+}
+export const restartJob = (jobID) => {
+    return {
+        type: RESTART_JOB,
+        payload: {
+            jobID
         }
     }
 }

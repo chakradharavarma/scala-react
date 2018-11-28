@@ -42,12 +42,12 @@ export const nameField = Field({
   margin: "normal",
   className: 'center-field',
   style: { width: 300 },
-  autoComplete: 'off'
+  autoComplete: 'off',
 })
 
 export const renameField = Field({
   margin: "normal",
-  style: { width: 300},
+  style: { width: 300 },
   className: 'center-field',
   autoComplete: 'off'
 })
@@ -62,28 +62,27 @@ export const cronField = Field({
   margin: "normal",
   style: { width: 300 }
 })
- 
+
 export const searchField = Field({
   label: 'Search'
 });
 
 export const codeField = (props) => ({
-    input,
-    label,
-    meta: { touched, error },
-    ...custom
+  input,
+  label,
+  meta: { touched, error },
+  ...custom
 }) => (
     <CodeMirror
-        mode={'shell'}
-        autoFocus
-        options={{ lineNumbers: true }}
-        helperText={touched && error}
-        {...input}
-        {...custom}
-        {...props}
+      mode={'shell'}
+      autoFocus
+      options={{ lineNumbers: true }}
+      helperText={touched && error}
+      {...input}
+      {...custom}
+      {...props}
     />
-);
-
+  );
 
 const mapStateToProps = (state) => {
   return {
@@ -98,13 +97,13 @@ export const clusterType = connect(mapStateToProps)((props) => (
     margin="normal"
     style={{ width: '100%' }}
   >
-  {
-    props.computes.fetched &&
-    props.computes.data.map(machine => (
-      <MenuItem key={machine.id} value={machine.id}>
-        { machine.name }
-      </MenuItem>
-    ))
-  }
+    {
+      props.computes.fetched &&
+      props.computes.data.map(machine => (
+        <MenuItem key={machine.id} value={machine.id}>
+          {machine.name}
+        </MenuItem>
+      ))
+    }
   </TextField>
 ))

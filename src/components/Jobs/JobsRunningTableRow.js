@@ -11,6 +11,10 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import { terminateJob, getJobs } from '../../actions/jobActions';
 import ConfirmActionModal from '../ConfirmActionModal';
 import { getStandardOut, getStandardError, showStandardError, showStandardOut } from '../../actions/jobActions';
+import RepeatIcon from '@material-ui/icons/Loop';
+
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 class JobsRunningTableRow extends Component {
@@ -26,10 +30,24 @@ class JobsRunningTableRow extends Component {
     this.setState({ anchorEl: null });
   };
 
+
+  handleCopyTextClick = () => {
+    this.setState({ message: 'Copied!' })
+  }
+
+  handleCopyTextMouseOut = () => {
+    const { message } = this.state;
+    if (message !== 'Click to copy Job ID') {
+      setTimeout(() => this.setState({ message: 'Click to copy Job ID' }), 700)  // TODO
+    }
+  }
+
+
   state = {
     anchorEl: null,
     open: false,
     job: null,
+    message: 'Click to copy Job ID',
   }
 
   render() {
@@ -40,29 +58,40 @@ class JobsRunningTableRow extends Component {
     return (
 
       <TableRow
+        className='flex'
         hover={job.status === "RUNNING"}
         onClick={job.status === "RUNNING" ? openPerformanceDrawer(job, true) : undefined}
         key={job.id}
       >
-        <TableCell component="th" scope="row">
-          {job.name}
+        <TableCell className='flex' component="th" scope="row">
+              <Tooltip title={ this.state.message }  >
+                <CopyToClipboard text={job.job_id}>
+                  <div onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
+                    {job.name}
+                  </div>
+                </CopyToClipboard>
+              </Tooltip>
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           {job.user_id}
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           {job.hasResults ? 'Yes' : 'No'}
         </TableCell>
-        <TableCell>
-          {job.status}
+        <TableCell className='flex'>
+          <span style={{ marginRight: 6 }}>{ job.status }</span>
+          {
+            job.status !== 'RUNNING' && <RepeatIcon color='action' className='rotate' />
+          }
+
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           {job.created.toLocaleString()}
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           {job.modified.toLocaleString()}
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           <ConfirmActionModal
             message='Are you sure you want to terminate this job?'
             handleConfirm={handleTerminateClick(job.job_id)}
@@ -77,7 +106,7 @@ class JobsRunningTableRow extends Component {
             </IconButton>
           </ConfirmActionModal>
         </TableCell>
-        <TableCell>
+        <TableCell className='flex'>
           <IconButton
             onClick={this.handlePopoverOpen}
             disabled={job.status !== 'RUNNING'}
@@ -88,10 +117,10 @@ class JobsRunningTableRow extends Component {
             <MoreIcon />
           </IconButton>
           <Menu onClose={this.handlePopoverClose} id="render-props-menu" anchorEl={anchorEl} open={open} >
-              <MenuItem onClick={() => { history.push(`/files#/jobs/${job.job_id}`) }}>Files</MenuItem>
-              <MenuItem onClick={showStandardOut} >Standard Out</MenuItem>
-              <MenuItem onClick={showStandardError}>Standard Error</MenuItem>
-            </Menu>
+            <MenuItem onClick={() => { history.push(`/files#/jobs/${job.job_id}`) }}>Files</MenuItem>
+            <MenuItem onClick={showStandardOut} >Standard Out</MenuItem>
+            <MenuItem onClick={showStandardError}>Standard Error</MenuItem>
+          </Menu>
         </TableCell>
       </TableRow>
     )
@@ -106,7 +135,6 @@ const mapDispatchToProps = (dispatch) => {
     getStandardError: (id) => dispatch(getStandardError(id)),
     showStandardError: () => dispatch(showStandardError()),
     showStandardOut: () => dispatch(showStandardOut()),
-
   }
 }
 

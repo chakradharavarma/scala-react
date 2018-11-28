@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import classnames from 'classnames'
 import FileModal from './FileModal';
 import NameModal from './NameModal';
@@ -50,27 +51,28 @@ function getSorting(order, orderBy) {
 
 class Files extends Component {
 
+  
   componentDidMount() {
-    window.addEventListener("hashchange", this.onHashChange, false);
-    const { fetchFolder, folder } = this.props;
-    const hash = window.location.hash;
-    if (hash) {
-      fetchFolder(hash.substring(1))()
-    } else {
-      fetchFolder(folder.path)();
-    }
+    // Add the hash if it doesn't exist and fetch the folder
+    const { fetchFolder, folder, history } = this.props;
+    const hash = history.location.hash;
+    const path = hash ? hash.substring(1) : folder.path
+    fetchFolder(path)();
+    this.unlisten = history.listen(this.onHashChange);
+    
   }
 
 
   componentWillUnmount() {
-    const { fetchFolder } = this.props;
-    window.removeEventListener("hashchange", this.onHashChange, false);
-    fetchFolder('/')();
+    // Remove the hash and stop listening
+    const { history } = this.props;
+    this.unlisten()
+    history.replace(history.location.pathname)
   }
 
-  onHashChange = () => {
+  onHashChange = (location, _) => {
     const { fetchFolder, modal } = this.props;
-    const hash = window.location.hash;
+    const hash = location.hash;
     if (!modal && hash) {
       fetchFolder(decodeURI(hash.substring(1)))()
     }
@@ -127,10 +129,16 @@ class Files extends Component {
     )
 
 
-
     let parts = path.split('/')
-    if (modal) {
-      parts.splice(1, 2)
+    const tooBig = path.length > 75
+    const cut = modal || tooBig
+    console.log(path.length);
+    if (cut) {
+      if (modal) parts.splice(1, 2)
+      else if (tooBig) {
+        parts.splice(1, 1)
+        parts = ['..'].concat(parts)
+      }
     }
 
     const rows = data
@@ -163,7 +171,7 @@ class Files extends Component {
                   .map((part, i) => (
                     <span key={`file-path-${i}`}
                       className='card-file-header-path'
-                      onClick={fetchFolder(path.split('/').slice(0, i + (modal ? 3 : 1)).join('/') || '/')} >
+                      onClick={fetchFolder(path.split('/').slice(0, i + (cut ? 3 : 1)).join('/') || '/')} >
                       {(i !== 1) ? '/' : ''} {part}
                     </span>
                   ))
@@ -176,12 +184,13 @@ class Files extends Component {
               <ScalaLoader centered active />
             ) : (
                 <Fade in timeout={400}>
-                  <Table className="file-explorer-table">
-                    <TableHead>
-                      <TableRow>
+                  <Table className="file-explorer-table flex">
+                    <TableHead className='flex'>
+                      <TableRow className='flex'>
                         {columnData.map(column => {
                           return (
                             <TableCell
+                              className='flex'
                               key={column.id}
                               numeric={column.numeric}
                               padding={column.disablePadding ? 'none' : 'default'}
@@ -205,7 +214,7 @@ class Files extends Component {
                         }, this)}
                       </TableRow>
                     </TableHead>
-                      <TableBody classes={{ root: 'file-explorer-table-body' }}>
+                      <TableBody classes={{ root: 'file-explorer-table-body flex' }}>
                         {
                           rows
                             .map((row, i) =>
@@ -251,5 +260,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     form: 'filesFilter',
     destroyOnUnmount: false,
     forceUnregisterOnUnmount: true
-  })(Files)
+  })(withRouter(Files))
 );

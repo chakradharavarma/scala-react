@@ -176,6 +176,7 @@ body {
 .card-file-header-path {
     margin-left: 18px;
     font-weight: 300;
+    white-space: nowrap;
     cursor: pointer;
 }
 
@@ -430,6 +431,22 @@ body {
 
 }
 
+.monthly-usage-details {
+    display: unset;
+    flex-direction: column;
+
+}
+
+.TODOmonthly-usage-details:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: linear-gradient( rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100% );
+  }
+
 .monthly-usage-summary {
     background-color: #5e8dbf !important;
     display: flex;
@@ -549,6 +566,7 @@ body {
     text-transform: uppercase;
     display: inline-block !important;
     padding-right: 8px;
+    line-height: 1.5em !important;
 }
 
 .confirm-workflow-value {
@@ -712,7 +730,8 @@ body {
 
 .file-explorer-item {
     width: fit-content;
-}
+    text-overflow: ellipsis;
+    overflow: hidden;}
 
 .file-explorer-item:hover {
     cursor: pointer;
@@ -770,10 +789,27 @@ div:focus {
 
 .pending-uploads-container {
     position:relative;
-    height: 12vh;
+    min-height: 10vh;
     overflow: scroll;
     overflow-y: scroll;
-    padding: 4px 0;
+    padding: 2vh 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 18vh;
+}
+
+
+.pending-upload-file {
+    font-weight: 300;
+    line-height: 1.8em !important;
+    text-align: center;
+    width: fit-content;
+}
+
+.pending-upload-file:hover {
+    font-weight: 600;
+    color: #7C0A02;
 }
 
 
@@ -847,8 +883,14 @@ div:focus {
 }
 
 
+.job-details-row-item-title.link {
+    text-decoration: underline !important;
+    font-weight: 400 !important;
+}
+
 .job-details-row-item-title.link:hover {
-    text-decoration: underline;
+    cursor: grab;
+    font-weight: 900 !important;
 }
 
 
@@ -1045,44 +1087,43 @@ div:focus {
     position: relative;
 }*/
 
-tr {
+tr.flex {
     display: flex !important;
     min-height: 60px !important;
     border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
 }
 
-thead {
+thead.flex {
     flex-basis: 60px;
 }
 
-thead > tr { 
+thead.flex > tr.flex { 
     z-index: 2;
     background-color: white;
 }
 
-thead, tbody {
+thead.flex, tbody.flex {
     display: flex !important;
     flex-direction: column !important;
     min-width: 728px;
     min-height: 60px;
-    user-select: none;
     vertical-align: middle;
     visibility: visible;
 }
 
-tbody {
+tbody.flex {
     position: relative !important;
     overflow-y: scroll;
     vertical-align: middle;
 }
 
-table {
+table.flex {
     display: flex !important;
     flex-direction: column;
     max-width: stretch;
 }
 
-td, th {
+td.flex, th.flex {
     border-bottom: 0px !important;
     display: flex !important;
     align-items: center;
@@ -1117,8 +1158,9 @@ td, th {
     padding-top: 24px !important;
 }
 
-.chart-container {
+.chart-container {    
     display: flex;
+    margin: 2vh 2vw 0;
 }
 
 ::-webkit-scrollbar {
@@ -1147,4 +1189,54 @@ td, th {
 .current-jobs-error {
     text-transform: uppercase;
     font-weight: 100;
+}
+
+.toggle-cumulative-checkbox {
+    position: relative;
+    display: block;
+    align-items: flex-start;
+    top: 100px;
+    right: 100px;
+}
+
+.rotate {
+	animation: rotating 2.4s linear infinite;
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.confirm-workflow-file {
+    margin: 0.5vh 0 0 0.5vw !important;
+}
+
+.date-picker-container {
+    position: relative;
+    z-index: 1;
+    left: 124px;
+    display: flex;
+    margin: 1rem 0rem;
+}
+
+.DateRangePicker {
+    width: 340px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.30), 0 3px 2px rgba(0,0,0,0.22);
+}
+  
+.DateRangePickerInput {
+    width: 100%
+}
+
+.DateInput_input {
+    font-size: 16px;
+}
+
+.recharts-responsive-container {
+    top: -84px;
 }

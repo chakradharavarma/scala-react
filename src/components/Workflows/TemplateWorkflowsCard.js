@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
@@ -7,10 +6,13 @@ import Grid from '@material-ui/core/Grid';
 import CardContent from '@material-ui/core/CardContent';
 import CreateWorkflowStepper from '../CreateWorkflowStepper';
 
-export default class TemplateWorkflows extends Component {
+export default class TemplateWorkflowCard extends Component {
 
   render() {
-    const { workflow, large } = this.props;
+    const { workflow, large, computes } = this.props;
+    const { data, fetched } = computes;
+
+    const instanceType = fetched && data.find(compute => compute.instanceType === workflow.resources.compute).name
 
     return (
       <CreateWorkflowStepper
@@ -34,14 +36,14 @@ export default class TemplateWorkflows extends Component {
                   Presets:
                 </Typography>
                 <Grid className='card-metadata' container spacing={8} >
-                  <Grid item xs={4} >
+                  <Grid item xs={3} >
                     {`v${workflow.version}`}
                   </Grid>
-                  <Grid item xs={4} >
+                  <Grid item xs={3} >
                     {`${workflow.resources.instanceCount} nodes`}
                   </Grid>
-                  <Grid item xs={4} >
-                    {workflow.resources.compute}
+                  <Grid item xs={6} >
+                    {instanceType}
                   </Grid>
                 </Grid>
               </CardContent>
@@ -51,12 +53,4 @@ export default class TemplateWorkflows extends Component {
       />
     );
   }
-}
-
-TemplateWorkflows.defaultProps = {
-  workflows: [],
-}
-
-TemplateWorkflows.propTypes = {
-  workflows: PropTypes.array,
 }

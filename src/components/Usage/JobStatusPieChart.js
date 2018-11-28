@@ -20,7 +20,7 @@ export default class JobStatusPieChart extends Component {
         <Typography className='job-status-chart-title' component='div' color='secondary' variant='headline'>
           Job Status
         </Typography>
-        <PieChart width={300} height={240}>
+        <PieChart width={300} height={260}>
           <Pie
             data={data}
             dataKey="value"

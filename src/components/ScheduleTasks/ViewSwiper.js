@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 import ScheduleField from './ScheduleField';
 import SelectWorkflow from './SelectWorkflow';
@@ -40,7 +41,6 @@ const styles = theme => ({
   },
   button: {
     alignSelf: 'flex-end',
-    marginRight: 96,
     marginBottom: 8,
     width: 96,
     justifyContent: 'space-between',
@@ -48,6 +48,11 @@ const styles = theme => ({
   gridContainer: {
     justifyContent: 'center',
   },
+  buttonGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  }
 });
 
 class ViewsSwiper extends Component {
@@ -72,20 +77,20 @@ class ViewsSwiper extends Component {
     dispatch(reset('createSchedule'));
     handleClose();
   }
-l
+  l
   render() {
-    const { classes, theme } = this.props;
+    const { classes, theme, handleClose } = this.props;
     return (
       <div className={classes.root}>
-          {
-            false && (
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-          fullWidth
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
+        {
+          false && (
+            <Tabs
+              value={this.state.value}
+              onChange={this.handleChange}
+              fullWidth
+              indicatorColor="secondary"
+              textColor="secondary"
+            >
               <Fragment>
                 <Tab className={classes.tab} disableRipple label="Custom CRON" />
                 <Tab className={classes.tab} disableRipple label="Minutes" />
@@ -93,11 +98,11 @@ l
                 <Tab className={classes.tab} disableRipple label="Daily" />
                 <Tab className={classes.tab} disableRipple label="Weekly" />
               </Fragment>
-        </Tabs>
+            </Tabs>
             // todo
           )
         }
-          <SwipeableViews
+        <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
@@ -115,10 +120,17 @@ l
             <SelectWorkflow />
           </TabContainer>
         </SwipeableViews>
-        <Button onClick={this.handleSubmit} className={classes.button} color='secondary'>
-          <SaveIcon />
-          SAVE
-        </Button>
+        <div className={classes.buttonGroup}>
+          <Button onClick={this.handleSubmit} className={classes.button} color='secondary'>
+            <SaveIcon />
+            SAVE
+          </Button>
+          <Button onClick={handleClose} className={classes.button} color='secondary'>
+            <CloseIcon />
+            CLOSE
+          </Button>
+        </div>
+
       </div>
     );
   }
@@ -130,8 +142,8 @@ ViewsSwiper.propTypes = {
 };
 
 export default reduxForm({
-    form: 'createSchedule',
-    destroyOnUnmount: false,
-    forceUnregisterOnUnmount: false,
-  })(withStyles(styles, { withTheme: true })(ViewsSwiper)
+  form: 'createSchedule',
+  destroyOnUnmount: false,
+  forceUnregisterOnUnmount: false,
+})(withStyles(styles, { withTheme: true })(ViewsSwiper)
 );

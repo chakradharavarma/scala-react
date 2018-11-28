@@ -56,6 +56,7 @@ class EditCronModal extends Component {
       id: schedule.id,
       workflowId: schedule.workflowId,
       cron: schedule.cron,
+      files: [],
     }));
   }
 

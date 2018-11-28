@@ -44,7 +44,7 @@ class JobsRunningTable extends Component {
   }
 
   async componentDidMount() {
-    setInterval(this.fetchJobs, 10000);
+    setInterval(this.fetchJobs, 5000);
   }
 
   fetchJobs = async () => {
@@ -62,24 +62,25 @@ class JobsRunningTable extends Component {
       <Fragment>
 
         <Table
-          className={classes.table}
+          className={`${classes.table} flex`}
         >
-          <TableHead>
-            <TableRow>
-              <TableCell>Workflow Name</TableCell>
-              <TableCell>User</TableCell>
-              <TableCell>Results available</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Created date</TableCell>
-              <TableCell>Modified date</TableCell>
-              <TableCell>Terminate job</TableCell>
-              <TableCell>Actions</TableCell>
+          <TableHead className='flex'>
+            <TableRow className='flex'> 
+              <TableCell className='flex'>Workflow Name</TableCell>
+              <TableCell className='flex'>User</TableCell>
+              <TableCell className='flex'>Results available</TableCell>
+              <TableCell className='flex'>Status</TableCell>
+              <TableCell className='flex'>Created date</TableCell>
+              <TableCell className='flex'>Modified date</TableCell>
+              <TableCell className='flex'>Terminate job</TableCell>
+              <TableCell className='flex'>Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {jobs.map(job => {
+          <TableBody className='flex'>
+            {jobs.map((job, i) => {
               return (<JobsRunningTableRow
                 job={job}
+                key={`running-job-${i}`}
                 openPerformanceDrawer={this.openPerformanceDrawer}
               />);
             })}

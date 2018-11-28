@@ -13,6 +13,7 @@ import ImpersonationReducer from './impersonationReducer';
 import JobOutputReducer from './jobOutputReducer';
 import JobPerformanceReducer from './jobPerformanceReducer';
 import ComputesReducer from './computesReducer';
+import DailyCostReducer from './dailyCostReducer';
 import { reducer as FormReducer } from 'redux-form'
 
 const reducers = combineReducers({
@@ -31,6 +32,7 @@ const reducers = combineReducers({
 	computes:				ComputesReducer,
 	jobPerformance:			JobPerformanceReducer,
 	jobOutput: 				JobOutputReducer,
+	dailyCost: 				DailyCostReducer,
 });
 
 export default reducers;

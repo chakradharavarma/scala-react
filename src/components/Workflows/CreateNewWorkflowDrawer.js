@@ -20,7 +20,8 @@ class CreateNewWorkflowDrawer extends Component {
 
   render() {
     const { open } = this.state;
-    const { data, fetched } = this.props.templateWorkflows
+    const { templateWorkflows } = this.props;
+    const { data, fetched } = templateWorkflows
     const createNewWorkflowTrigger = (
       <Button style={{ alignSelf: 'flex-start', marginLeft: 28 }} color='secondary'>
         <AddIcon />
@@ -63,7 +64,7 @@ class CreateNewWorkflowDrawer extends Component {
 
 const mapStateToProps = state => {
   return {
-    templateWorkflows: state.templateWorkflows
+    templateWorkflows: state.templateWorkflows,
   }
 }
 

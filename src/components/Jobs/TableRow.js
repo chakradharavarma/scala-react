@@ -83,6 +83,7 @@ class EnhancedTable extends React.Component {
         <Fragment>
                     <TableRow
                       hover
+                      className='flex'
                       onClick={event => this.handleClick(event, n.id)}
                       role='checkbox'
                       aria-checked={isSelected}
@@ -90,25 +91,27 @@ class EnhancedTable extends React.Component {
                       key={n.id}
                       selected={isSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell className='flex' padding="checkbox">
                         <Checkbox checked={isSelected} color='#ffffff' />
                       </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
+                      <TableCell className='flex' component="th" scope="row" padding="none">
                         {n.name}
                       </TableCell>
-                      <TableCell>{n.status}</TableCell>
-                      <TableCell>{n.update_date}</TableCell>
-                      <TableCell>{n.duration}</TableCell>
-                      <TableCell>{n.desktop}</TableCell>
-                      <TableCell >{n.desktop}</TableCell>
-                      <TableCell >{n.options}</TableCell>
+                      <TableCell className='flex'>{n.status}</TableCell>
+                      <TableCell className='flex'>{n.update_date}</TableCell>
+                      <TableCell className='flex'>{n.duration}</TableCell>
+                      <TableCell className='flex'>{n.desktop}</TableCell>
+                      <TableCell className='flex'>{n.desktop}</TableCell>
+                      <TableCell className='flex'>{n.options}</TableCell>
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                <TableRow className='flex' style={{ height: 49 * emptyRows }}>
+                  <TableCell className='flex' colSpan={6} />
                 </TableRow>
+              )
+              }
       </Fragment>
     );
   }

@@ -22,12 +22,12 @@ export const createDesktop = (type) => {
     }
 }
 
-export const createDesktopJob = (jobid, desktopType) => {
+export const createDesktopJob = (jobID, desktopType) => {
     return {
         type: CREATE_DESKTOP_JOB,
         payload: {
-            desktopType,
-            jobid
+            jobID,
+            desktopType
         }
     }
 }

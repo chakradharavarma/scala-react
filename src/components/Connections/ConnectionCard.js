@@ -62,7 +62,7 @@ class ConnectionCard extends Component {
               <span style={{ fontWeight: 800, textTransform: 'uppercase' }}>
                 Connection String:
               </span>
-              <Tooltip title={this.state.message && connectionString}  >
+              <Tooltip title={connectionString ? this.state.message : 'Please wait'}  >
                 <CopyToClipboard text={connectionString}>
                   <div className='connection-string' onClick={this.handleCopyTextClick} onMouseOut={this.handleCopyTextMouseOut} >
                     {connectionString || '\u00A0'}

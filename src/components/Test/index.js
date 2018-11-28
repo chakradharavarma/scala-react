@@ -1,25 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import PerformanceChart from '../PerformanceChart';
+import { connect } from 'react-redux';
+import Typography from "@material-ui/core/Typography";
+
 
 class Test extends Component {
 
   render() {
-    const { data, fetching, fetched } = this.props.jobPerformance
-    if (fetching) {
-      return null
-    }
-    if (!fetched) {
-      return <div>unable to get results</div>
-    }
-
     return (
       <div>
-        {
-          data.map((chart, i) => 
-            <PerformanceChart key={`chart-${i}`} chart={chart} />  
-          )
-        }
+        <Typography className='job-status-chart-title' color='secondary' variant='headline'>
+          No Data
+        </Typography>
       </div>
     );
   }

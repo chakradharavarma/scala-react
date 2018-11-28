@@ -33,14 +33,16 @@ class CreateWorkflowStepper extends Component {
     const { workflow, dispatch } = this.props;
     if(workflow) {
       dispatch(initialize('createWorkflow', {
-        ...workflow
+        ...workflow,
+        'files': [],
       }));
     } else {
       dispatch(initialize('createWorkflow', {
         resources: {
           instanceCount: 1,
-          compute: 'c4.large'
-        }
+          compute: 'c4.large',
+        },
+        files: [],
       }));
     }
   };

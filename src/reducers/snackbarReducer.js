@@ -267,8 +267,20 @@ export default function (state=initialState, action) {
       notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
       state = processQueue(state, notification);
       break
-    case actions.IMPERSONATE_USER_SUCCESS:
-      notification = createNotification('Successfully impersonating user', SUCCESS);
+    case actions.CLONE_WORKFLOW_SUCCESS:
+      notification = createNotification('Successfully cloned workflow', SUCCESS);
+      state = processQueue(state, notification);
+      break
+      case actions.IMPERSONATE_USER_SUCCESS:
+      notification = createNotification(formatErrorMessage(action.payload.response.data), ERROR);
+      state = processQueue(state, notification);
+      break
+    case actions.DROP_FAILED:
+      notification = createNotification(formatErrorMessage(`Drop failed for ${action.payload.file}`), ERROR);
+      state = processQueue(state, notification);
+      break
+    case actions.UNKNOWN_ERROR:
+      notification = createNotification(formatErrorMessage(`An unknown error occured`), ERROR);
       state = processQueue(state, notification);
       break
     default:

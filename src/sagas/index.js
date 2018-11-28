@@ -4,7 +4,10 @@ import moment from 'moment';
 import { getMode } from '../common/helpers'
 import { JOB_PERFORMANCE_RESOLUTION } from '../common/consts'
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
+import { createBrowserHistory } from "history";
 import Amplify, { Auth } from 'aws-amplify';
+
+const history = createBrowserHistory();
 
 function setAuthConfiguration() {
     return axios.get("/api/config/get")
@@ -29,7 +32,7 @@ function setAuthConfiguration() {
                 }
             });
         }).catch(err => {
-            if(err.response.data.includes('Proxy error')) {
+            if (err.response.data.includes('Proxy error')) {
                 err.response.data = 'Unable to fetch auth config. Make sure API is live';
             }
             return err
@@ -74,7 +77,14 @@ function getJobPerformance() {
     const start = end - (hours * 60 * 60)
     const query = `(100 - (avg by (jobId, resourceType) (irate(node_cpu_seconds_total{mode="idle"}[1m]))) * 100)`
     const url = `/api/v1/query_range?query=${query}&start=${start}&end=${end}&step=${JOB_PERFORMANCE_RESOLUTION}`;
-    return axios.get(url)   
+    return axios.get(url)
+        .catch(err => err);
+}
+
+function getDailyCost() {
+    const today = moment().format("YYYY-MM-DD")
+    const url = `/api/billing/get/daily/2018-09-01/${today}`
+    return axios.get(url)
         .catch(err => err);
 }
 
@@ -111,6 +121,18 @@ function getJobs() {
 function getComputes() {
     const url = '/api/config/computes';
     return axios.get(url)
+        .catch(err => err);
+}
+
+function restartJob({ jobID }) {
+    const url = `/api/job/restart/${jobID}`;
+    return axios.post(url)
+        .catch(err => err);
+}
+
+function cloneWorkflow({ id }) {
+    const url = `/api/workflow/copy/${id}`;
+    return axios.post(url)
         .catch(err => err);
 }
 
@@ -184,7 +206,7 @@ function createWorkflow(payload) {
 }
 
 function deleteWorkflow({ id }) {
-    const url = `/api/workflow/delete?id=${id}`;
+    const url = `/api/workflow/delete/${id}`;
     return axios.delete(url)
         .catch(err => err);
 }
@@ -209,17 +231,18 @@ function createFolder(payload) {
 }
 
 
-function checkDesktopJob({ jobid }) {
-    const url = `/desktopsJobsAjax/?jobid=${jobid}`;
+function checkDesktopJob({ jobID }) {
+    const url = `/api/desktop/get/${jobID}`;
     return axios.get(url)
         .catch(err => err);
 }
 
-/*
-function createDesktopJob({jobid, desktopType}) {
-    const url = `/createjobdesktop/?desktopType=${desktopType}&jobid=${jobid}`;
-    return axios.get(url).catch(err => err);
-}*/
+function createDesktopJob(payload) {
+    const url = `/api/job/create/desktop`;
+    const data = JSON.stringify(payload)
+    return axios.post(url, data)
+        .catch(err => err);
+}
 
 function deleteSchedule({ id }) { /* todo fix form data */
     const url = `/api/schedule/delete/${id}`;
@@ -303,10 +326,9 @@ function createDesktop(payload) {
         .catch(err => err);
 }
 
-function deleteDesktop(payload) {
-    const url = `/api/desktop/delete`;
-    const data = JSON.stringify(payload)
-    return axios.post(url, data)
+function deleteDesktop({ id }) {
+    const url = `/api/desktop/delete/${id}`;
+    return axios.delete(url)
         .catch(err => err);
 }
 
@@ -398,7 +420,7 @@ function* callDownloadFile(action) {
 }
 
 function* callStandardError(action) {
-    let payload = yield call(getFile, {path: `/jobs/${action.payload.id}/apperr`});
+    let payload = yield call(getFile, { path: `/jobs/${action.payload.id}/apperr` });
     if (payload.data) {
         yield put({ type: actions.GET_STD_ERR_SUCCESS, payload });
     } else {
@@ -407,7 +429,7 @@ function* callStandardError(action) {
 }
 
 function* callStandardOut(action) {
-    let payload = yield call(getFile, {path: `/jobs/${action.payload.id}/appout`});
+    let payload = yield call(getFile, { path: `/jobs/${action.payload.id}/appout` });
     if (payload.status === 200) {
         yield put({ type: actions.GET_STD_OUT_SUCCESS, payload });
     } else {
@@ -440,7 +462,7 @@ function* callLogIn(action) {
 
 function* callRegister(action) {
     const payload = yield call(register, action.payload)
-    if (payload.code || payload instanceof String  || typeof payload === 'string') { // even amazon's not perfect ¯\_(ツ)_/¯
+    if (payload.code || payload instanceof String || typeof payload === 'string') { // even amazon's not perfect ¯\_(ツ)_/¯
         yield put({ type: actions.REGISTER_FAILED, payload });
     } else if (payload instanceof Object) {
         yield put({ type: actions.REGISTER_SUCCESS, payload });
@@ -484,6 +506,26 @@ function* callJobs() {
     } else {
         yield put({ type: actions.FETCHED_JOBS_FAILED, payload });
     }
+}
+
+function* callRestartJob(action) {
+    const payload = yield call(restartJob, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.RESTART_JOB_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.RESTART_JOB_FAILED, payload });
+    }
+}
+
+function* callCloneWorkflow(action) {
+    const payload = yield call(cloneWorkflow, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.CLONE_WORKFLOW_SUCCESS, payload });
+        yield callWorkflowsAvailable(action);
+    } else {
+        yield put({ type: actions.CLONE_WORKFLOW_FAILED, payload });
+    }
+
 }
 
 function* callComputes() {
@@ -566,6 +608,15 @@ function* callJobPerformance(action) {
     }
 }
 
+function* callDailyBilling(action) {
+    const payload = yield call(getDailyCost, action.payload);
+    if (payload.status === 200) {
+        yield put({ type: actions.FETCHED_DAILY_COSTS_SUCCESS, payload });
+    } else {
+        yield put({ type: actions.FETCHED_DAILY_COSTS_FAILED, payload });
+    }
+}
+
 function* callInitDirectories(action) {
     const payload = yield call(initDirectories, action);
     if (payload.status === 200) {
@@ -592,7 +643,7 @@ function* callFolder(action) {
     let payload = yield call(getFolder, action.payload);
     if (payload.status === 200) {
         payload.path = action.payload.path
-        window.location.hash = action.payload.path;
+        history.replace(`${history.location.pathname}#${action.payload.path}`);
         payload.data = payload.data.map(file => ({
             ...file,
             modified: new Date(file.modified),
@@ -605,9 +656,9 @@ function* callFolder(action) {
 
 
 function* callFile(action) {
-    if(!getMode(action.payload.path)) {
-        action.payload.response = { data: "Unable to open this file type. Please try to download it instead."}
-        yield put({ type: actions.FETCHED_FILE_FAILED, payload: action.payload } );
+    if (!getMode(action.payload.path)) {
+        action.payload.response = { data: "Unable to open this file type. Please try to download it instead." }
+        yield put({ type: actions.FETCHED_FILE_FAILED, payload: action.payload });
         return;
     }
     let payload = yield call(getFile, action.payload);
@@ -666,7 +717,7 @@ function* callJobStatus() {
     } else {
         // TODO yield put({ type: actions.FETCHED_JOBS_STATUS_FAILED, payload });
     }
-}*/ 
+}*/
 
 function* callGetData(action) {
     // first, init the dirs, then do all these async
@@ -682,6 +733,7 @@ function* callGetData(action) {
         callConnections(action),
         callDesktops(action),
         callJobPerformance(action),
+        callDailyBilling(action),
     ])
 
 }
@@ -695,10 +747,26 @@ function* callInitApp(action) {
 }
 
 function* callCreateWorkflow(action) {
-    const payload = yield call(createWorkflow, action.payload);
+    let payload = yield call(createWorkflow, action.payload);
     if (payload.status === 200) {
-        yield put({ type: actions.CREATE_WORKFLOW_SUCCESS, payload });
+        const id = payload.data;
+        if (action.payload.files.length) {
+            payload = yield uploadFiles({
+                files: action.payload.files,
+                path: `/workflow/${id}/`,
+            });
+            if (payload.status !== 200) {
+                payload = yield deleteWorkflow({ id })
+                if (payload.status === 200) {
+                    yield put({ type: actions.CREATE_WORKFLOW_FAILED, payload });
+                } else {
+                    yield put({ type: actions.UNKNOWN_ERROR });
+                }
+                return;
+            }
+        } 
         yield callWorkflowsAvailable(action);
+        yield put({ type: actions.CREATE_WORKFLOW_SUCCESS, payload });
     } else {
         yield put({ type: actions.CREATE_WORKFLOW_FAILED, payload });
     }
@@ -750,9 +818,20 @@ function* callEditSchedule(action) { // todo, make a real edit
     }
 }
 
-function* callEditWorkflow(action) { // todo, make a real edit
-    const payload = yield call(editWorkflow, action.payload);
+function* callEditWorkflow(action) { // TODO make API calls parallel
+    let payload = yield call(editWorkflow, action.payload);
     if (payload.status === 200) {
+        const id = action.payload.id;
+        if (action.payload.files) {
+            payload = yield uploadFiles({
+                files: action.payload.files,
+                path: `/workflow/${id}/`,
+            });
+            if (payload.status !== 200) {
+                yield put({ type: actions.EDIT_WORKFLOW_FAILED, payload });
+                return
+            }
+        } 
         yield put({ type: actions.EDIT_WORKFLOW_SUCCESS, payload });
         yield callWorkflowsAvailable(action);
     } else {
@@ -760,7 +839,7 @@ function* callEditWorkflow(action) { // todo, make a real edit
     }
 }
 
-function* callGetJobMetrics(action) { // todo, make a real edit
+function* callGetJobMetrics(action) {
     const payload = yield call(getJobMetrics, action.payload);
     if (payload.status === 200) {
         yield put({ type: actions.GET_JOB_METRICS_SUCCESS, payload });
@@ -797,7 +876,7 @@ function* callCreateDesktopJob(action) {
         const { conn } = payload.data;
         if (!conn) {
             yield put({ type: actions.PROMPT_JOB_DESKTOP_DNE, payload });
-            payload = yield call(checkDesktopJob, action.payload);
+            payload = yield call(createDesktopJob, action.payload);
             if (payload.data) {
                 yield put({ type: actions.CREATE_DESKTOP_JOB_SUCCESS, payload });
                 yield callDesktops(action);
@@ -1043,6 +1122,14 @@ function* getJobsSaga() {
     yield takeLatest(actions.FETCH_JOBS, callJobs)
 }
 
+function* restartJobSaga() {
+    yield takeLatest(actions.RESTART_JOB, callRestartJob)
+}
+
+function* cloneWorkflowSaga() {
+    yield takeLatest(actions.CLONE_WORKFLOW, callCloneWorkflow)
+}
+
 export default function* root() {
     yield all([
         fork(getInitSaga),
@@ -1084,5 +1171,7 @@ export default function* root() {
         fork(jobPerformanceSaga),
         fork(getConnectionsSaga),
         fork(getJobsSaga),
+        fork(restartJobSaga),
+        fork(cloneWorkflowSaga),
     ])
 }

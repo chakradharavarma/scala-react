@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import Dropzone from 'react-dropzone'
 import {
   numberOfNodes,
-  cpusPerNode,
-  tasksPerNode,
   clusterType
 } from '../TextField/fields';
+import { change, formValueSelector } from 'redux-form';
 
 class WorkflowProps extends Component {
 
@@ -18,51 +19,58 @@ class WorkflowProps extends Component {
     this.setState({ [prop]: event.target.value });
   };
 
+
+  state = {
+    files: [],
+  }
+
+  handleDrop = (accepted, rejected) => { // todo add rejected code
+    const { dropFailed, changeFiles, files } = this.props
+
+    if (rejected.length) {
+      dropFailed(rejected)
+    }
+    changeFiles(accepted.concat(files))
+
+    this.setState({ acceptedFiles: accepted.concat(this.state.acceptedFiles) });
+  }
+
   render() {
+
+    const { files } = this.props;
+    
     return (
       <div className='step-content-container'>
         <Grid container style={{ margin: 20 }} justify='center'>
           <Grid container item xs={12} spacing={32}>
             <Grid item xs={12}>
-              <Field name="resources.compute"
-                component={clusterType}
-              />
+              <Field name="resources.compute" component={clusterType} />
             </Grid>
             <Grid item xs={12} >
               <Field name="resources.instanceCount"
                 parse={val => isNaN(parseInt(val, 10)) ? null : parseInt(val, 10)}
-                type='number'            
+                type='number'
                 component={numberOfNodes}
               />
             </Grid>
-            {false &&
-              <Grid item xs={12} lg={6} >
-                <Field name="resources.cpusPerNode"
-                  parse={val => isNaN(parseInt(val, 10)) ? null : parseInt(val, 10)}
-                  type='number'            
-                  component={cpusPerNode}
-                />
-              </Grid>
-            }
-            {
-              false &&
-              <Grid item xs={12} lg={6} >
-                <Field name="resources.tasksPerNode"
-                  component={tasksPerNode}
-                />
-              </Grid>
-            }
             <Grid item xs={12}>
-              <Dropzone style={{ width: '100%' }}>
-                <Button
-                  disableRipple
-                  style={{ width: '100%', minHeight: 62 }}
-                  variant="contained"
-                  color="secondary"
-                >
-                  Add Files
-                </Button>
+              <Dropzone style={{ flex: 1, border: 'unset' }} onDrop={this.handleDrop} >
+                {({ isDragActive }) => (
+                  <Button
+                    disableRipple
+                    variant='outlined'
+                    style={{ width: '100%', height: '50%', border: '1px solid #5e8dbf', backgroundColor: isDragActive ? '#78A7D9' : '#5e8dbf', color: 'white' }}
+                  >
+                    Add or Drop Files
+                  </Button>
+                )
+                }
               </Dropzone>
+              <div className='pending-uploads-container'>
+                {
+                  files.map((file, i) => <Typography key={`file-${i}`}>{file.name}</Typography>)
+                }
+              </div>
             </Grid>
           </Grid>
         </Grid>
@@ -71,8 +79,25 @@ class WorkflowProps extends Component {
   }
 }
 
-export default reduxForm({
-  form: 'editWorkflow',
-  destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true
-})(WorkflowProps);
+const selector = formValueSelector('editWorkflow');
+
+const mapStateToProps = (state) => {
+  return {
+    files: selector(state, 'files'),
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    changeFiles: files => dispatch(change('editWorkflow', 'files', files))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({
+    form: 'editWorkflow',
+    destroyOnUnmount: false,
+    forceUnregisterOnUnmount: true
+  })(WorkflowProps)
+);

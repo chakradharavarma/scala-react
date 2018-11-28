@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IndividualJobUsage from './IndividualJobUsage';
 import JobStatusPieChart from './JobStatusPieChart';
-import BillingPieChart from './BillingPieChart';
 
 import { MONTHS } from '../../common/consts'
 
@@ -33,15 +32,14 @@ export default class MonthlyUsagePanel extends Component {
           <div style={{ margin: "0 22px" }}>
             <div className='chart-container' >
               <JobStatusPieChart usage={usage} />
-              <BillingPieChart usage={usage} />
             </div>
-            <ExpansionPanel>
+            <ExpansionPanel >
               <ExpansionPanelSummary className='expansion-panel-jobs-summary' expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}>
                 <Typography className='expansion-panel-jobs-summary-title' variant='subheading'>
                   Individual Jobs summaries
               </Typography>
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails style={{ display: 'unset' }} >
+              <ExpansionPanelDetails className='monthly-usage-details' >
                 {
                   usage.data
                     .sort((a, b) => (b.modified - a.modified))
