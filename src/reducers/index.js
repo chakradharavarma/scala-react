@@ -14,6 +14,7 @@ import JobOutputReducer from './jobOutputReducer';
 import JobPerformanceReducer from './jobPerformanceReducer';
 import ComputesReducer from './computesReducer';
 import DailyCostReducer from './dailyCostReducer';
+import GeneralReducer from './generalReducer';
 import { reducer as FormReducer } from 'redux-form'
 
 const reducers = combineReducers({
@@ -33,6 +34,7 @@ const reducers = combineReducers({
 	jobPerformance:			JobPerformanceReducer,
 	jobOutput: 				JobOutputReducer,
 	dailyCost: 				DailyCostReducer,
+	general: 				GeneralReducer,
 });
 
 export default reducers;

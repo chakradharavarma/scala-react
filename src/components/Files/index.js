@@ -67,7 +67,7 @@ class Files extends Component {
     // Remove the hash and stop listening
     const { history } = this.props;
     this.unlisten()
-    history.replace(history.location.pathname)
+    //history.replace(history.location.pathname)
   }
 
   onHashChange = (location, _) => {

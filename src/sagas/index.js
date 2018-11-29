@@ -643,7 +643,8 @@ function* callFolder(action) {
     let payload = yield call(getFolder, action.payload);
     if (payload.status === 200) {
         payload.path = action.payload.path
-        history.replace(`${history.location.pathname}#${action.payload.path}`);
+        debugger;
+        history.replace(`${window.location.pathname}#${action.payload.path}`);
         payload.data = payload.data.map(file => ({
             ...file,
             modified: new Date(file.modified),

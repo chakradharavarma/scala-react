@@ -61,9 +61,7 @@ class JobsRunningTable extends Component {
     return (
       <Fragment>
 
-        <Table
-          className={`${classes.table} flex`}
-        >
+        <Table className={`${classes.table} flex`}>
           <TableHead className='flex'>
             <TableRow className='flex'> 
               <TableCell className='flex'>Workflow Name</TableCell>
