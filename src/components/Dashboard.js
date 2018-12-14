@@ -11,6 +11,13 @@ import { initializeApp } from '../actions/generalActions'
 import { ConnectedRouter } from 'connected-react-router'
 const history = createBrowserHistory()
 
+history.listen(location => {
+  console.log(location.pathname)
+  if(location.hash && !(location.pathname ===  '/files' || location.pathname ===  '/workflow' ) ) {
+    window.location.hash = ''
+  }
+})
+ 
 const theme = createMuiTheme({
   overrides: {
     MuiStepIcon: {

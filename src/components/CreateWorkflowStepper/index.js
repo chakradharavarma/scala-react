@@ -6,6 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import Stepper from './Stepper';
 import { connect } from 'react-redux';
 import { destroy, initialize } from 'redux-form';
+import { getComputeCost } from '../../actions/pricingActions'
 
 const styles = {
   appBar: {
@@ -34,16 +35,23 @@ class CreateWorkflowStepper extends Component {
     if(workflow) {
       dispatch(initialize('createWorkflow', {
         ...workflow,
-        'files': [],
+        files: [],
+        resources: {
+          hourlyCostEstimate: 0, 
+        },
       }));
+      dispatch(getComputeCost('us-east-2', workflow.resources.compute))
     } else {
+      const defaultCompute = 'c4.large'
       dispatch(initialize('createWorkflow', {
         resources: {
           instanceCount: 1,
-          compute: 'c4.large',
+          hourlyCostEstimate: 0,
+          compute: defaultCompute,
         },
         files: [],
       }));
+      dispatch(getComputeCost('us-east-2', defaultCompute))
     }
   };
 
@@ -55,6 +63,10 @@ class CreateWorkflowStepper extends Component {
       }, EXIT_TIMEOUT);
     });
   };
+
+  componentDidMount() {
+    this.handleClickOpen()
+  }
 
   render() {
     const { handleCloseCallback } = this.props;

@@ -10,7 +10,7 @@ import {
 const initialState = {
   fetching: false,
   fetched: false,
-  path: undefined,
+  path: "/",
   contents: undefined,
 }
 

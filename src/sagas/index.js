@@ -6,6 +6,7 @@ import { JOB_PERFORMANCE_RESOLUTION } from '../common/consts'
 import { takeLatest, put, call, fork, all } from 'redux-saga/effects'
 import { createBrowserHistory } from "history";
 import Amplify, { Auth } from 'aws-amplify';
+import { change } from 'redux-form';
 
 const history = createBrowserHistory();
 
@@ -120,6 +121,12 @@ function getJobs() {
 
 function getComputes() {
     const url = '/api/config/computes';
+    return axios.get(url)
+        .catch(err => err);
+}
+
+function getComputeCost({ region, instanceType }) {
+    const url = `/api/pricing/region/${region}/${instanceType}`;
     return axios.get(url)
         .catch(err => err);
 }
@@ -344,10 +351,9 @@ function resumeDesktop({ iid }) {
         .catch(err => err);
 }
 
-function initDirectories(payload) {
+function initDirectories() {
     const url = `/api/config/init`;
-    const data = JSON.stringify(payload)
-    return axios.post(url, data)
+    return axios.post(url)
         .catch(err => err);
 }
 
@@ -440,7 +446,6 @@ function* callStandardOut(action) {
 function* callLogOut() {
     const payload = yield Auth.signOut();
     if (payload) {
-        console.log(payload);
         alert('what is this? check the console.') //todo
     }
     yield put({ type: actions.LOG_OUT_SUCCESS, payload });
@@ -497,7 +502,11 @@ function* callJobs() {
             ...job,
             created: new Date(job.created),
             modified: new Date(job.modified),
+        })).map(job => ({
+            ...job,
+            duration: job.modified - job.created,
         }))
+
         yield put({ type: actions.FETCHED_JOBS_SUCCESS, payload });
         const hasRunningJobs = payload.data.find(job => job.status === 'RUNNING')
         if (hasRunningJobs) {
@@ -525,7 +534,19 @@ function* callCloneWorkflow(action) {
     } else {
         yield put({ type: actions.CLONE_WORKFLOW_FAILED, payload });
     }
+}
 
+function* callGetComputeCost(action) {
+    const payload = yield call(getComputeCost, action.payload);
+    if (payload.status === 200) {
+        const lowestCost = Math.min(...(payload.data.map(zone => zone.hourly_cost)))
+        const lowestCostZone = payload.data.find(zone => zone.hourly_cost === lowestCost)
+        console.log(lowestCostZone)
+        yield put(change('createWorkflow', 'resources.zone', lowestCostZone.zone));
+        yield put(change('createWorkflow', 'resources.hourlyCostEstimate', lowestCostZone.hourly_cost));
+    } else {
+        yield put({ type: actions.GET_COMPUTE_COST_FAILED, payload });
+    }
 }
 
 function* callComputes() {
@@ -634,16 +655,13 @@ function* callConfigureAuth(action) {
     } else {
         yield put({ type: actions.FETCHED_AUTH_CONFIG_FAILED, payload });
     }
-
 }
-
 
 function* callFolder(action) {
     action.payload = action.payload ? action.payload : { path: '/' }; // TODO clean up
     let payload = yield call(getFolder, action.payload);
     if (payload.status === 200) {
         payload.path = action.payload.path
-        debugger;
         history.replace(`${window.location.pathname}#${action.payload.path}`);
         payload.data = payload.data.map(file => ({
             ...file,
@@ -955,7 +973,7 @@ function* callDeleteSchedule(action) {
 function* callRunWorkflow(action) {
     const payload = yield call(runWorkflow, action.payload);
     if (payload.status === 200) {
-        yield put({ type: actions.RUN_WORKFLOW_SUCCESS, payload });
+        yield put({ type: actions.RUN_WORKFLOW_SUCCESS, payload: action.payload });
         yield callJobs(action);
         // TODO yield callJobStatus(action);
     } else {
@@ -1131,6 +1149,10 @@ function* cloneWorkflowSaga() {
     yield takeLatest(actions.CLONE_WORKFLOW, callCloneWorkflow)
 }
 
+function* computeCostSaga() {
+    yield takeLatest(actions.GET_COMPUTE_COST, callGetComputeCost)
+}
+
 export default function* root() {
     yield all([
         fork(getInitSaga),
@@ -1174,5 +1196,6 @@ export default function* root() {
         fork(getJobsSaga),
         fork(restartJobSaga),
         fork(cloneWorkflowSaga),
+        fork(computeCostSaga),
     ])
 }

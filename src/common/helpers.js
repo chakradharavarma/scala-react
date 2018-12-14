@@ -57,11 +57,17 @@ export const getDuration = function (start, end) {
   const hours = modifiedDate.diff(createdDate, "hours") - (days * 24)
   const minutes = modifiedDate.diff(createdDate, "minutes") - ((days * 24 * 60) + hours * 60)
   const seconds = modifiedDate.diff(createdDate, "seconds") % 60
-  return `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : ''} \
-                    ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : ''} \
-                    ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : ''} \
-                    ${seconds && !(hours || days) ? `${seconds} seconds` : ''} \
-                    `
+  const milliseconds = modifiedDate.diff(createdDate, "milliseconds") % 60
+  if(!days && !hours && !minutes && !seconds && !milliseconds) {
+    return null
+  } else {
+    return `${days ? `${days} ${days === 1 ? 'day' : 'days'}` : ''} \
+    ${hours ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : ''} \
+    ${minutes && !days ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : ''} \
+    ${seconds && !(hours || days) ? `${seconds} seconds` : ''} \
+    ${milliseconds && !(hours || days || minutes) ? `${milliseconds} milliseconds` : ''} \
+    `
+  }
 }
 
 /*

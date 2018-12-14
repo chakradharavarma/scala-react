@@ -38,14 +38,17 @@ class ScheduleCard extends Component {
     const { deleteSchedule, workflows, schedule } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-    if (!workflows) {
+    if (!workflows.fetched) {
       return null;
     }
+
     const workflow = workflows.data.find(workflow => workflow.id === schedule.workflowId);
     if (!workflow) {
-      deleteSchedule(schedule.id)
+      if(schedule.id) {
+        deleteSchedule(schedule.id)()
+      }
       return null;
-    }
+    } 
 
     return (
       <Grid item xs={12} lg={6}  >
@@ -53,7 +56,7 @@ class ScheduleCard extends Component {
           <CardContent>
             <div className='workflow-title-container'>
               <Typography color='secondary' gutterBottom variant="title">
-                {workflow.name}
+                { workflow.name }
               </Typography>
               <div>
                 <IconButton
@@ -71,7 +74,7 @@ class ScheduleCard extends Component {
                   PaperProps={{
                     style: {
                       width: 120,
-                      boxShadow: '0 4px 15px rgba(0,0,0,0.05)'
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
                     }
                   }}
                 >
@@ -101,7 +104,7 @@ class ScheduleCard extends Component {
                 Schedule: {schedule.cron}
               </Grid>
               <Grid item xs={12} >
-                Scheduler ID: {schedule.id}
+                Schedule ID: {schedule.id}
               </Grid>
               <Grid item xs={12} >
                 Workflow Name: {workflow.name}

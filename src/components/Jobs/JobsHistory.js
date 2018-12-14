@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -26,6 +25,7 @@ import { createDesktopJob } from '../../actions/desktopActions';
 import { restartJob } from '../../actions/jobActions';
 import { ACTIVE_STATUS } from '../../common/consts';
 import { getDuration } from '../../common/helpers';
+import { formValueSelector } from 'redux-form';
 
 function getSorting(order, orderBy) {
   return (a, b) => {
@@ -47,7 +47,7 @@ const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Job Name', sortable: true },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status', sortable: true },
   { id: 'created', numeric: false, disablePadding: false, label: 'Started', sortable: true },
-  { id: 'running_time', numeric: false, disablePadding: false, label: 'Duration', sortable: true },
+  { id: 'duration', numeric: false, disablePadding: false, label: 'Duration', sortable: true },
   { id: 'results', numeric: false, disablePadding: false, label: 'Results', sortable: false },
   { id: 'restart', numeric: false, disablePadding: false, label: 'Restart', sortable: false },
 ];
@@ -63,11 +63,6 @@ class JobsCardHead extends Component {
     return (
       <TableHead className='flex'>
         <TableRow className='flex'>
-          {
-            false && (
-              <TableCell padding="checkbox" />
-            )
-          }
           {columnData.map(column => {
             return (
               <TableCell
@@ -81,6 +76,7 @@ class JobsCardHead extends Component {
                   column.sortable ? (
                     <Tooltip
                       title="Sort"
+                      disableFocusListener
                       placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                       enterDelay={300}
                     >
@@ -206,14 +202,17 @@ class JobsCard extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, filterForm, jobs, onClickRestartJob, history } = this.props;
+    const { classes, filter, jobs, onClickRestartJob, history } = this.props;
     const { fetching } = jobs;
     const { order, orderBy, selected, rowsPerPage, page, drawerOpen, job } = this.state;
     let data;
-    if (filterForm) {
+    if (filter) {
       data = jobs.data
-        .filter(job => (job.name.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')) ||
-          (job.job_id.toLowerCase().includes((filterForm.values && filterForm.values.filter.toLowerCase()) || '')))
+        .filter(job => 
+          (job.name.toLowerCase().includes(filter )) ||
+          (job.status.toLowerCase().includes(filter )) ||
+          (job.job_id.toLowerCase().includes(filter))
+        )
     } else {
       data = jobs.data
     }
@@ -255,7 +254,7 @@ class JobsCard extends Component {
                             return (
                               <TableRow
                                 hover
-                                className='flex'
+                                className='flex clickable'
                                 role="checkbox"
                                 aria-checked={isSelected}
                                 key={job.id}
@@ -270,7 +269,7 @@ class JobsCard extends Component {
                                   `status-${job.status.toLowerCase()}`
                                 )}>{job.status}</TableCell>
                                 <TableCell className='flex'>{job.created.toLocaleString()}</TableCell>
-                                <TableCell className='flex'>{duration}</TableCell>
+                                <TableCell className='flex'>{ duration }</TableCell>
                                 <TableCell className='flex'>
                                   <Tooltip
                                     title='View results'
@@ -285,10 +284,11 @@ class JobsCard extends Component {
                                   </Tooltip>
                                 </TableCell>
                                 <TableCell className='flex'>
-                                  <IconButton
-                                    aria-label="Desktop"
-                                    onClick={onClickRestartJob(job.job_id)}
-                                  >
+                                    <IconButton
+                                      aria-label="Desktop"
+                                      disabled
+                                      onClick={onClickRestartJob(job.job_id)}
+                                    >
                                     <RepeatIcon />
                                   </IconButton>
                                 </TableCell>
@@ -338,10 +338,12 @@ JobsCard.defaultProps = {
   }
 }
 
+const selector = formValueSelector('filterJobsHistory');
+
 const mapStateToProps = (state) => {
   return {
     jobs: state.jobs,
-    filterForm: state.form.filterJobsHistory,
+    filter: selector(state, 'filter'),
   }
 }
 

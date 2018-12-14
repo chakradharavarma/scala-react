@@ -102,7 +102,7 @@ class JobInfoDrawer extends Component {
             </Grid>
             <Grid item xs={12} className='job-details-row'>
               <Typography variant='body2'>
-                <span className='job-details-row-item-title'>Duration: </span> { duration }
+                <span className='job-details-row-item-title'>Duration: </span> { duration || '-' }
               </Typography>
             </Grid>
             <Grid item xs={12} className='job-details-row'>

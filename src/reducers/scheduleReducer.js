@@ -3,13 +3,14 @@ import {
   LOG_OUT,
   FETCHED_SCHEDULES_FAILED,
   FETCHED_SCHEDULES_SUCCESS,
+  CREATE_SCHEDULE_FAILED,
 } from '../actions/types';
 
 const initialState = {
   fetching: false,
   fetched: false,
   data: [],
-  notification: undefined,
+  err: null,
 }
 
 export default function (state=initialState, action) {
@@ -21,7 +22,10 @@ export default function (state=initialState, action) {
       state = { ...state, fetching: false, fetched: true, data: action.payload.data || []};
       break;
     case FETCHED_SCHEDULES_FAILED:
-      state = { ...state, fetching: false, fetched: false};
+      state = { ...state, fetching: false, fetched: false, err: action.payload};
+      break;
+    case CREATE_SCHEDULE_FAILED:
+      state = { ...state, fetching: false, fetched: false, err: action.payload};
       break;
     case LOG_OUT:
       state = initialState;

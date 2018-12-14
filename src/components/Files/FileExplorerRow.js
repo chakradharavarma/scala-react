@@ -101,8 +101,8 @@ class FileExplorerRow extends Component {
           <TableCell className='flex'>
             {row.modified.toLocaleString()}
           </TableCell>
-          <TableCell className='flex'>
-            { this.formatSize(row.size)}
+          <TableCell numeric className='flex'>
+            { !row.isdir && this.formatSize(row.size)}
           </TableCell>
         </ContextMenuProvider>
         <RightClickMenu data={{ path: `${folder.path.trimRight('/')}/${row.name}`, name: row.name }} id={`row-${i}`} />

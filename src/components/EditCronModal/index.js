@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import Fade from '@material-ui/core/Fade';
-import { initialize } from 'redux-form';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import ScheduleField from './ScheduleField';
 import SelectWorkflow from './SelectWorkflow';
-import { reduxForm } from 'redux-form';
+import { reduxForm, initialize } from 'redux-form';
 import submitForm from './handleSubmit';
 
 const styles = {

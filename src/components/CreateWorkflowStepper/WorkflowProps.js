@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import Dropzone from 'react-dropzone'
+import { getComputeCost } from '../../actions/pricingActions'
 import {
   numberOfNodes,
   clusterType
@@ -21,38 +22,48 @@ class WorkflowProps extends Component {
   };
 
 
-  state = {
-    files: [],
-  }
-
   handleDrop = (accepted, rejected) => { // todo add rejected code
     const { dropFailed, changeFiles, files } = this.props
-
     if (rejected.length) {
       dropFailed(rejected)
     }
     changeFiles(accepted.concat(files))
-
-    this.setState({ acceptedFiles: accepted.concat(this.state.acceptedFiles) });
   }
 
   remove = (file) => () => {
     const { changeFiles, files } = this.props
     changeFiles(files.filter(f => f.name !== file.name))
+    this.forceUpdate();
+  }
+
+  updatePrice = () => {
+    const { compute, getCost } = this.props    
+    getCost(compute)
   }
 
   render() {
 
-    const { files } = this.props;
+    const { files, hourlyCostEstimate, instanceCount } = this.props;
+    debugger;
     
     return (
       <div className='step-content-container'>
         <Grid container style={{ margin: 20 }} justify='center'>
           <Grid container item xs={12} spacing={32}>
-            <Grid item xs={12}>
-              <Field name="resources.compute" component={clusterType} />
+            <Grid item xs={6}>
+              <Typography className='step-title' color='secondary'>
+                Est Cost Per Node: ${hourlyCostEstimate.toFixed(3)}/hr
+              </Typography>
             </Grid>
-            <Grid item xs={12} >
+            <Grid item xs={6}>
+              <Field onChange={this.updatePrice} name="resources.compute" component={clusterType} />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className='step-title' color='secondary'>
+                Est Cluster Cost: ${(instanceCount * hourlyCostEstimate).toFixed(3)}/hr
+              </Typography>
+            </Grid>
+            <Grid item xs={6} >
               <Field name="resources.instanceCount"
                 parse={val => isNaN(parseInt(val, 10)) ? null : parseInt(val, 10)}
                 type='number'
@@ -74,7 +85,7 @@ class WorkflowProps extends Component {
               </Dropzone>
               <div className='pending-uploads-container'>
                 {
-                  files.map((file, i) => {
+                  files && files.map((file, i) => {
                     return (
                       <Tooltip title="Click to remove" placement='right-start' >             
                         <Typography className='pending-upload-file' onClick={this.remove(file)} key={`file-${i}`}>{file.name}</Typography>
@@ -95,14 +106,18 @@ const selector = formValueSelector('createWorkflow');
 
 const mapStateToProps = (state) => {
   return {
+    compute: selector(state, 'resources.compute'),
+    instanceCount: selector(state, 'resources.instanceCount'),
     files: selector(state, 'files'),
+    hourlyCostEstimate: selector(state, 'resources.hourlyCostEstimate'),
   }
 }
 
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeFiles: files => dispatch(change('createWorkflow', 'files', files))
+    changeFiles: files => dispatch(change('createWorkflow', 'files', files)),
+    getCost: instanceType => dispatch(getComputeCost('us-east-2', instanceType))
   }
 }
 

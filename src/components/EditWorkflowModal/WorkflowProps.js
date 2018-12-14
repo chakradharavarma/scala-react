@@ -4,6 +4,7 @@ import { reduxForm, Field } from 'redux-form';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import Dropzone from 'react-dropzone'
 import {
   numberOfNodes,
@@ -26,13 +27,18 @@ class WorkflowProps extends Component {
 
   handleDrop = (accepted, rejected) => { // todo add rejected code
     const { dropFailed, changeFiles, files } = this.props
-
     if (rejected.length) {
       dropFailed(rejected)
     }
     changeFiles(accepted.concat(files))
+  }
 
-    this.setState({ acceptedFiles: accepted.concat(this.state.acceptedFiles) });
+  remove = (file) => () => {
+    const { changeFiles, files } = this.props
+    const idx = Math.max(files.indexOf(file), 0)
+    files.splice(idx, 1);
+    changeFiles(files)
+    this.forceUpdate();
   }
 
   render() {
@@ -68,7 +74,11 @@ class WorkflowProps extends Component {
               </Dropzone>
               <div className='pending-uploads-container'>
                 {
-                  files.map((file, i) => <Typography key={`file-${i}`}>{file.name}</Typography>)
+                  files.map((file, i) => (
+                      <Tooltip key={`file-${i}`} title="Click to remove" placement='right-start' >             
+                        <Typography className='pending-upload-file' onClick={this.remove(file)}>{file.name}</Typography>
+                      </Tooltip>
+                    ))
                 }
               </div>
             </Grid>

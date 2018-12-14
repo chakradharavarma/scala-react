@@ -51,7 +51,7 @@ function getSorting(order, orderBy) {
 
 class Files extends Component {
 
-  
+
   componentDidMount() {
     // Add the hash if it doesn't exist and fetch the folder
     const { fetchFolder, folder, history } = this.props;
@@ -59,13 +59,13 @@ class Files extends Component {
     const path = hash ? hash.substring(1) : folder.path
     fetchFolder(path)();
     this.unlisten = history.listen(this.onHashChange);
-    
+
   }
 
 
   componentWillUnmount() {
     // Remove the hash and stop listening
-    const { history } = this.props;
+    //const { history } = this.props;
     this.unlisten()
     //history.replace(history.location.pathname)
   }
@@ -117,7 +117,7 @@ class Files extends Component {
   render() {
     const { fetchFolder, folder, modal, filter } = this.props;
     const { orderBy, order, nameModal, renameModal } = this.state;
-    let { data, path, fetching } = folder;
+    let { data, path, fetching, fetched } = folder;
 
     data = data || [];
 
@@ -144,8 +144,7 @@ class Files extends Component {
     const rows = data
       .filter(row => row.name.toLowerCase().includes((filter || '').toLowerCase()))
       .sort(getSorting(order, orderBy))
-    //.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-
+      //.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
     return (
       <Fragment>
         <NameModal type='rename' open={renameModal} onClose={this.toggleRenameModal} />
@@ -179,10 +178,9 @@ class Files extends Component {
             </div>
 
           </div>
-          {
-            fetching ? (
-              <ScalaLoader centered active />
-            ) : (
+          <ScalaLoader centered active={fetching}>
+            {
+              fetched ? 
                 <Fade in timeout={400}>
                   <Table className="file-explorer-table flex">
                     <TableHead className='flex'>
@@ -198,6 +196,7 @@ class Files extends Component {
                             >
                               <Tooltip
                                 title="Sort"
+                                disableFocusListener
                                 placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                                 enterDelay={300}
                               >
@@ -214,24 +213,25 @@ class Files extends Component {
                         }, this)}
                       </TableRow>
                     </TableHead>
-                      <TableBody classes={{ root: 'file-explorer-table-body flex' }}>
-                        {
-                          rows
-                            .map((row, i) =>
-                              <FileExplorerRow
-                                i={i}
-                                toggleRenameModal={this.toggleRenameModal}
-                                row={row}
-                                key={`file-row-${i}`}
-                              />
-                            )
-                        }
-                      </TableBody>
+                    <TableBody classes={{ root: 'file-explorer-table-body flex' }}>
+                      {
+                        rows
+                          .map((row, i) =>
+                            <FileExplorerRow
+                              i={i}
+                              toggleRenameModal={this.toggleRenameModal}
+                              row={row}
+                              key={`file-row-${i}`}
+                            />
+                          )
+                      }
+                    </TableBody>
                   </Table>
                 </Fade>
-              )
-
-          }
+                :
+                <div classnames='centered'>Unable to get files</div>
+            }
+          </ScalaLoader>
         </Card>
         <FileModal />
       </Fragment>

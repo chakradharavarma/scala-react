@@ -8,12 +8,25 @@ import { formValueSelector } from 'redux-form';
 class ConfirmWorkflow extends Component {
 
   render() {
-    const { name, instanceCount, compute, files } = this.props;
+    const { name, instanceCount, compute, files, computes, hourlyCostEstimate } = this.props;
+
+    const { fetching, fetched, data } = computes
+
+    const el = data.find(el => el.instanceType === compute)
+
+    if(!el) {
+        return null
+    }
+
+    const { name: computeName } = el;
+
     return (
       <div className='step-content-container'>
-        <Typography variant='display1' color='secondary' component='div' className='step-title'>
+          <Typography variant='display1' color='secondary' component='div' className='step-title'>
           Confirm Workflow
         </Typography>
+      {
+        !fetching && (
         <Fade in timeout={{ enter: 200, exit: 300 }}>
           <Card className='confirm-workflow-card'>
             <div>
@@ -37,11 +50,11 @@ class ConfirmWorkflow extends Component {
                 Cluster Type:
             </Typography>
               <Typography className='confirm-workflow-value' variant='title'>
-                {compute}
+                {computeName}
               </Typography>
             </div>
             {
-              files.length ?
+              files.length ? // TODO check what reasons there could be for this to be null... Rob got an error.
               (
                 <div>
                   <Typography className='confirm-workflow-field' color='secondary' variant='title'>
@@ -59,9 +72,26 @@ class ConfirmWorkflow extends Component {
                 </div>
               ) : null
             }
+            {
+                fetched && (
+                  <div>
+                  <Typography className='confirm-workflow-field' color='secondary' variant='title'>
+                    Cost Estimate:
+                  </Typography>
+                  <Typography className='confirm-workflow-value' variant='title'>
+                    ${(instanceCount * hourlyCostEstimate).toFixed(3)}/hr
+                  </Typography>
+                </div>
+    
+                )
+
+            }
 
           </Card>
         </Fade>
+
+        ) 
+      }
       </div>
     )
   }
@@ -74,7 +104,9 @@ const mapStateToProps = (state) => {
     name: selector(state, 'name'),
     compute: selector(state, 'resources.compute'),
     instanceCount: selector(state, 'resources.instanceCount'),
+    hourlyCostEstimate: selector(state, 'resources.hourlyCostEstimate'),
     files: selector(state, 'files'),
+    computes: state.computes,
     //tasksPerNode: selector(state, 'resources.tasksPerNode'), // TODO delete
     //cpusPerNode: selector(state, 'resources.cpusPerNode'),
   }

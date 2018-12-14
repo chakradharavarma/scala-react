@@ -97,7 +97,6 @@ class JobsRunningTableRow extends Component {
             handleConfirm={handleTerminateClick(job.job_id)}
           >
             <IconButton
-              disabled={job.status !== 'RUNNING'}
               key="close"
               aria-label="Close"
               color="inherit"

@@ -76,6 +76,12 @@
     },
     "/api": {
       "target": "http://scdemo.scalacomputing.com:8081"
+    },
+    "/api-local": {
+      "target": "http://localhost:8080"
+    },
+    "/api-prod": {
+      "target": "http://scdemo.scalacomputing.com:8081"
     }
   }
 }

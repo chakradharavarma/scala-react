@@ -76,7 +76,7 @@ export const codeField = (props) => ({
     <CodeMirror
       mode={'shell'}
       autoFocus
-      options={{ lineNumbers: true }}
+      options={{ lineNumbers: true, lineWrapping: true }}
       helperText={touched && error}
       {...input}
       {...custom}
@@ -95,6 +95,7 @@ export const clusterType = connect(mapStateToProps)((props) => (
     {...props.input}
     select
     margin="normal"
+    label='Cluster Type'
     style={{ width: '100%' }}
   >
     {

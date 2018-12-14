@@ -57,7 +57,7 @@ class FileModal extends Component {
                         value={contents}
                         onChange={updateCode}
                         autoFocus
-                        options={{ lineNumbers: true }}
+                        options={{ lineNumbers: true, lineWrapping: true }}
                     />
                     <div className='edit-file-buttons'>
                         <Button variant="contained" onClick={handleClose}>

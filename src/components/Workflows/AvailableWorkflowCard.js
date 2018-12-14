@@ -89,7 +89,7 @@ class AvailableWorkflows extends Component {
                     }
                   }}
                 >
-                  <MenuItem onClick={this._handleClose(onClickRun(workflow.id))}>
+                  <MenuItem onClick={this._handleClose(onClickRun(workflow.id, workflow.name))}>
                     <PlayArrowOutlined className='menu-option-icon' />
                     Run
                   </MenuItem>
@@ -160,7 +160,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onClickRun: (id) => () => dispatch(runWorkflow(id)),
+    onClickRun: (id, name) => () => dispatch(runWorkflow(id, name)),
     onClickDelete: (id) => () => dispatch(deleteWorkflow(id)),
     onClickCloneWorkflow: (id) => () => dispatch(cloneWorkflow(id)),
   }

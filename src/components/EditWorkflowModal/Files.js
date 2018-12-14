@@ -24,7 +24,7 @@ class Scripts extends Component {
                     mode={'shell'}
                     value={''}
                     autoFocus
-                    options={{ lineNumbers: true }}
+                    options={{ lineNumbers: true, lineWrapping: true }}
                 />
             </Card>
         );

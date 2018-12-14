@@ -31,11 +31,12 @@ export const cloneWorkflow = (id) => {
     }
 }
 
-export const runWorkflow = (id) => {
+export const runWorkflow = (id, name) => {
     return {
         type: RUN_WORKFLOW,
         payload: {
-            id
+            id,
+            name,
         }
     }
 }

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 import Modal from '@material-ui/core/Modal';
 import Card from '@material-ui/core/Card'
 import { connect } from 'react-redux';
@@ -43,6 +45,15 @@ class OutputModal extends Component {
         onClose={closeStandardModal}
       >
         <Card className={classes.modal}>
+            <IconButton
+              key="close"
+              aria-label="Close"
+              onClick={closeStandardModal}
+              className='output-modal-close-button'
+            >
+             <CloseIcon />
+            </IconButton>
+
           <Typography variant='headline' className={classes.modalTitle}>
             {`Standard ${type === 'err' ? 'Error' : 'Out'} for ${job && job.name}`}
           </Typography>

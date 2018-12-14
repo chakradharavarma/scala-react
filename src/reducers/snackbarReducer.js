@@ -148,7 +148,7 @@ export default function (state=initialState, action) {
       state = processQueue(state, notification);
       break;
     case actions.RUN_WORKFLOW_SUCCESS:    
-      notification = createNotification('Successfully started job', SUCCESS);
+      notification = createNotification(`Started ${action.payload.name}`, INFO);
       state = processQueue(state, notification);
       break;
     case actions.RUN_WORKFLOW_FAILED:    

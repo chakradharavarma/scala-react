@@ -696,7 +696,6 @@ body {
     right:8px;
     float: right;
     clear:both;
-
 }
 
 .centered {
@@ -1239,4 +1238,24 @@ td.flex, th.flex {
 
 .recharts-responsive-container {
     top: -84px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.output-modal-close-button {
+    position: absolute !important;
+    right:8px;
+    float: right;
+    clear: both;
+    height: 32px !important;
+}
+
+.contact-us-container {
+    padding: 18px;
+}
+
+.contact-us-title {
+    text-decoration: underline;
 }

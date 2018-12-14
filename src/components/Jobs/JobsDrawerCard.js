@@ -24,14 +24,17 @@ class JobsDrawerCard extends Component {
     const { handleClick, workflow, closeDrawer } = this.props;
     return (
       <Grid item xs={10}>
-        <Card onClick={handleClick(workflow.id, closeDrawer)}>
+        <Card onClick={handleClick(workflow.id, workflow.name, closeDrawer)}>
           <CardMedia
             image={workflow.image}
             title={`${workflow.image.split('/').pop().split('.')[0]} logo`}
             className='jobs-drawer-card-media' />
           <CardContent>
-            <Typography gutterBottom variant="title">
+          <Typography gutterBottom variant="title">
               {workflow.name}
+            </Typography>
+            <Typography variant='caption'>
+              {workflow.id}
             </Typography>
           </CardContent>
         </Card>
@@ -47,8 +50,8 @@ JobsDrawerCard.propTypes = {
 const mapDispatchToProps = (dispatch) => {
   return (
     {
-      handleClick: (id, cb) => () => {
-        dispatch(runWorkflow(id))
+      handleClick: (id, name, cb) => () => {
+        dispatch(runWorkflow(id, name))
         cb()
       }
     }

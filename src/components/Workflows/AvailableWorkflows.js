@@ -4,8 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import AvailableWorkflowCard from './AvailableWorkflowCard';
 import ScalaLoader from '../ScalaLoader';
 
-import { deleteWorkflow, runWorkflow } from '../../actions/workflowActions'
-
 class AvailableWorkflows extends Component {
 
   render() {
@@ -38,11 +36,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onClickRun: (id) => () => dispatch(runWorkflow(id)),
-    onClickDelete: (id) => () => dispatch(deleteWorkflow(id)),
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AvailableWorkflows);
+export default connect(mapStateToProps)(AvailableWorkflows);
