@@ -283,6 +283,10 @@ export default function (state=initialState, action) {
       notification = createNotification(formatErrorMessage(`An unknown error occured`), ERROR);
       state = processQueue(state, notification);
       break
+    case actions.GET_COMPUTE_COST_FAILED:
+      notification = createNotification(formatErrorMessage(`We don't have enough information about that compute`), INFO);
+      state = processQueue(state, notification);
+      break
     default:
       break;
   }

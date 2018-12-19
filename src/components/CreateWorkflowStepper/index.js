@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import Fade from '@material-ui/core/Fade';
 import Stepper from './Stepper';
 import { connect } from 'react-redux';
-import { destroy, initialize } from 'redux-form';
+import { reset, initialize } from 'redux-form';
 import { getComputeCost } from '../../actions/pricingActions'
 
 const styles = {
@@ -17,7 +17,7 @@ const styles = {
   },
 };
 
-const EXIT_TIMEOUT = 500;
+const EXIT_TIMEOUT = 400;
 
 function Transition(props) {
   return <Fade {...props} timeout={{enter: 1000, exit: EXIT_TIMEOUT}} />;
@@ -34,11 +34,12 @@ class CreateWorkflowStepper extends Component {
     const { workflow, dispatch } = this.props;
     if(workflow) {
       dispatch(initialize('createWorkflow', {
-        ...workflow,
-        files: [],
         resources: {
           hourlyCostEstimate: 0, 
+          instanceCount: 1,
         },
+        ...workflow,
+        files: [],
       }));
       dispatch(getComputeCost('us-east-2', workflow.resources.compute))
     } else {
@@ -59,14 +60,11 @@ class CreateWorkflowStepper extends Component {
     cb()
     this.setState({ open: false }, () => {
       setTimeout(() => {
-        this.props.dispatch(destroy('createWorkflow'));
+        this.props.dispatch(reset('createWorkflow'));
       }, EXIT_TIMEOUT);
     });
   };
 
-  componentDidMount() {
-    this.handleClickOpen()
-  }
 
   render() {
     const { handleCloseCallback } = this.props;

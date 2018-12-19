@@ -79,7 +79,7 @@ class ConfirmWorkflow extends Component {
                     Cost Estimate:
                   </Typography>
                   <Typography className='confirm-workflow-value' variant='title'>
-                    ${(instanceCount * hourlyCostEstimate).toFixed(3)}/hr
+                    ${(instanceCount * hourlyCostEstimate).toFixed(3)} / hour
                   </Typography>
                 </div>
     

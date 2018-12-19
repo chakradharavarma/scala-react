@@ -126,7 +126,7 @@ function getComputes() {
 }
 
 function getComputeCost({ region, instanceType }) {
-    const url = `/api/pricing/region/${region}/${instanceType}`;
+    const url = `/api/pricing/region/${region}/${instanceType.replace('.', '-')}`;
     return axios.get(url)
         .catch(err => err);
 }
@@ -541,10 +541,15 @@ function* callGetComputeCost(action) {
     if (payload.status === 200) {
         const lowestCost = Math.min(...(payload.data.map(zone => zone.hourly_cost)))
         const lowestCostZone = payload.data.find(zone => zone.hourly_cost === lowestCost)
-        console.log(lowestCostZone)
-        yield put(change('createWorkflow', 'resources.zone', lowestCostZone.zone));
-        yield put(change('createWorkflow', 'resources.hourlyCostEstimate', lowestCostZone.hourly_cost));
+        if(lowestCostZone) {
+            console.log(lowestCostZone.hourly_cost)
+            yield put(change('createWorkflow', 'resources.zone', lowestCostZone.zone));
+            yield put(change('createWorkflow', 'resources.hourlyCostEstimate', lowestCostZone.hourly_cost));    
+        } else {
+            yield put({ type: actions.GET_COMPUTE_COST_FAILED, payload });
+        }
     } else {
+        console.log('--')
         yield put({ type: actions.GET_COMPUTE_COST_FAILED, payload });
     }
 }

@@ -48,7 +48,7 @@ function getStepContent(step) {
 
 class HorizontalNonLinearStepper extends Component {
   state = {
-    activeStep: 1,
+    activeStep: 0,
     completed: {},
   };
 

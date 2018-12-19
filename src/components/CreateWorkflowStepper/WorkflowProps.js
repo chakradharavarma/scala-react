@@ -37,33 +37,42 @@ class WorkflowProps extends Component {
   }
 
   updatePrice = () => {
-    const { compute, getCost } = this.props    
+    const { compute, getCost } = this.props
     getCost(compute)
   }
 
   render() {
 
     const { files, hourlyCostEstimate, instanceCount } = this.props;
-    debugger;
-    
+
     return (
       <div className='step-content-container'>
         <Grid container style={{ margin: 20 }} justify='center'>
           <Grid container item xs={12} spacing={32}>
-            <Grid item xs={6}>
-              <Typography className='step-title' color='secondary'>
-                Est Cost Per Node: ${hourlyCostEstimate.toFixed(3)}/hr
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
+            {
+              hourlyCostEstimate ?
+              (
+                <Grid item xs={6}>
+                  <Typography className='step-title' color='secondary'>
+                    Est Cost Per Node: ${hourlyCostEstimate.toFixed(3)}/hr
+                  </Typography>
+                </Grid>
+              ) : null
+            }
+            <Grid item xs={hourlyCostEstimate ? 6 : 12}>
               <Field onChange={this.updatePrice} name="resources.compute" component={clusterType} />
             </Grid>
-            <Grid item xs={6}>
-              <Typography className='step-title' color='secondary'>
-                Est Cluster Cost: ${(instanceCount * hourlyCostEstimate).toFixed(3)}/hr
-              </Typography>
-            </Grid>
-            <Grid item xs={6} >
+            {
+              hourlyCostEstimate ?
+              (
+                <Grid item xs={6}>
+                  <Typography className='step-title' color='secondary'>
+                    Est Cluster Cost: ${(instanceCount * hourlyCostEstimate).toFixed(3)}/hr
+                  </Typography>
+                </Grid>
+              ) : null
+            }
+            <Grid item xs={hourlyCostEstimate ? 6 : 12} >
               <Field name="resources.instanceCount"
                 parse={val => isNaN(parseInt(val, 10)) ? null : parseInt(val, 10)}
                 type='number'
@@ -87,7 +96,7 @@ class WorkflowProps extends Component {
                 {
                   files && files.map((file, i) => {
                     return (
-                      <Tooltip title="Click to remove" placement='right-start' >             
+                      <Tooltip title="Click to remove" placement='right-start' >
                         <Typography className='pending-upload-file' onClick={this.remove(file)} key={`file-${i}`}>{file.name}</Typography>
                       </Tooltip>
                     )
