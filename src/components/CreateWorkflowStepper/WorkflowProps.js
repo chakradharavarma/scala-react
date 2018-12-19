@@ -115,10 +115,10 @@ const selector = formValueSelector('createWorkflow');
 
 const mapStateToProps = (state) => {
   return {
-    compute: selector(state, 'resources.compute'),
-    instanceCount: selector(state, 'resources.instanceCount'),
-    files: selector(state, 'files'),
-    hourlyCostEstimate: selector(state, 'resources.hourlyCostEstimate'),
+      compute: selector(state, 'resources.compute'),
+      instanceCount: selector(state, 'resources.instanceCount'),
+      files: selector(state, 'files'),
+      hourlyCostEstimate: selector(state, 'resources.hourlyCostEstimate'),
   }
 }
 
