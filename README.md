@@ -1,4 +1,4 @@
-# React Version of the Scala Website #test
+# React Version of the Scala Website #
 
 To start:
 ```
